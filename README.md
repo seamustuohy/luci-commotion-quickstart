@@ -34,7 +34,7 @@ QS_uploadConfig_main
 QS_chooseConfig_main
 QS_newNetwork_main
 
-** section
+** module
 
 QS_bigButton "A single big button that takes its text from whatever it is passed"
 QS_infoBanner "A banner that takes and displays a main header and a explanation"
