@@ -27,9 +27,10 @@ function index()
 	--buttony takes a value passed to it from a button and calls that entry
 	entry({"QS", "button"}, call("buttony", name))
 
-	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "QuickStart").dependent=false
+	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
+	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main"), "Quick Start").dependent=false
 
-	end
+end
 
 
 function buttony()
