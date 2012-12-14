@@ -2,7 +2,12 @@
   <!-- Better: Parse table containing list of sharable services (name) and descriptions.
 	Build input fields from list
 		-->
-  <%- foreach service in services, print -%>
+<%- for i,x in ipairs(share_service) do
+	      svc_name = x.name
+	      svc_h_name = x.help_name
+	      svc_help = x. help_text
+          svc_description = x.description	
+-%>
   <input name="<%-=svc_name-%>" value="<%-=svc_value-%>" type="checkbox">
   <%-=svc_description-%>
   <img src="s2e-question" class="help_icon" onClick()>
@@ -13,5 +18,6 @@
   <div class="help_text">
     <strong><%-=svc_name-%>:</strong>
     <%-=svc_help-%>
+<%end%>
   </div> 
 </div>

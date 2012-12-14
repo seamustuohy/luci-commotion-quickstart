@@ -51,3 +51,11 @@ function find_nearby()
 		
 		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks})
 end
+
+function sharing_options()
+		 --the place where sharing options are parsed from
+
+		 local share_service = {
+		 	   { name="access point", help_name="Public Access Point:", help_text="These access points have no password and allow any wifi enabled user to use your node to access the network", description="This is a description of stuff"}
+		luci.template.render("QS/QS_sharingPrefs_main", {share_service=share_service})
+end
