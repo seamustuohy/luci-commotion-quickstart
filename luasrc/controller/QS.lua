@@ -23,22 +23,31 @@ module("luci.controller.commotion.QS.QS_button", package.seeall)
 function index()
 	--each page gets an entry that either calls a template or a function
 	--any function call needs a template call at the end of the function
-	
-	--buttony takes a value passed to it from a button and calls that entry
-	entry({"QS", "button"}, call("buttony", name))
 
 	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
 	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main"), "Quick Start").dependent=false
-
-end
-
-
-function buttony()
-	page = name
-	luci.dispatcher.node("QS", page)
+	entry({"QS", "nearbyMesh"}, call(find_nearby)).dependent=false
+	
 end
 
 
 function load_main()
-luci.template.render("QS/QS_error_main", {errorType=header, errorMsg=errorMsg,})
-end		 
+		 luci.template.render("QS/QS_error_main", {errorType=header, errorMsg=errorMsg,})
+end
+
+function find_nearby()
+		 --this would eventually call the daemon. For now we just send some falsified data over.
+
+		 local networks = {
+		 	   { name="Commotion", config="true"},
+		 	   { name="RedHooks", config="true"},
+		 	   { name="Ninux", config="false"},
+		 	   { name="Byzantium", config="true"},
+		 	   { name="Funkfeuer", config="false"},
+		 	   { name="FreiFunk", config="false"},
+		 	   { name="Big Bobs Mesh Network", config="false"},
+		 	   { name="Viva la' Revolution", config="true"},
+		}
+		
+		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks})
+end
