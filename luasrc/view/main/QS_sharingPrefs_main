@@ -1,6 +1,6 @@
 <%+header%>
 
-<%-- MOVE SHARABLE VARS TO CBI FILE --%>
+<%-- resolve var name mismatch with QS_sharing.htm --%>
 <%-
    topheader="Welcome Back!"
    subheading="As a final step, let's fill out your sharing preferences."
@@ -10,9 +10,9 @@
    }
 
    sharable={
-	    { svc_name="Public Access Point", svc_value="ap", 
-		svc_description="I would like to share a public access point.", 
-		svc_help="These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network." 
+	    { svc_name="Public Access Point", svc_value="ap",
+		svc_description="I would like to share a public access point.",
+		svc_help="These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
 	    },
 	    { svc_name="Secure Access Point", svc_value="sap",
 		svc_description="I would like to share a secure access point.",
