@@ -1,12 +1,15 @@
 <div class="share_services">
-  <!-- Better: Parse table containing list of sharable services (name) and descriptions.
-	Build input fields from list
-		-->
+  <!-- Resolve field name mismatch between QS_sharing.htm and QS_sharingPrefs_main -->
 <%- for i,x in ipairs(share_service) do
 	      svc_name = x.name
 	      svc_h_name = x.help_name
+<<<<<<< HEAD:luasrc/view/module/QS_sharing.htm
 	      svc_help = x.help_text
           svc_description = x.description	
+=======
+	      svc_help = x. help_text
+          svc_description = x.description
+>>>>>>> f21342d3796707ce5f5567db85e7079de9a61872:luasrc/view/module/QS_sharing
 -%>
   <input name="<%-=svc_name-%>" value="<%-=svc_value-%>" type="checkbox">
   <%-=svc_description-%>
@@ -19,5 +22,5 @@
     <strong><%-=svc_name-%>:</strong>
     <%-=svc_help-%>
 <%end%>
-  </div> 
+  </div>
 </div>
