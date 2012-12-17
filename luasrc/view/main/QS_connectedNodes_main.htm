@@ -1,0 +1,18 @@
+<%+header%>
+<%-
+   topheader="Congratulations!"
+   subheading="You are connected to a network that is connected to ..."
+
+   buttons={
+           { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
+           { text="Continue With This Network", icon="plus", action="sharingPrefs"},
+           { text="Customize This Network", icon="arrow", action="uci"}
+   }
+
+-%>
+
+<%= include("commotion/QS/module/QS_infoBanner") %>
+<%= include("commotion/QS/module/QS_nodeNeighbors") %>
+<%= include("commotion/QS/module/QS_buttons") %>
+
+<%+footer%>

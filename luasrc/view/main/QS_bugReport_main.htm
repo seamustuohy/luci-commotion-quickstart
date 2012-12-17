@@ -1,0 +1,17 @@
+<%+header%>
+<%-
+   topheader="Report Your Bug Here"
+   subheading="Fill out the form below and give the document created to trusted individuals who offer there help."
+
+   buttons={
+           { text="Submit This Bug Report", icon="x", action="submitReport"},
+           { text="Start Over", icon="arrow", action="welcomeMain"}
+   }
+
+-%>
+
+<%= include("commotion/QS/module/QS_infoBanner") %>
+<%= include("commotion/QS/module/QS_nodeNeighbors") %>
+<%= include("commotion/QS/module/QS_buttons") %>
+
+<%+footer%>
