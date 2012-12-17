@@ -1,0 +1,19 @@
+<%+header%>
+<%-
+   topheader=("You have chosen " .. network)
+   subheading="This Network..."
+
+   buttons={
+           { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
+           { text="Continue With This Network", icon="plus", action="tryNetwork"},
+           { text="Customize This Network", icon="diamond", action="uci"}
+   }
+
+--list_items is the list of values. list_items[1] = {"name", value}, etc.    
+-%>
+
+<%= include("commotion/QS/module/QS_infoBanner") %>
+<%= include("commotion/QS/module/QS_meshInfo") %>
+<%= include("commotion/QS/module/QS_buttons") %>
+
+<%+footer%>

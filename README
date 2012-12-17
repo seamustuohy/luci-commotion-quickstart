@@ -18,19 +18,20 @@ This package will work as such.
 
 This will allow for any modification of any UX path to be done in the controller without messing around with the views. All modeling will be done withing the "sections." As such, if a CBI model is called it will be embedded within the main section of some main_view. This will allow for buttons to make UCI calls as well as load templates.
 
-*view
+* view
 
 ** main
-QS_welcome_main
-QS_basicInfo_main
-QS_nearbyMesh_main
+-QS_welcome_main
+-QS_basicInfo_main
+-QS_nearbyMesh_main
 QS_UCI_main "the main section of this page calls whatever cbi map it is passed"
-QS_chosenMeshDefault_main
-QS_errorPage_main
+-QS_chosenMeshDefault_main
+-QS_errorPage_main
 QS_connectedNodes_main
 QS_wait4Reset_main
-QS_sharingPrefs_main
+-QS_sharingPrefs_main
 QS_uploadConfig_main
+QS_bugReport_main
 
 ** section
 
@@ -65,3 +66,17 @@ inner_dot
 inner_diamond
 inner_plus
 outer_circle
+
+
+Implemented controller calls
+** main
+-QS_welcome_main
+-QS_basicInfo_main
+-QS_nearbyMesh_main
+QS_UCI_main "the main section of this page calls whatever cbi map it is passed"
+-QS_chosenMeshDefault_main
+-QS_errorPage_main
+QS_connectedNodes_main
+QS_wait4Reset_main
+-QS_sharingPrefs_main
+QS_uploadConfig_main
