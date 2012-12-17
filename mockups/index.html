@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <title>HTML Exemplar for offline mockups</title>
+  <!--[if lt IE 9]><script src="js/html5.js"></script><![endif]-->
+  <link rel="stylesheet" href="css/cascade.css">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <script src="js/xhr.js"></script>
+ </head>
+
+ <body class="lang_en Mesh Configuration (Manual)">
+  <header>
+   <div class="fill">
+    <div class="container">
+     <a class="brand" href="#">commotion-747130</a>
+     <ul class="nav">
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/commotion">Commotion</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/commotion/meshprofile">Mesh Configuration (Profile)</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/commotion/meshconfig">Mesh Configuration (Manual)</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/commotion/frontpage">Front Page</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/commotion/upgrade">Remote Upgrade</a></li>
+	</ul>
+        </li>
+	
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status">Status</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/overview">Overview</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/iptables">Firewall</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/routes">Routes</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/syslog">System Log</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/dmesg">Kernel Log</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/processes">Processes</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/realtime">Realtime Graphs</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/splash">Client-Splash</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/status/olsr">OLSR</a></li>
+	</ul>
+        </li>
+	
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system">System</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/system">System</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/admin">Administration</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/packages">Software</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/startup">Startup</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/crontab">Scheduled Tasks</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/ntpc">Time Synchronisation</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/fstab">Mount Points</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/leds"> LED Configuration</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/flashops">Backup / Flash Firmware</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/system/reboot">Reboot</a></li>
+	</ul>
+        </li>
+	
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/services">Services</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/services/splash">Client-Splash</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/services/olsrd">OLSR</a></li>
+	</ul>
+        </li>
+	
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network">Network</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/network">Interfaces</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/wireless">Wifi</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/dhcp">DHCP and DNS</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/hosts">Hostnames</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/routes">Static Routes</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/diagnostics">Diagnostics</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/firewall">Firewall</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/wol">Wake on LAN</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/network/qos">QoS</a></li>
+	</ul>
+        </li>
+	
+        <li class="dropdown">
+            <a class="menu" href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/statistics">Statistics</a>
+	 <ul class="dropdown-menu">
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/statistics/collectd">Collectd</a></li>
+	  <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/statistics/graph">Graphs</a></li>
+	</ul>
+        </li>
+	
+         <li>
+	        <a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/logout">Logout</a>
+        </li> 
+    
+	</ul>
+
+	
+	<div class="pull-right">
+	
+      <span id="xhr_poll_status" style="display:none" onclick="XHR.running() ? XHR.halt() : XHR.run()">
+       <span class="label success" id="xhr_poll_status_on">Auto Refresh on</span>
+       <span class="label" id="xhr_poll_status_off" style="display:none">Auto Refresh off</span>
+      </span>
+     </div>
+	
+    </div>
+   </div>
+  </header><div id="maincontent" class="container">
+<!-- End header.htm -->
+
+
+<form method="post" name="cbi" action="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')">
+	<div>
+		<script type="text/javascript" src="/luci-static/resources/cbi.js"></script>
+		<input type="hidden" name="cbi.submit" value="1" />
+		<input type="submit" value="Save" class="hidden" />
+	</div>
+
+<div class="cbi-map" id="cbi-mesh">
+	<h2><a id="content" name="content">Configuration</a></h2>
+	<div class="cbi-map-descr">This configuration wizard will assist you in setting up your router for a Commotion network. It is suggested to reboot your node after changing these settings.</div>
+<fieldset class="cbi-section" id="cbi-mesh-network">
+	<legend>Network-wide Settings</legend>
+	<div class="cbi-section-descr"></div>
+	
+
+
+		
+
+		<fieldset class="cbi-section-node" id="cbi-mesh-cfg0202af">
+			
+
+
+	<div class="cbi-value" id="cbi-mesh-cfg0202af-basename"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.basename">Base-name</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.basename" id="cbid.mesh.cfg0202af.basename" value="commotion" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.basename', true, 'hostname');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The one-word name of the network, used to create SSIDs and hostnames.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-ssid"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.ssid">Mesh SSID</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.ssid" id="cbid.mesh.cfg0202af.ssid" value="commotionwireless.net" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.ssid', true, 'hostname');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The backhaul SSID of the mesh network.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-bssid"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.bssid">Mesh BSSID</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.bssid" id="cbid.mesh.cfg0202af.bssid" value="02:CA:FF:EE:BA:BE" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.bssid', true, 'macaddr');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The backhaul BSSID of the mesh network, must be statically set for ad-hoc Wi-Fi.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-channel_2"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.channel_2">2GHz Channel</label>
+		<div class="cbi-value-field">
+
+
+	<select class="cbi-input-select" onchange="cbi_d_update(this.id)" id="cbid.mesh.cfg0202af.channel_2" name="cbid.mesh.cfg0202af.channel_2" size="1">
+	<option id="cbi-mesh-cfg0202af-channel_2-1" value="1">1 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-2" value="2">2 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-3" value="3">3 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-4" value="4">4 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-5" value="5" selected="selected">5 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-6" value="6">6 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-7" value="7">7 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-8" value="8">8 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-9" value="9">9 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-10" value="10">10 (2.4 GHz)</option><option id="cbi-mesh-cfg0202af-channel_2-11" value="11">11 (2.4 GHz)</option>
+	</select>
+
+		<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The 2.4GHz backhaul channel of the mesh network, if applicable
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-channel_5"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.channel_5">5GHz Channel</label>
+		<div class="cbi-value-field">
+
+
+	<select class="cbi-input-select" onchange="cbi_d_update(this.id)" id="cbid.mesh.cfg0202af.channel_5" name="cbid.mesh.cfg0202af.channel_5" size="1">
+	<option id="cbi-mesh-cfg0202af-channel_5-36" value="36" selected="selected">36 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-40" value="40">40 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-44" value="44">44 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-48" value="48">48 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-149" value="149">149 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-153" value="153">153 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-157" value="157">157 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-161" value="161">161 (5 GHz)</option><option id="cbi-mesh-cfg0202af-channel_5-165" value="165">165 (5 GHz)</option>
+	</select>
+
+		<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The 5GHz backhaul channel of the mesh network, if applicable.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-analytics_enable"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.analytics_enable">Enable Analytics</label>
+		<div class="cbi-value-field">
+
+	<input type="hidden" value="1" name="cbi.cbe.mesh.cfg0202af.analytics_enable" />
+	<input class="cbi-input-checkbox" onclick="cbi_d_update(this.id)" onchange="cbi_d_update(this.id)" type="checkbox" id="cbid.mesh.cfg0202af.analytics_enable" name="cbid.mesh.cfg0202af.analytics_enable" value="1" />
+		
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Whether to send anonymous usage data for this network.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-analytics_server"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.analytics_server">Analytics Server</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.analytics_server" id="cbid.mesh.cfg0202af.analytics_server" value="monitor.commotionwireless.net" placeholder="monitor.commotionwireless.net" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.analytics_server', true, 'host');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The server to send anonymous usage statistics to, if this networks supports sending anonymous usage statistics.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-analytics_server">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-analytics_server", {"cbid.mesh.cfg0202af.analytics_enable":"1"}, "cbip-mesh-cfg0202af-analytics_server");
+	</script>
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-analytics_port"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.analytics_port">Analytics Port</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.analytics_port" id="cbid.mesh.cfg0202af.analytics_port" value="" placeholder="25826" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.analytics_port', true, 'port');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The port on the analytics server to send data to.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-analytics_port">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-analytics_port", {"cbid.mesh.cfg0202af.analytics_enable":"1"}, "cbip-mesh-cfg0202af-analytics_port");
+	</script>
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-vpn_enable"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.vpn_enable">Enable VPN</label>
+		<div class="cbi-value-field">
+
+	<input type="hidden" value="1" name="cbi.cbe.mesh.cfg0202af.vpn_enable" />
+	<input class="cbi-input-checkbox" onclick="cbi_d_update(this.id)" onchange="cbi_d_update(this.id)" type="checkbox" id="cbid.mesh.cfg0202af.vpn_enable" name="cbid.mesh.cfg0202af.vpn_enable" value="1" />
+		
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Whether to enable the N2N VPN for remote access to this node.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-vpn_server"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.vpn_server">VPN Server</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.vpn_server" id="cbid.mesh.cfg0202af.vpn_server" value="vpn.commotionwireless.net" placeholder="vpn.commotionwireless.net" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.vpn_server', true, 'host');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The address of the N2N 'supernode,' which facilitates the VPN.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-vpn_server">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-vpn_server", {"cbid.mesh.cfg0202af.vpn_enable":"1"}, "cbip-mesh-cfg0202af-vpn_server");
+	</script>
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-vpn_port"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.vpn_port">VPN Port</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.vpn_port" id="cbid.mesh.cfg0202af.vpn_port" value="" placeholder="7654" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.vpn_port', true, 'port');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The port on the VPN 'supernode' to connect to.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-vpn_port">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-vpn_port", {"cbid.mesh.cfg0202af.vpn_enable":"1"}, "cbip-mesh-cfg0202af-vpn_port");
+	</script>
+
+
+<div class="cbi-value" id="cbi-mesh-cfg0202af-vpn_key"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.vpn_key">VPN Key</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.mesh.cfg0202af.vpn_key" id="cbid.mesh.cfg0202af.vpn_key" value="" placeholder="c0MM0t10N!r0ckS!" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.mesh.cfg0202af.vpn_key', true, 'wpakey');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				The shared encryption key for the VPN.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-vpn_key">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-vpn_key", {"cbid.mesh.cfg0202af.vpn_enable":"1"}, "cbip-mesh-cfg0202af-vpn_key");
+	</script>
+
+
+<div class="cbi-value cbi-value-last" id="cbi-mesh-cfg0202af-vpn_route"><label class="cbi-value-title" for="cbid.mesh.cfg0202af.vpn_route">Route traffic</label>
+		<div class="cbi-value-field">
+
+	<input type="hidden" value="1" name="cbi.cbe.mesh.cfg0202af.vpn_route" />
+	<input class="cbi-input-checkbox" onclick="cbi_d_update(this.id)" onchange="cbi_d_update(this.id)" type="checkbox" id="cbid.mesh.cfg0202af.vpn_route" name="cbid.mesh.cfg0202af.vpn_route" value="1" />
+		
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Select this to route all traffic through the VPN.
+			</div>
+</div></div>
+
+
+<script type="text/javascript" id="cbip-mesh-cfg0202af-vpn_route">
+		
+		cbi_d_add("cbi-mesh-cfg0202af-vpn_route", {"cbid.mesh.cfg0202af.vpn_enable":"1"}, "cbip-mesh-cfg0202af-vpn_route");
+	</script>
+
+
+
+
+
+
+
+
+
+		</fieldset>
+		<br />
+
+	
+
+	
+</fieldset>
+
+	<br />
+</div>
+
+<div class="cbi-map" id="cbi-system">
+	
+	
+<fieldset class="cbi-section" id="cbi-system-system">
+	<legend>Settings specific to this node</legend>
+	<div class="cbi-section-descr"></div>
+	
+
+
+		
+
+		<fieldset class="cbi-section-node" id="cbi-system-cfg02e48a">
+			
+
+
+	<div class="cbi-value" id="cbi-system-cfg02e48a-location"><label class="cbi-value-title" for="cbid.system.cfg02e48a.location">Location</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.system.cfg02e48a.location" id="cbid.system.cfg02e48a.location" value="" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.system.cfg02e48a.location', true, 'hostname');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Human-readable location, optionally used to generate hostname/SSID. No spaces or underscores.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-system-cfg02e48a-homepage"><label class="cbi-value-title" for="cbid.system.cfg02e48a.homepage">Homepage</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.system.cfg02e48a.homepage" id="cbid.system.cfg02e48a.homepage" value="http://commotionwireless.net" />
+	
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Homepage for this node or network, used in the splash screen.
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-system-cfg02e48a-latitude"><label class="cbi-value-title" for="cbid.system.cfg02e48a.latitude">Latitude</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.system.cfg02e48a.latitude" id="cbid.system.cfg02e48a.latitude" value="" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.system.cfg02e48a.latitude', true, 'float');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				e.g. 40.11143
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value" id="cbi-system-cfg02e48a-longitude"><label class="cbi-value-title" for="cbid.system.cfg02e48a.longitude">Longitude</label>
+		<div class="cbi-value-field">
+
+	<input type="text" class="cbi-input-text" onchange="cbi_d_update(this.id)" name="cbid.system.cfg02e48a.longitude" id="cbid.system.cfg02e48a.longitude" value="" />
+	
+	<script type="text/javascript">//<![CDATA[
+		
+		cbi_validate_field('cbid.system.cfg02e48a.longitude', true, 'float');
+	//]]></script>
+			<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				e.g. -88.20723
+			</div>
+</div></div>
+
+
+
+
+
+<div class="cbi-value cbi-value-last" id="cbi-system-cfg02e48a-latlon"><label class="cbi-value-title" for="cbid.system.cfg02e48a.latlon">Find your coordinates with OpenStreetMap</label>
+		<div class="cbi-value-field">
+
+
+		
+			
+				<input type="hidden"  value="cbid.system.cfg02e48a.latitude" id="cbid.system.cfg02e48a.latlon.latfield" name="cbid.system.cfg02e48a.latlon.latfield"/>
+				<input type="hidden"  value="cbid.system.cfg02e48a.longitude" id="cbid.system.cfg02e48a.latlon.lonfield" name="cbid.system.cfg02e48a.latlon.lonfield"/>
+			
+			<input type="hidden"  value="40" id="cbid.system.cfg02e48a.latlon.centerlat" name="cbid.system.cfg02e48a.latlon.centerlat"/>
+			<input type="hidden"  value="-88" id="cbid.system.cfg02e48a.latlon.centerlon" name="cbid.system.cfg02e48a.latlon.centerlon"/>
+			<input type="hidden"  value="4" id="cbid.system.cfg02e48a.latlon.zoom" name="cbid.system.cfg02e48a.latlon.zoom"/>
+		
+
+		
+			<input class="cbi-input-button" type="button" name="cbid.system.cfg02e48a.latlon.displayosm" id="cbid.system.cfg02e48a.latlon.displayosm" value="Show OpenStreetMap" 
+					onclick="
+						document.getElementById('cbid.system.cfg02e48a.latlon.hideosm').style.display='inline';
+						document.getElementById('cbid.system.cfg02e48a.latlon.displayosm').style.display='none';
+						for(var i = 0; Math.min(i, window.frames.length)!=window.frames.lengths; i++){
+							if(frames[i].name=='cbid.system.cfg02e48a.latlon.iframe'){								
+								document.getElementById('cbid.system.cfg02e48a.latlon.iframediv').style.display='block';
+								frames[i].location.href='/luci-static/resources/OSMLatLon.htm';
+							}
+                                                }
+					"
+			/>
+			<input class="cbi-input-button" style="display:none" type="button" name="cbid.system.cfg02e48a.latlon.hideosm" id="cbid.system.cfg02e48a.latlon.hideosm" value="Hide OpenStreetMap" 
+					onclick="
+						document.getElementById('cbid.system.cfg02e48a.latlon.displayosm').style.display='inline';
+						document.getElementById('cbid.system.cfg02e48a.latlon.hideosm').style.display='none';
+						document.getElementById('cbid.system.cfg02e48a.latlon.iframediv').style.display='none';
+					"
+			/>
+	</div>
+	<div class="cbi-value-osmiframesection" id="cbid.system.cfg02e48a.latlon.iframediv" style="display:none">
+			<iframe src=""  id="cbid.system.cfg02e48a.latlon.iframe" name="cbid.system.cfg02e48a.latlon.iframe" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+		
+
+		<br />
+			<div class="cbi-value-description">
+				<span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
+				Select your location with a mouse click on the map. The map will only show up if you are connected to the Internet.
+			</div>
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+		</fieldset>
+		<br />
+
+	
+
+	
+</fieldset>
+
+	<br />
+</div>
+	<div class="cbi-page-actions">
+		
+
+		
+		
+			<input class="cbi-button cbi-button-apply" type="submit" name="cbi.apply" value="Save &#38; Apply" />
+		
+		<input class="cbi-button cbi-button-save" type="submit" value="Save" />
+		<input class="cbi-button cbi-button-reset" type="reset" value="Reset" />
+
+		<script type="text/javascript">cbi_d_update();</script>
+	</div></form>
+
+<!-- Begin footer.htm -->
+   <footer><a href="http://luci.subsignal.org/">Powered by LuCI Trunk (trunk+svn8676)</a>
+
+    CommotionWRT Pre-Release PR3
+
+    
+     <ul class="breadcrumb pull-right" id="modemenu">
+	    
+		    <li><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/commotion/">Commotion</a> <span class="divider">|</span></li>
+	    
+		    <li class="active"><a href="/cgi-bin/luci/;stok=3663526e89ff937fda120ca15c18caaa/admin/">Administration</a> <span class="divider">|</span></li>
+	    
+     </ul>
+    
+   </footer>
+   </div>
+  </div>
+ </body>
+</html>
+
+
+

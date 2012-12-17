@@ -1,0 +1,85 @@
+/* Begin reset/Structural */
+html, body, div {
+	border: 0 none;
+	font: inherit;
+	margin: 0;
+	outline: 0 none;
+	padding: 0;
+	vertical-align: baseline;
+}
+body, p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset {
+    font: 13px/1.5 AsapRegular,Arial,sans-serif;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+article, aside, figure, footer, header, hgroup, section {
+    border: 0 none;
+    font: inherit;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    vertical-align: baseline;
+}
+/* End reset/Structural */
+
+/* Begin top color bars */
+#navbar-inners {
+	height:20px;
+	margin:0;
+	width:100%;
+	background-color: #877AED;
+}
+
+#navbar-inners div {
+	float: left;
+}
+
+.color0 {
+	background-color: #FE739B;
+	width: 5%;
+}
+
+.color1 {
+	background-color: #00FFCF;
+	width: 43.5%;
+}
+
+.color2 {
+	background-color: #C7BA38;
+	width: 3%;
+}
+
+.color3 {
+	background-color: #E8FF00;
+	width: 43%;
+}
+
+.color4 {
+	width: 5%;
+}
+
+/* End top color bars */
+/* Begin Branding */
+#region-branding {
+	height: 140px;
+	width: 250px;
+}
+
+#logo {
+ align: center;
+}
+/* End Branding */
+
+/* Begin header message */
+#zone-preface {
+	background-color: #000;
+	color: #fff;
+}
+/* End header message */
+
+/* Begin footer */
+#zone-footer {
+	background-color: #00FFCF;
+	color: #000;
+/* End footer */
