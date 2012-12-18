@@ -1,0 +1,14 @@
+<center><h2>Upload <%=file_type%></h2></center>
+<fieldset class="cbi-section">
+  <form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+  <div class="cbi-section-descr"> Upload <%=file_instructions%> </div>
+  <div class="cbi-section-node">
+	<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
+	  <div class="cbi-value-field">
+		<input type="file" name="file" id="media" />
+		<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px" />
+	  </div>
+	</div>
+  </div>
+</form>
+</fieldset>

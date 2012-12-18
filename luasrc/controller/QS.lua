@@ -32,7 +32,7 @@ function index()
 	entry({"QS", "error"}, call("error")).dependent=false
 	entry({"QS", "connectedNodes"}, call("connected_nodes")).dependent=false
 	entry({"QS", "wait4Reset"}, call("wait_4_reset")).dependent=false
-	entry({"QS", "uploadConfig"}, call("upload_config")).dependent=false
+	entry({"QS", "uploadConfig"}, call("upload_file")).dependent=false
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 end
 
@@ -131,4 +131,30 @@ function mesh_defaults()
 		--send list of items to the template for parsing
 		luci.template.render("QS/QS_chosenMeshDefault_main", {list_items=list_items, network=network})
 		
+end
+
+function upload_file()
+   local sys = require "luci.sys"
+   local fs = require "luci.fs"
+   local tmp_file = "/tmp/"
+   local access = nixio.fs.access("/tmp/")
+   -- causes media files to be uploaded to their namesake in the /tmp/ dir.
+   local fp
+   luci.http.setfilehandler(
+	  function(meta, chunk, eof)
+		 if not fp then
+			if meta and meta.name == "file" then
+			   fp = io.open(tmp_file .. meta.file, "w")
+			end
+		 end
+		 if chunk then
+			fp:write(chunk)
+		 end
+		 if eof then
+			fp:close()
+		 end
+		 end
+						   )
+						   
+   luci.template.render("QS/QS_uploadConfig_main", {access=access})
 end
