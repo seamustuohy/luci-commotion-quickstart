@@ -1,0 +1,17 @@
+<%+header%>
+<%-
+   topheader="Upload Your Custom Configuration Here"
+   subheading="Choose a file from your computer to upload to the node."
+
+   buttons={
+           { text="Continue with this Configuration", icon="x", action="wait4Reset"},
+           { text="Start Over", icon="arrow", action="welcomeMain"}
+   }
+
+-%>
+
+<%= include("commotion/QS/module/QS_infoBanner") %>
+<%= include("commotion/QS/module/QS_upload") %>
+<%= include("commotion/QS/module/QS_buttons") %>
+
+<%+footer%>

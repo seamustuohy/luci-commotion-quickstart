@@ -1,0 +1,18 @@
+<%+header%>
+<%-
+   topheader="There was an error in our software"
+   subheading=error_value
+
+   buttons={
+           { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
+           { text=("Customize" .. error_name), icon="diamond", action="uci"},
+           { text="Save and Report This Bug", icon="arrow", action="bugReport"}
+   }
+
+-%>
+
+<%= include("commotion/QS/module/QS_infoBanner") %>
+<%= include("commotion/QS/module/QS_errorMessage") %>
+<%= include("commotion/QS/module/QS_buttons") %>
+
+<%+footer%>
