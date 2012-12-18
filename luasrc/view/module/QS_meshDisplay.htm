@@ -3,8 +3,9 @@
 <%-
    for _,x in ipairs(networks) do
        name = x.name
-       config = w.config   
+       config = x.config   
    -%>
 <li class="<%=config%>"><%=name%></li>
 
 <%end%>
+</ul>
