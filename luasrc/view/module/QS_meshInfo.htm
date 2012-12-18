@@ -1,0 +1,55 @@
+<div>
+<%-
+   for _,x in ipairs(list_items) do
+       if x[1] == "gateway_sharing" then
+           gateway_sharing=x[2]
+       elseif x[1] == "app_sharing" then
+           app_sharing=x[2]
+       elseif x[1] == "network_key" then
+           network_key=x[2]
+       elseif x[1] == "security_counter" then
+           security_counter=x[2]
+       end
+   end
+
+   if network_key ~= true then
+       net_key_title = "Requires A Network Key"
+       net_key_help = "This network requires a network password for new nodes"
+       --need to make upload use same backend but load different frontends when done.
+       net_key_subsection = "QS/module/QS_upload"
+   else
+       net_key_title = "Does NOT Require a Network Key"
+       net_key_help = "This network does NOT require a network password for new nodes"
+       net_key_subsection = "QS/module/null"
+   end
+
+   if gate_share == true then
+       --We need to implement a check on the daemon to see if it can connect to the internet
+       gate_share_title = "Shares Gateway Connectivity"
+       gate_share_help = "This network has users currently sharing their access to the Internet"
+   else
+       gate_share_title = "Does NOT share Gateway Connectivity"
+       gate_share_help = "This network does NOT currently have access to the Internet"
+   end
+
+   if app_share == true then
+       --We need to do an MDNS check for this process
+       app_share_title = "Has Local Applications Running"
+       app_share_help = "This network currently has local applications running on it"
+   else
+       app_share_title = "Does NOT Require a Network Key"
+       app_share_help = "This network currently does NOT have local applications running on it"
+   end
+   
+   -%>
+
+<h3><%=net_key_title%></h3>
+<%=net_key_help%>
+<%include(net_key_subsection)%>
+
+<h3><%=gate_share_title%></h3>
+<%=gate_share_help%>
+<h3><%=app_share_title%></h3>
+<%=app_share_help%>
+
+</div>
