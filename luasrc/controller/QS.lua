@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
-module("luci.controller.commotion.QS.QS_button", package.seeall)
+module("luci.controller.QS.QS", package.seeall)
 
 
 function index()
@@ -26,11 +26,15 @@ function index()
 
 	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
 	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main"), "Quick Start").dependent=false
-	entry({"QS", "nearbyMesh"}, call(find_nearby)).dependent=false
-	entry({"QS", "sharingPrefs"}, call(sharing_options)).dependent=false
-	entry({"QS", "chosenMeshDefault"}, call(mesh_defaults)).dependent=false
+	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
+	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
+	entry({"QS", "chosenMeshDefault"}, call("mesh_defaults")).dependent=false
+	entry({"QS", "error"}, call("error")).dependent=false
+	entry({"QS", "connectedNodes"}, call("connected_nodes")).dependent=false
+	entry({"QS", "wait4Reset"}, call("wait_4_reset")).dependent=false
+	entry({"QS", "uploadConfig"}, call("upload_config")).dependent=false
+	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 end
-
 
 function load_main()
 		 luci.template.render("QS/QS_error_main", {errorType=header, errorMsg=errorMsg,})
@@ -57,7 +61,8 @@ function sharing_options()
 		 --the place where sharing options are parsed from
 
 		 local share_service = {
-		 	   { name="access point", help_name="Public Access Point:", help_text="These access points have no password and allow any wifi enabled user to use your node to access the network", description="This is a description of stuff"}
+		 	   { name="access point", help_name="Public Access Point:", help_text="These access points have no password and allow any wifi enabled user to use your node to access the network", description="This is a description of stuff"},
+			   }
 			   
 		luci.template.render("QS/QS_sharingPrefs_main", {share_service=share_service})
 end
