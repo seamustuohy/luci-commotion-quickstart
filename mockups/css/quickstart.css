@@ -61,7 +61,10 @@ article, aside, figure, footer, header, hgroup, section {
 
 /* End top color bars */
 /* Begin Branding */
+#zone-menu-wrapper {}
 #region-branding {
+	margin-left:auto;
+	margin-right:auto;
 	height: 140px;
 	width: 250px;
 }
@@ -72,14 +75,61 @@ article, aside, figure, footer, header, hgroup, section {
 /* End Branding */
 
 /* Begin header message */
-#zone-preface {
+#zone-preface-wrapper {
 	background-color: #000;
 	color: #fff;
+	min-height: 100px;
+}
+#zone-preface {
+	padding: 20px 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	background-color: #000;
+	color: #fff;
+	vertical-align: baseline;
+	text-align: center;
+}
+
+#zone-preface hr {
+	background-color: #FF739C;
+	color: #FF739C;
+	margin: 0 auto 20px;
+	max-width: 460px;
 }
 /* End header message */
 
+/* Begin main body */
+#zone-content-wrapper {
+	min-height: 100px;
+}
+#zone-content {
+	padding: 20px 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	vertical-align: baseline;
+	text-align: center;
+}
+/* End main body */
+
 /* Begin footer */
-#zone-footer {
+#zone-footer-wrapper {
 	background-color: #00FFCF;
 	color: #000;
+	min-height: 100px;
+}
+#zone-footer {
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #00FFCF;
+	color: #000;
+	padding: 20px 20px;
+}
+
+#zone-footer img.button {
+	width: 50px;
+	height: 50px;
+}
 /* End footer */
