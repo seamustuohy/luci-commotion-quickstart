@@ -153,8 +153,7 @@ function upload_file()
 		 if eof then
 			fp:close()
 		 end
-		 end
-						   )
-						   
+	end)
+
    luci.template.render("QS/QS_uploadConfig_main", {access=access})
 end
