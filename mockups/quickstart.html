@@ -8,18 +8,24 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Add mandatory header content -->
 		<meta charset="utf-8" />
+		<!-- Are the favicon and stylesheet paths static or dynamic? -->
 		<link type="image/png" href="images/favicon.ico" rel="shortcut icon" />
 		<link rel="stylesheet" href="css/quickstart.css" type="text/css" />
 		<!--script src="#" type="text/javascript"-->
-		<title>Quickstart Mockup | %node%</title>
+		<!-- NEED: page title var in each page to be used in title and h1 -->
+		<title>%=PageTitle% | %=node%</title>
 	</head>
 	<body>
-	<!--<% include("QS/module/QS_logoInfoBanner") %>
-<% include("QS/module/QS_bigButton") %>
--->
 		<div id="page">
+	  <!-- End header call -->
+
+	  <!-- Begin main function calls -->
+
+	<!-- <% include("QS/module/QS_logoInfoBanner") %> -->
+<!---
+		Seems like there should be a way to make this an include from infoBanner
+				-->
 			<header>
 				<!-- top level navigational elements -->
 				<div id="navbar-inners">
@@ -29,7 +35,6 @@
 					<div class="color3"></div>
 					<div class="color4"></div>
 				</div>
-				<!-- h1 functionally identical to title -->
 				<div id="zone-menu-wrapper">
 					<div id="region-branding">
 						<img id="logo" alt="Commotion Wireless Project logo" src="images/commotion_kbabout_measure-03.png" />
@@ -38,13 +43,15 @@
 				<div id="zone-preface-wrapper">
 					<div id="zone-preface">
 						<hr />
-						<h1>Quickstart Mockup</h1>
+						<!-- h1 functionally identical to title for accessibility -->
+						<h1>%=PageTitle%</h1>
 						<!-- Rest of header content -->
-						<p>Welcome! You are only 10 minutes away from having your node set up.</p>
+						<h2>Welcome!</h2>
+						<p>You are only 10 minutes away from having your node set up.</p>
 					</div>
 				</div>
 			</header>
-
+<!-- <% include("QS/module/QS_bigButton") %> -->
 			<div id="zone-content-wrapper">
 				<div id="zone-content">
 					<!-- inline styles are placeholders only -->
@@ -58,7 +65,6 @@
 -->
 			<div id="zone-footer-wrapper">
 				<div id="zone-footer">
-<!--				  <a href="/cgi-bin/luci/QS/<%=action%>"><%=text%></a>-->
 						<div class="button-wrapper">
 						<a href="#">
 							<figure>
