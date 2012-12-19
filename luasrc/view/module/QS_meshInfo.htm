@@ -11,7 +11,17 @@
            security_counter=x[2]
        end
    end
-
+   if security_counter == 0 then
+       sec_msg = "This network is insecure"
+   elseif security_counter == 2 then
+       sec_msg = "This network is somewhat secure"   
+   elseif security_counter == 4 then
+       sec_msg = "This network is moderately secure"
+   elseif security_counter == 6 then
+       sec_msg = "This network is secure against casual attackers"
+   elseif security_counter == 8 then
+          sec_msg = "This network has adequate security for most needs"
+   end
    if network_key ~= true then
        net_key_title = "Requires A Network Key"
        net_key_help = "This network requires a network password for new nodes"
@@ -42,14 +52,14 @@
    end
    
    -%>
-
-<h3><%=net_key_title%></h3>
+<ul>
+<li><h3><%=sec_msg%></h3></li>
+<li><h3><%=net_key_title%></h3></li>
 <%=net_key_help%>
 <%include(net_key_subsection)%>
-
-<h3><%=gate_share_title%></h3>
+<li><h3><%=gate_share_title%></h3></li>
 <%=gate_share_help%>
-<h3><%=app_share_title%></h3>
+<li><h3><%=app_share_title%></h3></li>
 <%=app_share_help%>
-
+</ul>
 </div>

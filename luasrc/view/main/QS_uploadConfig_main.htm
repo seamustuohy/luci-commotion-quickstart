@@ -8,7 +8,7 @@
    
    buttons={
            { text="Continue with this Configuration", icon="x", action="wait4Reset"},
-           { text="Start Over", icon="arrow", action="welcomeMain"}
+           { text="Start Over", icon="arrow", action="welcome"}
    }
 
 -%>
@@ -19,6 +19,7 @@ Why does the uploader not work? With permissions like <%=access%> it should be w
 "testing = <%=testing%> "
 "testing2 = <%=testing2%> "
 "testing3 = <%=testing3%> "
+<center><h3>Upload <%=file_type%></h3></center>
 <%= include("QS/module/QS_upload") %>
 <%= include("QS/module/QS_buttons") %>
 
