@@ -1,0 +1,101 @@
+				<!--<%+header%>
+<%-
+   topheader="Welcome"
+   subheading="You are only 10 minutes away from having a node set up."
+   bigButtonText="Click Here to Start"
+   bigButtonImage="plus.png"
+-%>-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<!-- Are the favicon and stylesheet paths static or dynamic? -->
+		<link type="image/png" href="images/favicon.ico" rel="shortcut icon" />
+		<link rel="stylesheet" href="css/quickstart.css" type="text/css" />
+		<!--script src="#" type="text/javascript"-->
+		<!-- NEED: page title var in each page to be used in title and h1 -->
+		<title>%=PageTitle% | %=node%</title>
+	</head>
+	<body>
+		<div id="page">
+	  <!-- End header call -->
+
+	  <!-- Begin main function calls -->
+
+	<!-- <% include("QS/module/QS_logoInfoBanner") %> -->
+<!---
+		Seems like there should be a way to make this an include from infoBanner
+				-->
+			<header>
+				<!-- top level navigational elements -->
+				<div class="navbar-inners">
+					<div class="color0"></div>
+					<div class="color1"></div>
+					<div class="color2"></div>
+					<div class="color3"></div>
+					<div class="color4"></div>
+				</div>
+				<div id="zone-menu-wrapper">
+					<div id="region-branding">
+						<img id="logo" alt="Commotion Wireless Project logo" src="images/commotion_kbabout_measure-03.png" />
+					</div>
+				</div>
+				<div id="zone-preface-wrapper">
+					<div id="zone-preface">
+						<hr />
+						<!-- h1 functionally identical to title for accessibility -->
+						<h1>%=PageTitle%</h1>
+						<!-- Rest of header content -->
+						<h2>Welcome!</h2>
+						<p>You are only 10 minutes away from having your node set up.</p>
+					</div>
+				</div>
+			</header>
+<!-- <% include("QS/module/QS_bigButton") %> -->
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<!-- replace action, action alt text -->
+					<a href="%=action%" class="bigButton">
+						<figure>
+							<img src="images/bigstart.png" alt="Click to begin configuration" class="bigButton" />
+							<figcaption>Click to begin configuration</figcaption>
+						</figure>
+					</a>
+				</div>
+			</div>
+
+<!--
+<%+footer%>
+-->
+			<div id="zone-footer-wrapper">
+				<div id="zone-footer">
+						<div class="button-wrapper">
+						<a href="#">
+							<figure>
+								<img src="images/target.png" alt="Advanced Config Button" class="button" />
+								<figcaption>Advanced Config</figcaption>
+							</figure>
+						</a>
+						<a href="#">
+							<figure>
+								<img src="images/greendot.png" alt="Help Button" class="button" />
+								<figcaption>Help</figcaption>
+							</figure>
+						</a>
+						<a href="#">
+							<figure>
+								<img src="images/equal.png" alt="Admin Menu Button" class="button" />
+								<figcaption>Admin Menu</figcaption>
+							</figure>
+						</a>
+						<a href="#">
+							<figure>
+								<img src="images/quit.png" alt="Quit Quickstart Wizard Button" class="button" />
+								<figcaption>Quit</figcaption>
+							</figure>
+						</a>
+						</div>
+				</div>
+			</div>
+	</body>
+</html>

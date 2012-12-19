@@ -1,7 +1,0 @@
-<center>
-<div id="button">INSERT BUTTON IMAGES HERE!!!!!!!!!!!!!
-</div>
-<div id="buttonText">
-<%=bigButtonText%>
-</div>
-</center>

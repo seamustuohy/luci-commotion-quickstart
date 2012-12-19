@@ -1,0 +1,171 @@
+/* Begin reset/Structural */
+html, body, div {
+	border: 0 none;
+	font: inherit;
+	margin: 0;
+	outline: 0 none;
+	padding: 0;
+	vertical-align: baseline;
+}
+body, p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset {
+    font: 13px/1.5 AsapRegular,Arial,sans-serif;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+article, aside, figure, footer, header, hgroup, section {
+    border: 0 none;
+    font: inherit;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    vertical-align: baseline;
+}
+/* End reset/Structural */
+
+/* Begin top color bars */
+.navbar-inners {
+	height:20px;
+	margin:0;
+	width:100%;
+	background-color: #877AED;
+}
+
+.navbar-inners div {
+	height: 20px;
+	margin: 0;
+	display: block;
+	float: left;
+}
+
+.color0 {
+	background-color: #FE739B;
+	width: 5%;
+}
+
+.color1 {
+	background-color: #00FFCF;
+	width: 43.5%;
+}
+
+.color2 {
+	background-color: #C7BA38;
+	width: 3%;
+}
+
+.color3 {
+	background-color: #E8FF00;
+	width: 43%;
+}
+
+.color4 {
+	width: 5%;
+}
+
+/* End top color bars */
+/* Begin Branding */
+#zone-menu-wrapper {}
+#region-branding {
+	margin-left:auto;
+	margin-right:auto;
+	height: 140px;
+	width: 250px;
+}
+
+#logo {
+ align: center;
+}
+/* End Branding */
+
+/* Begin header message */
+#zone-preface-wrapper {
+	background-color: #000;
+	color: #fff;
+	min-height: 100px;
+}
+#zone-preface {
+	padding: 20px 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	background-color: #000;
+	color: #fff;
+	vertical-align: baseline;
+	text-align: center;
+}
+
+#zone-preface hr {
+	background-color: #FF739C;
+	color: #FF739C;
+	margin: 0 auto 20px;
+	max-width: 460px;
+}
+/* End header message */
+
+/* Begin main body */
+#zone-content-wrapper {
+	min-height: 100px;
+}
+
+#zone-content {
+	padding: 20px 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	vertical-align: baseline;
+	text-align: center;
+}
+
+.bigButton {
+	width: 50px;
+	height: 50px;
+	text-decoration: none;
+	color: #000;
+	/* May need to define width */
+}
+
+/* End main body */
+
+/* Begin footer */
+#zone-footer-wrapper {
+	background-color: #00FFCF;
+	color: #000;
+	min-height: 100px;
+}
+#zone-footer {
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #00FFCF;
+	color: #000;
+	padding: 20px 20px;
+}
+
+.button-wrapper {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 350px;
+}
+
+#zone-footer figure {
+	margin: 10px;
+	width: 60px;
+	display: inline-block;
+	white-space: normal;
+	vertical-align: top;
+}
+
+#zone-footer img.button {
+	width: 34px;
+	height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#zone-footer a {
+	color:#000;
+	text-align: center;
+}
+/* End footer */
