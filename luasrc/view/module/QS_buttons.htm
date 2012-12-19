@@ -1,4 +1,4 @@
-<div>
+  <div class="button-wrapper">
   <%-
   for i,x in ipairs(buttons) do
       text = x.text
@@ -6,9 +6,12 @@
 	  action = x.action
      -%>
   
-  <%=icon%>
-  <a href="/cgi-bin/luci/QS/<%=action%>"><%=text%></a>
-  
+	<a href="/cgi-bin/luci/QS/<%=action%>">
+	  <figure>
+		<img src="<%=media%>/QS/images/<%=icon%>m.png" alt="<%=text%> Button" class="button" />
+		<figcaption><%=text%></figcaption>
+	  </figure>
+	</a>
 
   <%end%>
 </div>

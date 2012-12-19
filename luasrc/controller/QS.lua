@@ -20,20 +20,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 module("luci.controller.QS.QS", package.seeall)
 
 
+require "luci.model.uci"
+
 function index()
 	--each page gets an entry that either calls a template or a function
 	--any function call needs a template call at the end of the function
 
+	entry({"QS", "start"}, call("start"), "Quick Start").dependent=false
 	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
-	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main"), "Quick Start").dependent=false
+	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main")).dependent=false
 	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
 	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
 	entry({"QS", "chosenMeshDefault"}, call("mesh_defaults")).dependent=false
 	entry({"QS", "error"}, call("error")).dependent=false
 	entry({"QS", "connectedNodes"}, call("connected_nodes")).dependent=false
-	entry({"QS", "wait4Reset"}, call("wait_4_reset")).dependent=false
-	entry({"QS", "uploadConfig"}, call("upload_file")).dependent=false
+	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
+
+	--Reset Options require a page to be passed so that it knows where to go after reboot.
+	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chosenMeshDefault")).dependent=false
+
+
+	--template page to change the start page
+    --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
+
+	--a testing function TO BE REMOVED BEFORE DEPLOYMENT
+	--entry({"QS", "test"}, call("start", "QS_basicInfo_main")).dependent=false
+end
+
+
+function test(x)
+		 test =x
+		 luci.template.render("QS/test", {test=test})
+end
+
+function start(x)
+	local uci = luci.model.uci.cursor()
+         local startPage = ''
+  	  	 if x then
+		 	uci:set('quickstart', 'options', 'startpage', x)
+		 	uci:save('quickstart')
+		    uci:commit('quickstart')
+			startPage = x
+		 else
+			startPage = uci:get('quickstart', 'options', 'startpage')
+			luci.http.redirect(startPage)
+		 end
 end
 
 function load_main()
@@ -54,7 +86,7 @@ function find_nearby()
 		 	   { name="Viva la' Revolution", config="true"},
 		}
 		
-		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks})
+		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks, test=test})
 end
 
 function sharing_options()
@@ -133,18 +165,22 @@ function mesh_defaults()
 		
 end
 
-function upload_file()
+function upload_file(page)
    local sys = require "luci.sys"
    local fs = require "luci.fs"
-   local tmp_file = "/tmp/"
+   local tmp = "/tmp/"
    local access = nixio.fs.access("/tmp/")
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
    luci.http.setfilehandler(
 	  function(meta, chunk, eof)
 		 if not fp then
-			if meta and meta.name == "file" then
-			   fp = io.open(tmp_file .. meta.file, "w")
+			if meta and meta.name == "config" then
+			   fp = io.open(tmp .. meta.file, "w")
+			   --DO SOMETHING WITH CONFIG HERE
+			elseif meta and meta.name == "key" then
+			   fp = io.open(tmp .. meta.file, "w")
+			   --DO SOMETHING WITH KEY HERE
 			end
 		 end
 		 if chunk then
@@ -154,15 +190,15 @@ function upload_file()
 			fp:close()
 		 end
 	end)
-
-   luci.template.render("QS/QS_uploadConfig_main", {access=access})
+	
+   luci.template.render("QS/" .. page, {access=access})
 end
 
 
-function wait_4_reset()
+function wait_4_reset(next)
 		 -- NIODE AP UNIQUE
-		 -- PASS THE NEXT STEP
-timer = 120
-	luci.template.render("QS/QS_uploadConfig_main", {timer=timer})
+	start(next)
+	timer = 120
+	luci.template.render("QS/QS_wait4reset_main", {timer=timer, AP=AP})
 	luci.sys.reboot()
 end

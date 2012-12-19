@@ -1,0 +1,2 @@
+config quickstart options
+	   option startpage 'QS_welcome_main'

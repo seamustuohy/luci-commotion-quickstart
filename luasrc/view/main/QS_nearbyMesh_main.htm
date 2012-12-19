@@ -1,4 +1,3 @@
-<%+header%>
 <%-
    topheader="Here are the nearby networks."
    subheading="Click on a network to make a compatible node."
@@ -6,13 +5,13 @@
    buttons={
            { text="Upload a Config", icon="arrow", action="uploadConfig"},
            { text="Create New Network", icon="plus", action="newNetwork"},
-           { text="Use A Pre-Built Config", icon="bullseye", action="chooseConfig"}
+           { text="Use A Pre-Built Config", icon="target", action="chooseConfig"}
    }
    
 -%>
-
+<% include("QS/module/QS_header") %>
 <%= include("QS/module/QS_infoBanner") %>
 <%= include("QS/module/QS_meshDisplay") %>
 <%= include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
 
-<%+footer%>

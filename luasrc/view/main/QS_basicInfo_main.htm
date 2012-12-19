@@ -1,13 +1,14 @@
-<%+header%>
 <%-
    topheader="While we search for nearby networks..."
    subheading="Give us some basic info about your node."
+   PageTitle="While we search..."
    buttons={ { text="continue", icon="plus", action="nearbyMesh"} }
    UCI={node_name, password} 
 -%>
-
+<% include("QS/module/QS_header") %>
 <% include("QS/module/QS_infoBanner") %>
+NEED UCI INFO 
 <!--<% include("QS/module/QS_UCI") %>-->
 <% include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
 
-<%+footer%>

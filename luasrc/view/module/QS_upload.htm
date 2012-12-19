@@ -2,7 +2,7 @@
   <div class="cbi-section-node">
 	<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
 	  <div class="cbi-value-field">
-		<input type="file" name="file" id="media" />
+		<input type="file" name="<%=uploadType%>" id="media" />
 		<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px"/>
 		  <div class="cbi-section-descr"> Upload <%=file_instructions%> </div>
 	  </div>
