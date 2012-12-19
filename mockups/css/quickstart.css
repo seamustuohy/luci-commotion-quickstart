@@ -24,14 +24,17 @@ article, aside, figure, footer, header, hgroup, section {
 /* End reset/Structural */
 
 /* Begin top color bars */
-#navbar-inners {
+.navbar-inners {
 	height:20px;
 	margin:0;
 	width:100%;
 	background-color: #877AED;
 }
 
-#navbar-inners div {
+.navbar-inners div {
+	height: 20px;
+	margin: 0;
+	display: block;
 	float: left;
 }
 
@@ -103,6 +106,7 @@ article, aside, figure, footer, header, hgroup, section {
 #zone-content-wrapper {
 	min-height: 100px;
 }
+
 #zone-content {
 	padding: 20px 10px;
 	margin-left: auto;
@@ -111,6 +115,15 @@ article, aside, figure, footer, header, hgroup, section {
 	vertical-align: baseline;
 	text-align: center;
 }
+
+.bigButton {
+	width: 50px;
+	height: 50px;
+	text-decoration: none;
+	color: #000;
+	/* May need to define width */
+}
+
 /* End main body */
 
 /* Begin footer */

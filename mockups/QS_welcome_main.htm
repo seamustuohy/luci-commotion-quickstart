@@ -28,7 +28,7 @@
 				-->
 			<header>
 				<!-- top level navigational elements -->
-				<div id="navbar-inners">
+				<div class="navbar-inners">
 					<div class="color0"></div>
 					<div class="color1"></div>
 					<div class="color2"></div>
@@ -54,9 +54,13 @@
 <!-- <% include("QS/module/QS_bigButton") %> -->
 			<div id="zone-content-wrapper">
 				<div id="zone-content">
-					<!-- inline styles are placeholders only -->
-					<img src="#" alt="action button" class="button" width="50" height="50" />
-					<p>Click here to start</p>
+					<!-- replace action, action alt text -->
+					<a href="%=action%" class="bigButton">
+						<figure>
+							<img src="images/bigstart.png" alt="Click to begin configuration" class="bigButton" />
+							<figcaption>Click to begin configuration</figcaption>
+						</figure>
+					</a>
 				</div>
 			</div>
 
