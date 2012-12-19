@@ -1,21 +1,13 @@
-<center>
-<div id="button">INSERT BUTTON IMAGES HERE!!!!!!!!!!!!!
-</div>
-<div id="buttonText">
-<%=bigButtonText%>
-</div>
-</center>
-
-----
-			<div id="zone-content-wrapper">
+<center>			<div id="zone-content-wrapper">
 				<div id="zone-content">
 					<!-- replace action, action alt text -->
-					<a href="%=action%" class="bigButton">
+					<a href="/cgi-bin/luci/QS/<%=bigButtonAction%>" class="bigButton">
 						<figure>
-							<img src="%=path%/images/bigstart.png" alt="Click to begin configuration" class="bigButton" />
+							<img src="<%=media%>/QS/images/bigstart.png" alt="Click to begin configuration" class="bigButton" />
 							<figcaption><%=bigButtonText%></figcaption>
 							<!--<figcaption>Click here to start</figcaption>-->
 						</figure>
 					</a>
 				</div>
 			</div>
+</center>

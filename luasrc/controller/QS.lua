@@ -160,7 +160,9 @@ end
 
 
 function wait_4_reset()
-    timer = 120
+		 -- NIODE AP UNIQUE
+		 -- PASS THE NEXT STEP
+timer = 120
 	luci.template.render("QS/QS_uploadConfig_main", {timer=timer})
 	luci.sys.reboot()
 end
