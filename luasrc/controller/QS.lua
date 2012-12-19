@@ -38,7 +38,7 @@ function index()
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 
 	--Reset Options require a page to be passed so that it knows where to go after reboot.
-	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chosenMeshDefault")).dependent=false
+	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chossenMeshDefault")).dependent=false
 
 
 	--template page to change the start page
@@ -48,11 +48,17 @@ function index()
 	--entry({"QS", "test"}, call("start", "QS_basicInfo_main")).dependent=false
 end
 
-
+-- TO BE TAKEN OUT BEFORE DEPLOYMENT
 function test(x)
 		 test =x
 		 luci.template.render("QS/test", {test=test})
 end
+
+function log(msg)
+        luci.sys.exec("logger -t luci " .. msg)
+end
+--REMOVE ALL OF THE ABOVE BEFORE DEPLOYMENT OR FACE MY WRATH
+
 
 function start(x)
 	local uci = luci.model.uci.cursor()
@@ -170,6 +176,7 @@ function upload_file(page)
    local fs = require "luci.fs"
    local tmp = "/tmp/"
    local access = nixio.fs.access("/tmp/")
+   local file = luci.http.formvalue("file")
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
    luci.http.setfilehandler(
@@ -191,14 +198,46 @@ function upload_file(page)
 		 end
 	end)
 	
+	
    luci.template.render("QS/" .. page, {access=access})
 end
 
 
 function wait_4_reset(next)
-		 -- NIODE AP UNIQUE
+
+	--make the node name unique for restart
+	local name = uci:get('quickstart', 'options', 'startpage')
+	UName = name .. "_" .. luci.sys.uniqueid(5)
+
+	--This part may be complete gibberish that does not work
+	uci:foreach("wireless", "wifi-face",
+   		function(s) 
+			if s.mode == ap then
+			--This is where it would break, can I just modify the object s to modify the UCI section
+	   	  	   s.ssid = UName
+    end end)
+	uci:save('wireless')
+	uci:commit('wireless')
+
+	
+	--set the new start page
 	start(next)
 	timer = 120
 	luci.template.render("QS/QS_wait4reset_main", {timer=timer, AP=AP})
 	luci.sys.reboot()
+end
+
+
+function start(x)
+	local uci = luci.model.uci.cursor()
+         local startPage = ''
+  	  	 if x then
+		 	uci:set('quickstart', 'options', 'startpage', x)
+		 	uci:save('quickstart')
+		    uci:commit('quickstart')
+			startPage = x
+		 else
+			startPage = uci:get('quickstart', 'options', 'startpage')
+			luci.http.redirect(startPage)
+		 end
 end

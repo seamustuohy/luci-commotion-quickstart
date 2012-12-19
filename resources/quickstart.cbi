@@ -1,2 +1,3 @@
 config quickstart options
+	   option name 'my_node'
 	   option startpage 'QS_welcome_main'
