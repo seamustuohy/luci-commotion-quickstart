@@ -1,8 +1,7 @@
-<%+header%>
 <%-
    topheader=("You have chosen " .. network)
    subheading="This Network..."
-
+   PageTitle="Network Configuration"
    buttons={
            { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
            { text="Continue With This Network", icon="plus", action="tryNetwork"},
@@ -11,9 +10,9 @@
 
 --list_items is the list of values. list_items[1] = {"name", value}, etc.    
 -%>
-
+<% include("QS/module/QS_header") %>
 <%= include("QS/module/QS_infoBanner") %>
 <%= include("QS/module/QS_meshInfo") %>
 <%= include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
 
-<%+footer%>

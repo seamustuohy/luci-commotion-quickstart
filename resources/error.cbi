@@ -1,0 +1,5 @@
+config errorNo 666
+	   option errorMsg "OLSRd could not start"
+	   option errorLoc "OLSRd"
+	   option errorDesc "This probobly means taht there is an error in your OLSR configurations. Talk to another node owner to compare your configuration with theirs."
+	   option errorNo "666"

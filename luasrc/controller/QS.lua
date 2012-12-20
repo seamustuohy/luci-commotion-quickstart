@@ -32,26 +32,25 @@ function index()
 	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
 	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
 	entry({"QS", "chosenMeshDefault"}, call("mesh_defaults")).dependent=false
-	entry({"QS", "error"}, call("error")).dependent=false
 	entry({"QS", "connectedNodes"}, call("connected_nodes")).dependent=false
 	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
-
+	entry({"QS", "downloader"}, call("download_file")).dependent=false
+	
 	--Reset Options require a page to be passed so that it knows where to go after reboot.
-	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chossenMeshDefault")).dependent=false
+	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chosenMeshDefault")).dependent=false
 
 
 	--template page to change the start page
     --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
 
 	--a testing function TO BE REMOVED BEFORE DEPLOYMENT
-	--entry({"QS", "test"}, call("start", "QS_basicInfo_main")).dependent=false
+	entry({"QS", "test"}, call("test")).dependent=false
 end
 
--- TO BE TAKEN OUT BEFORE DEPLOYMENT
-function test(x)
-		 test =x
-		 luci.template.render("QS/test", {test=test})
+--TODO  TO BE TAKEN OUT BEFORE DEPLOYMENT
+function test()
+		 error("666")
 end
 
 function log(msg)
@@ -59,6 +58,19 @@ function log(msg)
 end
 --REMOVE ALL OF THE ABOVE BEFORE DEPLOYMENT OR FACE MY WRATH
 
+function download_file()
+local result = luci.http.formvalue
+		 if  result("error") then
+		 	 file = result("error")
+		elseif result("config") then
+		 	 file = result("config")
+		elseif result("download") then
+			 --actually download the file here on button action!
+		end
+		-- Could you name the file object contents? Then I can just pipe it through my render. :)
+		
+	luci.template.render("QS/QS_downloader_main", {contents=contents})
+end
 
 function start(x)
 	local uci = luci.model.uci.cursor()
@@ -74,12 +86,18 @@ function start(x)
 		 end
 end
 
-function load_main()
-		 luci.template.render("QS/QS_error_main", {errorType=header, errorMsg=errorMsg,})
+function error(errorNo)
+--This should be called when the daemon returns a error, and passed the error number
+	local uci = luci.model.uci.cursor()
+	errorMsg = uci:get('errorman', errorNo, 'errorMsg')
+	errorLoc = uci:get('errorman', errorNo, 'errorLoc')
+	errorDesc = uci:get('errorman', errorNo, 'errorDesc')
+	errorNo = uci:get('errorman', errorNo, 'errorNo')
+	luci.template.render("QS/QS_errorPage_main", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
 end
 
 function find_nearby()
-		 --this would eventually call the daemon. For now we just send some falsified data over.
+		 --TODO : this would eventually call the daemon. For now we just send some falsified data over.
 
 		 local networks = {
 		 	   { name="Commotion", config="true"},
@@ -96,7 +114,7 @@ function find_nearby()
 end
 
 function sharing_options()
-		 --the place where sharing options are parsed from
+		 --TODO: the place where sharing options are parsed from
 
 		 local share_service = {
 		 	   { name="access point", help_name="Public Access Point:", help_text="These access points have no password and allow any wifi enabled user to use your node to access the network", description="This is a description of stuff"},
@@ -121,7 +139,10 @@ function switch(t,x,y)
 end
 
 function mesh_defaults()
-		 --Later this will parse text from each config file and then use that data against a set of values here to create a "network defaults" info page.
+		 -- This value is the name of the network to be passed to the daemon later to grab configs, etc.
+		 config = luci.http.formvalue("config")
+
+--TODO Later this will parse text from each config file and then use that data against a set of values here to create a "network defaults" info page.
 		 
 		 local security_counter = 0
 		 local list_items = {}
@@ -198,46 +219,32 @@ function upload_file(page)
 		 end
 	end)
 	
-	
    luci.template.render("QS/" .. page, {access=access})
 end
 
-
 function wait_4_reset(next)
-
+	local uci = luci.model.uci.cursor()
 	--make the node name unique for restart
-	local name = uci:get('quickstart', 'options', 'startpage')
-	UName = name .. "_" .. luci.sys.uniqueid(5)
+	local name = uci:get('quickstart', 'options', 'name')
 
-	--This part may be complete gibberish that does not work
-	uci:foreach("wireless", "wifi-face",
-   		function(s) 
-			if s.mode == ap then
+	--TODO change wireless1 to become wireless
+	--TODO Test this part which may be complete gibberish that does not work on a node with wireless
+	--UName = name .. "_" .. luci.sys.uniqueid(5)
+	--uci:foreach("wireless1", "wifi-iface",
+   	--	function(s)
+	--		if s.mode == 'ap' then
 			--This is where it would break, can I just modify the object s to modify the UCI section
-	   	  	   s.ssid = UName
-    end end)
-	uci:save('wireless')
-	uci:commit('wireless')
-
+	--   	  	   s.ssid = UName
+	--		   log(s.ssid)
+	--		   	save = uci:save('wireless1')
+	--			commit = uci:commit('wireless1')
+    --end end)
 	
 	--set the new start page
 	start(next)
 	timer = 120
-	luci.template.render("QS/QS_wait4reset_main", {timer=timer, AP=AP})
-	luci.sys.reboot()
+	luci.template.render("QS/QS_wait4reset_main", {timer=timer, name=name})
+	--TODO Uncomment the next line to make the node actually reset
+	--luci.sys.reboot()
 end
 
-
-function start(x)
-	local uci = luci.model.uci.cursor()
-         local startPage = ''
-  	  	 if x then
-		 	uci:set('quickstart', 'options', 'startpage', x)
-		 	uci:save('quickstart')
-		    uci:commit('quickstart')
-			startPage = x
-		 else
-			startPage = uci:get('quickstart', 'options', 'startpage')
-			luci.http.redirect(startPage)
-		 end
-end

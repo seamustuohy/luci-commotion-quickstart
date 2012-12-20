@@ -1,11 +1,13 @@
 
-<ul>
+<center><ul>
 <%-
    for _,x in ipairs(networks) do
        name = x.name
-       config = x.config   
+       config = x.config
+       configID = x.configID
    -%>
-<li class="<%=config%>"><%=name%></li>
+   <li class="<%=config%>">
+   <a href="<%=function_url%>?config=<%=name%>"><%=name%>/</a></li>
 
 <%end%>
-</ul>
+</ul></center>

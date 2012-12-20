@@ -1,3 +1,9 @@
 config quickstart options
 	   option name 'my_node'
 	   option startpage 'QS_welcome_main'
+
+config downloads errors
+	   option 5 '/tmp/olsrd.conf'
+
+config downloads configs
+	   option commotion '/www/config/commotion.conf'

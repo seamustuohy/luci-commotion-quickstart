@@ -1,10 +1,15 @@
+<style>
+  .true {text-decoration:underline;
+  color:blue;}
+  </style>
 <%-
    topheader="Here are the nearby networks."
    subheading="Click on a network to make a compatible node."
-
+   PageTitle="Nearby Networks"
+   function_url = luci.dispatcher.build_url('QS', 'chosenMeshDefault')
    buttons={
            { text="Upload a Config", icon="arrow", action="uploadConfig"},
-           { text="Create New Network", icon="plus", action="newNetwork"},
+           { text="Create New Network", icon="plus", action="UCI"},
            { text="Use A Pre-Built Config", icon="target", action="chooseConfig"}
    }
    

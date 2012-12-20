@@ -1,21 +1,30 @@
 <!-- Is this tied to the node in any way or just a straight 2 minute countdown? -->
+<script type="text/javascript">
+var count=120;
 
+var counter=setInterval(timer, 1000); //1000 will  run it every 1 second
+  function timer()
+{
+  count=count-1;
+  if (count <= 0)
+			     {
+			        clearInterval(counter);
+			        return;
+			     }
+
+			    document.getElementById("timer").innerHTML=count + " seconds"; // watch for spelling
+			   }
+</script>
 <!-- Drawing from two modules. May make sense to split most of this out into the template for better handling -->
 <div>
 	<p>Please reconnect to the wireless access point</p>
 	<p class="qs_node_name">
-		<%=node_name%>
+		<%=name%>
 	</p>
 	<p>in</p>
 	<!-- from http://stackoverflow.com/questions/11082210/what-to-use-in-order-to-count-down-in-seconds-from-a-fixed-minute-in-lua -->
-	<div id="timer">
-		local time = <%=timer%>
-		local function decreaseTime()
-			time = time-1
-			print(time)
-		end
-
-		timer.performWithDelay(1000,decreaseTime,60)
+	<div class="qs_timer">
+<span id="timer"></span>
 	</div>
-	<p>minutes to finish configuring this node.</p>
+	<p> to finish configuring this node.</p>
 </div>
