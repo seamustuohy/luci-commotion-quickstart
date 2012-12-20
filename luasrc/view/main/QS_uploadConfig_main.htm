@@ -1,20 +1,20 @@
 
 <%-
-   topheader="Upload Your Custom Configuration Here"
-   subheading="Choose a file from your computer to upload to the node."
-   file_type="Config File"
-   file_instructions="and submit a config file from your own computer. You will be able to customize this configuration once it has been applied to the node."
-   access=access
-   PageTitle="Upload A Config"
-   uploadType="config"
-   buttons={
-           { text="Continue with this Configuration", icon="x", action="wait4Reset"},
-           { text="Start Over", icon="arrow", action="welcome"}
-   }
-   
-   
+      topheader="Upload Your Custom Configuration Here"
+      subheading="Choose a file from your computer to upload to the node."
+      file_type="Config File"
+      file_instructions="and submit a config file from your own computer. You will be able to customize this configuration once it has been applied to the node."
+      access=access
+      PageTitle="Upload A Config"
+      uploadType="config"
+      buttons={
+              { text="Continue with this Configuration", icon="x", action="wait4Reset"},
+              { text="Start Over", icon="arrow", action="welcome"}
+      }
 
--%>
+
+
+   -%>
 <% include("QS/module/QS_header") %>
 <%= include("QS/module/QS_infoBanner") %>
 Hello, you have <%=access%> permissions.

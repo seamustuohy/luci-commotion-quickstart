@@ -59,7 +59,7 @@ end
 --REMOVE ALL OF THE ABOVE BEFORE DEPLOYMENT OR FACE MY WRATH
 
 function download_file()
-local result = luci.http.formvalue
+local result = luci.http.formvalue()
 		 if  result("error") then
 		 	 file = result("error")
 		elseif result("config") then
@@ -92,7 +92,6 @@ function error(errorNo)
 	errorMsg = uci:get('errorman', errorNo, 'errorMsg')
 	errorLoc = uci:get('errorman', errorNo, 'errorLoc')
 	errorDesc = uci:get('errorman', errorNo, 'errorDesc')
-	errorNo = uci:get('errorman', errorNo, 'errorNo')
 	luci.template.render("QS/QS_errorPage_main", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
 end
 
@@ -222,6 +221,7 @@ function upload_file(page)
    luci.template.render("QS/" .. page, {access=access})
 end
 
+
 function wait_4_reset(next)
 	local uci = luci.model.uci.cursor()
 	--make the node name unique for restart
@@ -248,3 +248,16 @@ function wait_4_reset(next)
 	--luci.sys.reboot()
 end
 
+function uci_loader()
+	uci_page = luci.http.formvalue("uci")
+	uci_last_page = luci.http.formvalue("last")
+	local documentation = {}
+	local uci = luci.model.uci.cursor()
+	uci:foreach("QS_documentation", uci_page,
+   		function(s)
+				if s.title then
+	       		   table.insert(documentation,s)
+   		end end end)
+   
+	 luci.template.render("commotion/apps_view", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
+end
