@@ -130,13 +130,49 @@ color: #000;
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
-	width: 500px;
+	width: 700px;
 	text-align: center;
+	vertical-align: middle;
 }
 
-#nearbyMesh li {
-	align: left;
+table.near {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	text-align: center;
+	font-size: 1.5em;
 }
+
+.near thead, .near tbody, .near caption, .near tr {
+	width: 100%;
+	vertical-align: middle;
+}
+
+.near thead, .near th {
+	visibility: hidden;
+}
+
+.near a {
+	text-decoration: none;
+}
+
+.near img {
+	vertical-align: middle;
+}
+
+table.near tr > td:first-child {
+	width: 50%;
+	text-align: right;
+	padding: 10px;
+}
+
+table.near tr > td:first-child + td {
+	width: 50%;
+	text-align: left;
+	padding-left: 10px;
+}
+
 img.true {}
 a.true {
 	text-decoration: underline;

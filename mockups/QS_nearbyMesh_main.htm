@@ -49,10 +49,47 @@
 
 
 			<div id="nearbyMesh">
-				<p>
-					<img src="images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
-				</p>
-				<!-- This should probably be rewritten as a table -->
+				<table summary="List of nearby meshes" class="near">
+					<caption>
+						<img src="images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
+					</caption>
+					<tbody>
+						<tr>
+							<th scope="col">Automatic</th>
+							<th scope="col">Type of network</th>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="#">Funkfeuer</a></li></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="#">Gwifi</a></td>
+						</tr>
+						<tr>
+							<td><img src="images/check.png" alt="Full configuration available" class="true" /></td>
+							<td><a href="#" class="true">Commotion</a></td>
+						</tr>
+						<tr>
+							<td><img src="images/check.png" alt="Full configuration available" class="true" /></td>
+							<td><a href="#" class="true">RedHook</a></td>
+						</tr>
+						<tr>
+							<td><img src="images/check.png" alt="Full configuration available" class="true" /></td>
+							<td><a href="#" class="true">Byzantium</a></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="#">HotMesh</a></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="#">Ninux</a></td>
+						</tr>
+					</tbody>
+				</table>
+				</ul>
+				<!-- This should probably be rewritten as a table
 				<ul>
 					<li><a href="#">Funkfeuer</a></li>
 					<li><a href="#">Gwifi</a></li>
@@ -61,7 +98,7 @@
 					<li><img src="images/check.png" alt="Full configuration available" class="true" /><a href="#" class="true">Byzantium</a></li>
 					<li><a href="#">HotMesh</a></li>
 					<li><a href="#">Ninux</a></li>
-				</ul>
+				</ul> -->
 			</div>
 <!-- render this
    for _,x in ipairs(networks) do
