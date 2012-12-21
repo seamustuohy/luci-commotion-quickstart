@@ -59,17 +59,43 @@ end
 --REMOVE ALL OF THE ABOVE BEFORE DEPLOYMENT OR FACE MY WRATH
 
 function download_file()
-local result = luci.http.formvalue()
-		 if  result("error") then
-		 	 file = result("error")
-		elseif result("config") then
-		 	 file = result("config")
-		elseif result("download") then
-			 --actually download the file here on button action!
+	local result = luci.http.formvalue
+	local filetype = result("type")
+	local id = result("id")
+	local contents = ""
+	if result("download") and result("filename") then
+	   local fp = io.open(result("filename"), "r")
+	   if (fp) then
+	   	  log("Opened the file!")
+		  luci.http.prepare_content("application/force-download")
+		  luci.http.header("Content-Disposition", "attachment; filename=" .. result("filename"))
+		  e, es = luci.ltn12.pump.all(luci.ltn12.source.file(fp), luci.http.write)
+		  log("es: " .. es)
+		  fp:close()
+	end
+	elseif id and filetype then
+		local uci = luci.model.uci.cursor()
+		local filename
+		if filetype == "error" then
+		   	  filename = uci:get('quickstart', 'errors', id)
+		elseif filetype == "config" then
+		      filename = uci:get('quickstart', 'configs', id)
 		end
-		-- Could you name the file object contents? Then I can just pipe it through my render. :)
-		
-	luci.template.render("QS/QS_downloader_main", {contents=contents})
+		if filename then
+		   local fp = io.open(filename, "r")
+		   if fp then
+		   	  local string = fp:read("*a")
+			  while string ~= "" do
+			  		contents = contents .. string
+					string = fp:read("*a")
+			  end
+		   fp:close()
+		   end
+		end
+		luci.template.render("QS/QS_downloader_main", {filename=filename, contents=contents})
+	else
+		luci.template.render("QS/QS_downloader_main", {})
+	end
 end
 
 function start(x)
@@ -92,12 +118,16 @@ function error(errorNo)
 	errorMsg = uci:get('errorman', errorNo, 'errorMsg')
 	errorLoc = uci:get('errorman', errorNo, 'errorLoc')
 	errorDesc = uci:get('errorman', errorNo, 'errorDesc')
-	luci.template.render("QS/QS_errorPage_main", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
+
+	if errorMsg and errorLoc and errorDesc and errorNo then
+	   luci.template.render("QS/QS_errorPage_main", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
+	else
+		luci.template.render("QS/QS_errorPage_main", {})
+	end
 end
 
 function find_nearby()
 		 --TODO : this would eventually call the daemon. For now we just send some falsified data over.
-
 		 local networks = {
 		 	   { name="Commotion", config="true"},
 		 	   { name="RedHooks", config="true"},
@@ -249,15 +279,48 @@ function wait_4_reset(next)
 end
 
 function uci_loader()
-	uci_page = luci.http.formvalue("uci")
+		 --TODO create settings uci config option for each page
+		 --TODO test out if the qs_uci.htm section self.map function actually works
+		 --TODO create a set of simple docuemntation sections to test on
+		 --TODO get a list of all configurations users will want access to and how to group them
+		 
+uci_page = luci.http.formvalue("uci")
 	uci_last_page = luci.http.formvalue("last")
 	local documentation = {}
+	local settings = {}
 	local uci = luci.model.uci.cursor()
 	uci:foreach("QS_documentation", uci_page,
    		function(s)
-				if s.title then
+				if s.title == settings then
+				   table.insert(settings,s)
+				elseif s.title then
 	       		   table.insert(documentation,s)
    		end end end)
-   
+	
+	page_instructions = settings.page_instructions
+	next_page = settings.next_page
+	
+				
 	 luci.template.render("commotion/apps_view", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
+end
+
+function get_neigh()
+--mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
+-- this should be done over a period of time to update the page.
+
+--		 local data = fetch_txtinfo("links") 
+--the next two lines used to live in fetch_txtinfo() in olsrd.lua
+local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
+local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
+
+-- This was under the local data = ... that exists above.
+
+	    if not data or not data.Links then
+		        neighbors = 0
+		        return nil
+	    end
+
+    table.sort(data.Links, compare_links)
+
+    luci.template.render("QS/QS_connectedNodes_main", {neighbors=neighbors})
 end
