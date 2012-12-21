@@ -6,13 +6,13 @@
    buttons={
            { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
            { text="Continue With This Network", icon="plus", action="sharingPrefs"},
-           { text="Customize This Network", icon="arrow", action="uci"}
+           { text="Customize This Network", icon="arrow", action="uci?uci=name;last=connectedNodes"}
    }
 
 -%>
 
-<%= include("commotion/QS/module/QS_infoBanner") %>
-<%= include("commotion/QS/module/QS_nodeNeighbors") %>
-<%= include("commotion/QS/module/QS_buttons") %>
+<%= include("QS/module/QS_infoBanner") %>
+<%= include("QS/module/QS_nodeNeighbors") %>
+<%= include("QS/module/QS_buttons") %>
 
 <%+footer%>

@@ -1,13 +1,13 @@
 <%-
-      topheader=<%=uci_page%>
-      subheading=<%=page_instructions%>
+      topheader = uci_page
+      subheading = page_instructions
       access=access
-      PageTitle=<%=uci_page%>
+      PageTitle = uci_page
       buttons={
-              { text="Next", icon="arrow", action=<%=next_page%> .. "?last=" .. <%=uci_page%>},
+              { text="Next", icon="arrow", action = next_page .. "?last=" .. uci_page},
       }
       if uci_last_page then
-          table.insert(buttons,{ text="Go Back", icon="x", action=<%=uci_last_page%>})
+          table.insert(buttons,{ text="Go Back", icon="x", action = uci_last_page})
       end
 
    -%>

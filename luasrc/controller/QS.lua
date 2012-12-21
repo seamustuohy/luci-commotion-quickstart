@@ -36,6 +36,7 @@ function index()
 	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 	entry({"QS", "downloader"}, call("download_file")).dependent=false
+	entry({"QS", "uci"}, call("uci_loader")).dependent=false
 	
 	--Reset Options require a page to be passed so that it knows where to go after reboot.
 	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chosenMeshDefault")).dependent=false
@@ -254,26 +255,25 @@ end
 
 function wait_4_reset(next)
 	local uci = luci.model.uci.cursor()
+
 	--make the node name unique for restart
 	local name = uci:get('quickstart', 'options', 'name')
 
 	--TODO change wireless1 to become wireless
-	--TODO Test this part which may be complete gibberish that does not work on a node with wireless
-	--UName = name .. "_" .. luci.sys.uniqueid(5)
-	--uci:foreach("wireless1", "wifi-iface",
-   	--	function(s)
-	--		if s.mode == 'ap' then
-			--This is where it would break, can I just modify the object s to modify the UCI section
-	--   	  	   s.ssid = UName
-	--		   log(s.ssid)
-	--		   	save = uci:save('wireless1')
-	--			commit = uci:commit('wireless1')
-    --end end)
+	UName = name .. "_" .. luci.sys.uniqueid(5)
+	uci:foreach("wireless1", "wifi-iface",
+				function(s)
+				if s.mode == "ap" then
+				uci:set("wireless1", s['.name'], "ssid", UName)
+				end
+				end)
+	uci:save('wireless1')
+	uci:commit('wireless1')
 	
 	--set the new start page
 	start(next)
 	timer = 120
-	luci.template.render("QS/QS_wait4reset_main", {timer=timer, name=name})
+	luci.template.render("QS/QS_wait4reset_main", {timer=timer, UName=name})
 	--TODO Uncomment the next line to make the node actually reset
 	--luci.sys.reboot()
 end
@@ -284,27 +284,30 @@ function uci_loader()
 		 --TODO create a set of simple docuemntation sections to test on
 		 --TODO get a list of all configurations users will want access to and how to group them
 		 
-uci_page = luci.http.formvalue("uci")
+    uci_page = luci.http.formvalue("uci")
 	uci_last_page = luci.http.formvalue("last")
 	local documentation = {}
 	local settings = {}
 	local uci = luci.model.uci.cursor()
+	log("start")
 	uci:foreach("QS_documentation", uci_page,
    		function(s)
 				if s.title == settings then
+				   log("settings found")
 				   table.insert(settings,s)
 				elseif s.title then
+					log("object " .. s.title .. " found")
 	       		   table.insert(documentation,s)
-   		end end end)
+   		end end)
 	
 	page_instructions = settings.page_instructions
 	next_page = settings.next_page
 	
 				
-	 luci.template.render("commotion/apps_view", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
+	 luci.template.render("QS/QS_uci_main", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
 end
 
-function get_neigh()
+function connected_nodes()
 --mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
 -- this should be done over a period of time to update the page.
 
@@ -315,12 +318,12 @@ local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
 
 -- This was under the local data = ... that exists above.
 
-	    if not data or not data.Links then
-		        neighbors = 0
-		        return nil
-	    end
+--	    if not data or not data.Links then
+--		        neighbors = 0
+--		        return nil
+--	    end
 
-    table.sort(data.Links, compare_links)
-
+--    table.sort(data.Links, compare_links)
+	  neighbors = 0
     luci.template.render("QS/QS_connectedNodes_main", {neighbors=neighbors})
 end
