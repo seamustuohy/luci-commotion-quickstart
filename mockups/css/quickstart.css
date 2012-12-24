@@ -192,7 +192,7 @@ min-height: 100px;
 }
 
 #zone-footer, #zone-buttons{
-width: 35%;
+width: 30%;
 margin-left: auto;
 margin-right: auto;
 color: #000;
@@ -220,6 +220,10 @@ width: 350px;
 .button-wrapper ul li {
 	display: table-cell;
 	width: 36 px;
+}
+
+.button-wrapper ul li a {
+	text-decoration: none;
 }
 
 #zone-footer figure, #zone-buttons figure {
