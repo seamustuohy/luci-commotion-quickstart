@@ -46,7 +46,7 @@
 			</header>
 
 <!--include("QS/module/QS_meshDisplay")-->
-
+<!-- Ready to dump back into module -->
 
 			<div id="nearbyMesh">
 				<table summary="List of nearby meshes" class="near">
@@ -89,16 +89,8 @@
 					</tbody>
 				</table>
 				</ul>
-				<!-- This should probably be rewritten as a table
-				<ul>
-					<li><a href="#">Funkfeuer</a></li>
-					<li><a href="#">Gwifi</a></li>
-					<li><img src="images/check.png" alt="Full configuration available" class="true" /><a href="#" class="true">Commotion</a></li>
-					<li><img src="images/check.png" alt="Full configuration available" class="true" /><a href="#" class="true">RedHook</a></li>
-					<li><img src="images/check.png" alt="Full configuration available" class="true" /><a href="#" class="true">Byzantium</a></li>
-					<li><a href="#">HotMesh</a></li>
-					<li><a href="#">Ninux</a></li>
-				</ul> -->
+
+
 			</div>
 <!-- render this
    for _,x in ipairs(networks) do
@@ -124,28 +116,61 @@
 			<div id="zone-buttons">
 
 					<div class="button-wrapper">
-						<a href="#">
+						<!--<table class="button">
+							<tr>
+								<td>
+									<a href="#">
+										<figure>
+											<img src="images/arrowm.png" alt="Upload a Config Button" class="button" />
+											<figcaption>Upload a Config</figcaption>
+										</figure>
+									</a>
+								</td>
+								<td>
+									<a href="#">
+										<figure>
+											<img src="images/plusm.png" alt="Create New Network" class="button" />
+											<figcaption>Create New Network</figcaption>
+										</figure>
+									</a>
+								</td>
+								<td>
+									<a href="#">
+										<figure>
+											<img src="images/targetm.png" alt="Use A Pre-Built Config Button" class="button" />
+											<figcaption>Use A Pre-Built Config</figcaption>
+										</figure>
+									</a>
+								</td>
+							</tr>
+						</table>-->
+
+<ul>
+	<li>					<a href="#">
 							<figure>
 								<img src="images/arrowm.png" alt="Upload a Config Button" class="button" />
 								<figcaption>Upload a Config</figcaption>
 							</figure>
 						</a>
-
+	</li>
+	<li>
 						<a href="#">
 							<figure>
 								<img src="images/plusm.png" alt="Create New Network" class="button" />
 								<figcaption>Create New Network</figcaption>
 							</figure>
 						</a>
-
+	</li>
+	<li>
 						<a href="#">
 							<figure>
 								<img src="images/targetm.png" alt="Use A Pre-Built Config Button" class="button" />
 								<figcaption>Use A Pre-Built Config</figcaption>
 							</figure>
 						</a>
+	</li>
+</ul>
 					</div>
-				</span>
 				</div>
 			</div>
 
