@@ -1,4 +1,5 @@
-<%-   for _, r in pairs(documentation) do
+<%-
+   for _, r in pairs(documentation) do
 	      if r.uci then
 		      value = r.uci
               title = r.title
@@ -8,8 +9,8 @@
 -%>
 
 <h2><%=title%></h2>
-<%= self.map:get(r, value) %>
+
 <div class="flavor"><%=flavor%></div>
 <div class="help"><%=help%></div>
 
-<%=end%>
+<%end%>

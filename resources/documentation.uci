@@ -1,47 +1,52 @@
-config documentation name
+config documentation
+    option section 'name'
     option title 'settings'
 	option next_page 'olsrd'
 	option page_instructions 'Please name the various bits and bobs of your node here.'
-	option uci 'wireless.@wifi-iface[1].ssid'
+	option uci 'ssid'
 
-config documentation name
+config documentation
+    option section 'name'
     option title 'Node Name (SSID)'
 	option flavor 'Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.'
 	option help 'The public name that your node advertises. SSID is an acronym for Service Set Identifier'
-	option uci 'wireless.@wifi-iface[1].ssid'
+	option uci 'ssid'
 
-config documentation name
+config documentation
+    option section 'name'
     option title 'Mesh Network Name (SSID)'
 	option flavor 'Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.'
 	option help 'The mesh name that your node advertises. SSID is an acronym for Service Set Identifier'
-	option uci 'wireless.@wifi-iface[0].ssid'
+	option uci 'ssid'
 
-config documentation name
+config documentation
+    option section 'name'
     option title 'Network Identifier (BSSID)'
 	option flavor 'Choose a identifier that is 12 characters. This identifier can be any number and and letter between A-F. Must be the same across all nodes on the network.'
 	option help 'The shared identifier of the network. BSSID is an acronym for Basic Service Set Identifier. It is represented by a string of Hexidecimal charicters 12 long with a : between every set of two.'
-	option uci 'wireless.@wifi-iface[0].bssid'
+	option uci 'bssid'
 
-config documentation networking
+config documentation
+    option section 'networking'
     option title 'Channel'
 	option flavor 'Choose a channel. Must be the same as the channel of nearby nodes you wish your node to communicate with..'
 	option help 'The radio frequency that the node communcates over. These range from 1-14.'
-	option uci 'wireless.radio0.channel'
+	option uci 'channel'
 
-config documentation networking
+config documentation
+    option section 'networking'
     option title 'Network Address (IP Address)'
 	option flavor 'Choose an IP address that is nine digets long. You may only use numbers.'
 	option help 'The network address of your node. The node will add a 1 to the end of any ipaddress given to it for client connections, and a 5 to the front for mesh connections. Please note that many ranges of addresses are claimed, and as such, we reccomend that you do not change this unless you own the range of addresses you are assigning the node to.'
 
-config documentation main
+config documentation
+    option section 'main'
 	option title 'Node Name'
 	option flavor 'Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.'
 	option help 'This is a way to personalize your node. Note: This may be used later to personalize your node. Innapropriate or personally identifying names are not reccomended.'
 
-config documentation main
+config documentation
+    option section 'main'
 	option title 'Password'
 	option flavor 'Choose a password that is 6-24 characters in length. This password can be numbers, letters, and special characters.'
 	option help 'This is your password for accessing the admin interface of this node if you wish to change settings in the future. Do not give this password to anyone you do not trust implicitly.'
-
-
-	

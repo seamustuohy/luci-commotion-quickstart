@@ -285,24 +285,22 @@ function uci_loader()
 		 --TODO get a list of all configurations users will want access to and how to group them
 		 
     uci_page = luci.http.formvalue("uci")
+	log(uci_page)
 	uci_last_page = luci.http.formvalue("last")
 	local documentation = {}
 	local settings = {}
 	local uci = luci.model.uci.cursor()
 	log("start")
-	uci:foreach("QS_documentation", uci_page,
+	uci:foreach("QS_documentation", "documentation",
    		function(s)
-				if s.title == settings then
-				   log("settings found")
-				   table.insert(settings,s)
-				elseif s.title then
-					log("object " .. s.title .. " found")
+				if s.section == uci_page then
+				if s.title == "settings" then
+				   page_instructions = s.page_instructions
+				   next_page = s.next_page
+				elseif s.title ~= "settings" then
+				   log("object " .. s.title .. " found")
 	       		   table.insert(documentation,s)
-   		end end)
-	
-	page_instructions = settings.page_instructions
-	next_page = settings.next_page
-	
+   		end end end)
 				
 	 luci.template.render("QS/QS_uci_main", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
 end
