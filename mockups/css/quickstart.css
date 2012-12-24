@@ -124,7 +124,7 @@ color: #000;
 /* May need to define width */
 }
 
-#nearbyMesh {
+#meshDisplay {
 	text-decoration: none;
 	list-style-type: none;
 	margin-left: auto;
