@@ -7,10 +7,12 @@
               help = r.help
 	      end
 -%>
-
+<form method="post" action="<%=REQUEST_URI%>/submit" enctype="multipart/form-data">
 <h2><%=title%></h2>
-
 <div class="flavor"><%=flavor%></div>
+<input type="text" name="uci.<%=value%>">
 <div class="help"><%=help%></div>
 
 <%end%>
+<input type="submit" value="Submit">
+</form>

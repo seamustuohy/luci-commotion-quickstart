@@ -23,6 +23,10 @@ module("luci.controller.QS.QS", package.seeall)
 require "luci.model.uci"
 
 function index()
+	local uci = luci.model.uci.cursor()
+	--checks quickstart uci to disallow quickstart once completed
+	--QS does not require admin and has too much power to be accessable through a portal
+	if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	--each page gets an entry that either calls a template or a function
 	--any function call needs a template call at the end of the function
 
@@ -37,16 +41,16 @@ function index()
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 	entry({"QS", "downloader"}, call("download_file")).dependent=false
 	entry({"QS", "uci"}, call("uci_loader")).dependent=false
-	
-	--Reset Options require a page to be passed so that it knows where to go after reboot.
-	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset", "chosenMeshDefault")).dependent=false
+	entry({"QS", "uci", "submit"}, call("set_uci")).dependent=false	
+	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset")).dependent=false
 
 
-	--template page to change the start page
+	--template page to change the start page TO REMOVE BEFORE DEPLOYMENT
     --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
 
 	--a testing function TO BE REMOVED BEFORE DEPLOYMENT
 	entry({"QS", "test"}, call("test")).dependent=false
+end
 end
 
 --TODO  TO BE TAKEN OUT BEFORE DEPLOYMENT
@@ -253,9 +257,9 @@ function upload_file(page)
 end
 
 
-function wait_4_reset(next)
+function wait_4_reset()
 	local uci = luci.model.uci.cursor()
-
+	page = luci.http.formvaluetable("page")
 	--make the node name unique for restart
 	local name = uci:get('quickstart', 'options', 'name')
 
@@ -267,11 +271,10 @@ function wait_4_reset(next)
 				uci:set("wireless1", s['.name'], "ssid", UName)
 				end
 				end)
-	uci:save('wireless1')
-	uci:commit('wireless1')
+	uci:save('wireless1')	uci:commit('wireless1')
 	
 	--set the new start page
-	start(next)
+	start(page)
 	timer = 120
 	luci.template.render("QS/QS_wait4reset_main", {timer=timer, UName=name})
 	--TODO Uncomment the next line to make the node actually reset
@@ -285,12 +288,10 @@ function uci_loader()
 		 --TODO get a list of all configurations users will want access to and how to group them
 		 
     uci_page = luci.http.formvalue("uci")
-	log(uci_page)
 	uci_last_page = luci.http.formvalue("last")
 	local documentation = {}
 	local settings = {}
 	local uci = luci.model.uci.cursor()
-	log("start")
 	uci:foreach("QS_documentation", "documentation",
    		function(s)
 				if s.section == uci_page then
@@ -298,7 +299,6 @@ function uci_loader()
 				   page_instructions = s.page_instructions
 				   next_page = s.next_page
 				elseif s.title ~= "settings" then
-				   log("object " .. s.title .. " found")
 	       		   table.insert(documentation,s)
    		end end end)
 				
@@ -324,4 +324,52 @@ local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
 --    table.sort(data.Links, compare_links)
 	  neighbors = 0
     luci.template.render("QS/QS_connectedNodes_main", {neighbors=neighbors})
+end
+
+
+function set_uci()
+
+		 local uci = luci.model.uci.cursor()
+		 --create a table with all form values of type uci.ITEMHERE
+		 uci_values = luci.http.formvaluetable("uci")
+
+		 --Create UCI switch to identify and set to various values
+		 uci_switch = switch {
+		 --TODO change wireless1 to wireless for use on a real node
+		 SSID_AP = function (x,y,value)
+		 uci:foreach("wireless1", "wifi-iface",
+		 	function(s)
+				if s.mode == "ap" and s.ssid ~= value then
+		 		   uci:set("wireless1", s['.name'], "ssid", value)
+		 		   uci:save('wireless1')
+		 		   uci:commit('wireless1')
+		 		end
+			end)
+		 end,
+		 SSID_MESH = function (x,y,value)
+		 uci:foreach("wireless1", "wifi-iface",
+		 	function(s)
+				if s.mode == "adhoc" and s.ssid ~= value then
+		 		   uci:set("wireless1", s['.name'], "ssid", value)
+		 		   uci:save('wireless1')
+		 		   uci:commit('wireless1')
+		 		end
+			end)
+		 end,
+		 BSSID_MESH = function (x,y,value)
+		 uci:foreach("wireless1", "wifi-iface",
+		 	function(s)
+				if s.mode == "adhoc" and s.bssid ~= value then
+		 		   uci:set("wireless1", s['.name'], "bssid", value)
+		 		   uci:save('wireless1')
+		 		   uci:commit('wireless1')
+		 		end
+			end)
+		 end}
+
+--TODO find how to make the functions wait for the last one to complete before starting the next
+		for i,value in pairs(uci_values) do
+		 	 uci_switch:case(i, value)
+			 luci.sys.call("sleep 3")
+		end
 end

@@ -3,28 +3,28 @@ config documentation
     option title 'settings'
 	option next_page 'olsrd'
 	option page_instructions 'Please name the various bits and bobs of your node here.'
-	option uci 'ssid'
+	option uci 'uci.ssid'
 
 config documentation
     option section 'name'
     option title 'Node Name (SSID)'
 	option flavor 'Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.'
 	option help 'The public name that your node advertises. SSID is an acronym for Service Set Identifier'
-	option uci 'ssid'
+	option uci 'SSID_AP'
 
 config documentation
     option section 'name'
     option title 'Mesh Network Name (SSID)'
 	option flavor 'Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.'
 	option help 'The mesh name that your node advertises. SSID is an acronym for Service Set Identifier'
-	option uci 'ssid'
+	option uci 'SSID_MESH'
 
 config documentation
     option section 'name'
     option title 'Network Identifier (BSSID)'
 	option flavor 'Choose a identifier that is 12 characters. This identifier can be any number and and letter between A-F. Must be the same across all nodes on the network.'
 	option help 'The shared identifier of the network. BSSID is an acronym for Basic Service Set Identifier. It is represented by a string of Hexidecimal charicters 12 long with a : between every set of two.'
-	option uci 'bssid'
+	option uci 'BSSID_MESH'
 
 config documentation
     option section 'networking'
