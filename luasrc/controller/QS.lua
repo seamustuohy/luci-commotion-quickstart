@@ -32,7 +32,7 @@ function index()
 
 	entry({"QS", "start"}, call("start"), "Quick Start").dependent=false
 	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
-	entry({"QS", "basicinfo"}, template("QS/QS_basicInfo_main")).dependent=false
+	entry({"QS", "basicInfo"}, call("basic_info")).dependent=false
 	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
 	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
 	entry({"QS", "chosenMeshDefault"}, call("mesh_defaults")).dependent=false
@@ -42,8 +42,9 @@ function index()
 	entry({"QS", "downloader"}, call("download_file")).dependent=false
 	entry({"QS", "uci"}, call("uci_loader")).dependent=false
 	entry({"QS", "uci", "submit"}, call("set_uci")).dependent=false	
-	entry({"QS", "Reset4NewConfig"}, call("wait_4_reset")).dependent=false
-
+	entry({"QS", "chooseConfig"}, call("choose_config")).dependent=false
+	entry({"QS", "end"}, call("complete")).dependent=false
+	entry({"QS", "tryNetwork"}, call("set_config")).dependent=false
 
 	--template page to change the start page TO REMOVE BEFORE DEPLOYMENT
     --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
@@ -117,6 +118,16 @@ function start(x)
 		 end
 end
 
+
+function complete()
+	local uci = luci.model.uci.cursor()
+	uci:set('quickstart', 'options', 'complete', 'true')
+	uci:save('quickstart')
+	uci:commit('quickstart')
+	luci.template.render("QS/QS_finished_main")
+end
+
+
 function error(errorNo)
 --This should be called when the daemon returns a error, and passed the error number
 	local uci = luci.model.uci.cursor()
@@ -130,6 +141,43 @@ function error(errorNo)
 		luci.template.render("QS/QS_errorPage_main", {})
 	end
 end
+
+
+function basic_info()
+		if luci.http.formvalue("node_name") then
+		    local uci = luci.model.uci.cursor()
+			local node_name = luci.http.formvalue("node_name")
+			if node_name == '' then
+			   message = "Please enter a node name"
+			   luci.template.render("QS/QS_basicInfo_main", {message=message})
+			else
+			   uci:set('quickstart', 'options', 'name', node_name)
+		 	   uci:save('quickstart')
+		       uci:commit('quickstart')
+		 	   local p1 = luci.http.formvalue("pwd1")
+	    	   local p2 = luci.http.formvalue("pwd2")
+				  if p1 or p2 then
+				  	 if p1 == p2 then
+					 	if p1 == '' then
+						   message = "Please enter a password"
+						   luci.template.render("QS/QS_basicInfo_main", {message=message, current=node_name})
+						else   
+					        luci.sys.user.setpasswd("root", p1)
+			 			    luci.http.redirect("nearbyMesh")
+						end
+					 else
+					    message = "Given password confirmation did not match, password not changed!"
+						luci.template.render("QS/QS_basicInfo_main", {message=message, current=node_name})
+					 end
+				else
+				luci.http.redirect("nearbyMesh")
+				end
+			end
+		else
+			luci.template.render("QS/QS_basicInfo_main")
+		end
+end
+
 
 function find_nearby()
 		 --TODO : this would eventually call the daemon. For now we just send some falsified data over.
@@ -148,10 +196,33 @@ function find_nearby()
 end
 
 function sharing_options()
-		 --TODO: the place where sharing options are parsed from
-
+		 --TODO: Create a switch that parses the svc_name and runs a function if the value passed to this function has clicked/unclicked checkboxes.
+		 
 		 local share_service = {
-		 	   { name="access point", help_name="Public Access Point:", help_text="These access points have no password and allow any wifi enabled user to use your node to access the network", description="This is a description of stuff"},
+	    { svc_name="Public Access Point", svc_value="ap",
+		svc_description="I would like to share a public access point.",
+		svc_help="These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
+	    },
+	    { svc_name="Secure Access Point", svc_value="sap",
+		svc_description="I would like to share a secure access point.",
+		svc_help="A secure access point allows any user with the password to use your network. Be sure to use a new password for node user accounts."
+	    },
+	    { svc_name="Gateway Sharing", svc_value="net",
+		svc_description="I would like to share my Internet access.",
+		svc_help="This option allows others to use your node as a gateway to the Internet."
+	    },
+	    { svc_name="Local Applications", svc_value="apps",
+		svc_description="I would like my node to advertise local applications.",
+		svc_help="This option allows you to create an application page, allowing others to see services running on nodes near yours.",
+	    },
+	    { svc_name="Network Key", svc_value="gpg",
+		svc_description="I would like to secure my network with a key.",
+		svc_help="This option allows you to upload or create a key that will be required for any other node to communicate with yours. This will also prevent you from communicating with other devices that do not have the same key."
+	    },
+	    { svc_name="Captive Portal", svc_value="captive",
+		svc_description="I would like to use a captive portal on my node.",
+		svc_help="A captive portal requires users to click through a web page before using other network services. This is a good place for you to set your expectations of users of your node."
+	    }
 			   }
 			   
 		luci.template.render("QS/QS_sharingPrefs_main", {share_service=share_service})
@@ -172,10 +243,12 @@ function switch(t,x,y)
 	return t
 end
 
-function mesh_defaults()
-		 -- This value is the name of the network to be passed to the daemon later to grab configs, etc.
-		 config = luci.http.formvalue("config")
-
+function mesh_defaults(config, keyval)
+		 -- This config value is the name of the config file to be passed to the daemon later to grab configs, etc.
+		 -- we check to see if passed via function, and if not then via GET request
+		 if not config then
+		 	config = luci.http.formvalue("config")
+		 end
 --TODO Later this will parse text from each config file and then use that data against a set of values here to create a "network defaults" info page.
 		 
 		 local security_counter = 0
@@ -183,13 +256,13 @@ function mesh_defaults()
 
 		 -- parse config of network/ call daemon for network values
 		 -- values below are temporary fakes
-		 network = "Commotion"
+		 network = config
 		 local defaults = {
 		 OLSR_secure = true,
 		 WPA_None = true,
 		 ServalD = true,
 		 DTN = true,
-		 network_key = "lkj84rfl234lfd2feds2f3fd23f2",
+		 network_key = "HASHVALUEov0984jvdef",
 		 gateway_sharing = true,
 		 app_sharing = true,
 		 }
@@ -221,6 +294,11 @@ function mesh_defaults()
 		end
 		table.insert(list_items,{"security_counter",security_counter})
 
+		--If a key is uploaded send it back with the uploaded key values.
+		if keyval then
+		   defaults.network_key = keyval
+		end
+		
 		--send list of items to the template for parsing
 		luci.template.render("QS/QS_chosenMeshDefault_main", {list_items=list_items, network=network})
 		
@@ -230,7 +308,6 @@ function upload_file(page)
    local sys = require "luci.sys"
    local fs = require "luci.fs"
    local tmp = "/tmp/"
-   local access = nixio.fs.access("/tmp/")
    local file = luci.http.formvalue("file")
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
@@ -239,10 +316,12 @@ function upload_file(page)
 		 if not fp then
 			if meta and meta.name == "config" then
 			   fp = io.open(tmp .. meta.file, "w")
-			   --DO SOMETHING WITH CONFIG HERE
+			   mesh_defaults(meta.file)
 			elseif meta and meta.name == "key" then
 			   fp = io.open(tmp .. meta.file, "w")
-			   --DO SOMETHING WITH KEY HERE
+			   --create hash of key
+			   --check key hash against hash of key in config
+			   --send result "false" or "correct" back to mesh_defaults with mesh_defaults(config, keyval)
 			end
 		 end
 		 if chunk then
@@ -252,14 +331,35 @@ function upload_file(page)
 			fp:close()
 		 end
 	end)
-	
-   luci.template.render("QS/" .. page, {access=access})
+
+   luci.template.render("QS/" .. page, {configName=configName})
 end
 
 
-function wait_4_reset()
+function set_config(config)
+		 if not config then
+		 	config = luci.http.formvalue("config")
+		 end
+
+		 --TODO remove the following if statement that shows both conditions. Keep the "result =" as stated in later comments
+		 if config == "Big Bobs Mesh Network" then
+		 		result = 666
+		 else
+				--TODO Send the name of the config file to the daemon and have it set those configurations.
+		 		--TODO change "sleep" in next line to commotion_daemon call w/ config
+		 		result = luci.sys.call("sleep 1")
+		 end
+		 if result == 0 then
+		 	 wait_4_reset("connectedNodes", "Your configurations have been set")
+		 else
+			 error(result)
+		 end
+end
+
+function wait_4_reset(page, notice)
+
+	--TODO add the wait_4_reset function to all pages that have setting changes that require reset.
 	local uci = luci.model.uci.cursor()
-	page = luci.http.formvaluetable("page")
 	--make the node name unique for restart
 	local name = uci:get('quickstart', 'options', 'name')
 
@@ -268,25 +368,37 @@ function wait_4_reset()
 	uci:foreach("wireless1", "wifi-iface",
 				function(s)
 				if s.mode == "ap" then
-				uci:set("wireless1", s['.name'], "ssid", UName)
+				--save the correct AP if it has not already been set
+				    if not uci:get('quickstart', 'options', 'APname') then
+				   	   uci:set("quickstart", "options", "APname", s.ssid)
+					   uci:save('quickstart')
+				   	   uci:commit('quickstart')
+					end
+				--set the unique AP for next reset
+				   uci:set("wireless1", s['.name'], "ssid", UName)
+				   uci:save('wireless1')
+				   uci:commit('wireless1')
 				end
 				end)
-	uci:save('wireless1')	uci:commit('wireless1')
 	
 	--set the new start page
 	start(page)
 	timer = 120
-	luci.template.render("QS/QS_wait4reset_main", {timer=timer, UName=name})
+	luci.template.render("QS/QS_wait4reset_main", {timer=timer, name=UName, notice=notice})
 	--TODO Uncomment the next line to make the node actually reset
 	--luci.sys.reboot()
 end
 
 function uci_loader()
 		 --TODO create settings uci config option for each page
-		 --TODO test out if the qs_uci.htm section self.map function actually works
 		 --TODO create a set of simple docuemntation sections to test on
 		 --TODO get a list of all configurations users will want access to and how to group them
-		 
+		 --TODO see what data the daemon will keep about known configs for custom uci pages with required & missing info
+	if luci.http.formvalue("module") then
+	   template = luci.http.formvalue("module")
+	else template = "QS_uci_main"
+	end
+	   
     uci_page = luci.http.formvalue("uci")
 	uci_last_page = luci.http.formvalue("last")
 	local documentation = {}
@@ -302,11 +414,11 @@ function uci_loader()
 	       		   table.insert(documentation,s)
    		end end end)
 				
-	 luci.template.render("QS/QS_uci_main", {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
+	 luci.template.render("QS/" .. template, {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
 end
 
 function connected_nodes()
---mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
+--TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
 -- this should be done over a period of time to update the page.
 
 --		 local data = fetch_txtinfo("links") 
@@ -322,13 +434,13 @@ local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
 --	    end
 
 --    table.sort(data.Links, compare_links)
-	  neighbors = 0
+	  --TODO remove trash variable below once actual data is being parsed.
+	neighbors = 0
     luci.template.render("QS/QS_connectedNodes_main", {neighbors=neighbors})
 end
 
 
 function set_uci()
-
 		 local uci = luci.model.uci.cursor()
 		 --create a table with all form values of type uci.ITEMHERE
 		 uci_values = luci.http.formvaluetable("uci")
@@ -344,6 +456,7 @@ function set_uci()
 		 		   uci:save('wireless1')
 		 		   uci:commit('wireless1')
 		 		end
+			return 0
 			end)
 		 end,
 		 SSID_MESH = function (x,y,value)
@@ -354,6 +467,7 @@ function set_uci()
 		 		   uci:save('wireless1')
 		 		   uci:commit('wireless1')
 		 		end
+			return 0
 			end)
 		 end,
 		 BSSID_MESH = function (x,y,value)
@@ -364,12 +478,30 @@ function set_uci()
 		 		   uci:save('wireless1')
 		 		   uci:commit('wireless1')
 		 		end
+			return 0
 			end)
 		 end}
 
---TODO find how to make the functions wait for the last one to complete before starting the next
+--TODO find how to make the functions wait for the last one to complete before starting the next and as such segfaulting
 		for i,value in pairs(uci_values) do
 		 	 uci_switch:case(i, value)
-			 luci.sys.call("sleep 3")
+			 luci.sys.call("sleep 2")
 		end
+end
+
+
+function choose_config()
+		 --TODO : this would eventually call the daemon to check the hardware and provide the appropriate mesh configs. For now we just send some falsified data over.
+		 local configs = {
+		 	   { name="Commotion", type="AwesomeSauce"},
+		 	   { name="RedHooks", type="Community epicness"},
+		 	   { name="Ninux", type="Italian?"},
+		 	   { name="Byzantium", type="Laptop-ness"},
+		 	   { name="Funkfeuer", type="Austrian"},
+		 	   { name="FreiFunk", type="C base 4TheWin"},
+		 	   { name="Big Bobs Mesh Network", type="With all the trappings"},
+		 	   { name="Viva la' Education", type="We dont need no"},
+		}
+		
+		luci.template.render("QS/QS_chooseConfig_main", {configs=configs})
 end

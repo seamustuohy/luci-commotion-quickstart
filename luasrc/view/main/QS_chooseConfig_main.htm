@@ -1,0 +1,17 @@
+<%-
+   topheader="Here are some of our pre-built configurations"
+   subheading="Choose one and we will continue from here"
+   PageTitle="Choose Config"
+   function_url = luci.dispatcher.build_url('QS', 'chosenMeshDefault')
+   buttons={
+           { text="Go Back and Find a Nearby Network", icon="x", action="nearbyMesh"},
+           { text="Start Over", icon="arrow", action="welcome"}
+   }
+
+-%>
+<% include("QS/module/QS_header") %>
+<%= include("QS/module/QS_infoBanner") %>
+<%= include("QS/module/QS_chooseConfig") %>
+<%= include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
+

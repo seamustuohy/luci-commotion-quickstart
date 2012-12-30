@@ -22,15 +22,24 @@
    elseif security_counter == 8 then
           sec_msg = "This network has adequate security for most needs"
    end
-   if network_key ~= true then
-       net_key_title = "Requires A Network Key"
-       net_key_help = "This network requires a network password for new nodes"
-       --need to make upload use same backend but load different frontends when done.
-       net_key_subsection = "QS/module/QS_upload"
-   else
+   if network_key == false then
        net_key_title = "Does NOT Require a Network Key"
        net_key_help = "This network does NOT require a network password for new nodes"
        net_key_subsection = "QS/module/null"
+   elseif network_key == "fail" then
+       net_key_title = "Require a Different Network Key"
+       net_key_help = "The network key you entered was incorect. Please upload the correct key."
+       net_key_subsection = "QS/module/QS_upload"
+   elseif network_key == "correct" then
+       net_key_title = "Uses the key you uploaded"
+       net_key_help = "You have uploaded the correct key for this network"
+       net_key_subsection = "QS/module/null"
+   else
+       net_key_title = "Requires A Network Key"
+       net_key_help = "This network requires a network password for new nodes"
+       --need to make upload use same backend but load different frontends when done.
+       file_instructions = "your network key here"
+       net_key_subsection = "QS/module/QS_upload"
    end
 
    if gate_share == true then

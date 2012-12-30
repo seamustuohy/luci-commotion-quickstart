@@ -1,8 +1,7 @@
-<%+header%>
 <%-
    topheader="Congratulations!"
    subheading="You are connected to a network that is connected to ..."
-
+   PageTitle="Connected Nodes"
    buttons={
            { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
            { text="Continue With This Network", icon="plus", action="sharingPrefs"},
@@ -10,9 +9,9 @@
    }
 
 -%>
-
+<% include("QS/module/QS_header") %>
 <%= include("QS/module/QS_infoBanner") %>
 <%= include("QS/module/QS_nodeNeighbors") %>
 <%= include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
 
-<%+footer%>
