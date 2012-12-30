@@ -4,18 +4,26 @@
    PageTitle="Sharing Prefrences"
 
 -%>
+
 <% include("QS/module/QS_header") %>
-<style>
-function handleChange(cb) {
-  display("Changed, new value = " + cb.checked);
-}
-</style>
 <% include("QS/module/QS_infoBanner") %>
 <% include("QS/module/QS_sharing") %>
-
-  <div class="button-wrapper"><figure><input type="image" src="<%=media%>/QS/images/plusm.png" alt="Submit button" value="Submit"></br>
-<figcaption>Click Here to Finish</figcaption></figure>
+<div id="zone-button-wrapper">
+  <div id="zone-buttons">
+	<div class="button-wrapper">
+	  <figure>
+		<input type="image" src="<%=media%>/QS/images/plusm.png" alt="Submit button" value="Submit"></br>
+		<figcaption>Click Here to Finish</figcaption>
+	  </figure>
+	</div>
   </div>
+</div>
 </form>
 <% include("QS/module/QS_footer") %>
 
+<script type="text/javascript">
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+</script>
