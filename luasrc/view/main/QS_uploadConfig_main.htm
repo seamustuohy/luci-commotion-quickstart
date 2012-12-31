@@ -4,24 +4,15 @@
       subheading="Choose a file from your computer to upload to the node."
       file_type="Config File"
       file_instructions="and submit a config file from your own computer. You will be able to customize this configuration once it has been applied to the node."
-      access=access
       PageTitle="Upload A Config"
       uploadType="config"
       buttons={
-              { text="Continue with this Configuration", icon="x", action="wait4Reset"},
               { text="Start Over", icon="arrow", action="welcome"}
       }
-
-
 
    -%>
 <% include("QS/module/QS_header") %>
 <%= include("QS/module/QS_infoBanner") %>
-Hello, you have <%=access%> permissions.
-Why does the uploader not work? With permissions like <%=access%> it should be working just fine. It hates you thats why. FIX THIS!!!!!!
-"testing = <%=testing%> "
-"testing2 = <%=testing2%> "
-"testing3 = <%=testing3%> "
 <center><h3>Upload <%=file_type%></h3></center>
 <%= include("QS/module/QS_upload") %>
 <%= include("QS/module/QS_buttons") %>

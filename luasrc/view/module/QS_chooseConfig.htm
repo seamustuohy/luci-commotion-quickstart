@@ -1,0 +1,13 @@
+
+<center><ul>
+<%-
+   for _,x in ipairs(configs) do
+       name = x.name
+       type = x.type
+   -%>
+   <li class="configs">
+   <a href="<%=function_url%>?config=<%=name%>"><%=name%></a></br><%=type%></li>
+   
+
+<%end%>
+</ul></center>

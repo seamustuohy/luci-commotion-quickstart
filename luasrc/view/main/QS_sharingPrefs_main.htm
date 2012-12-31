@@ -1,44 +1,29 @@
-<%+header%>
-
-<%-- resolve var name mismatch with QS_sharing.htm --%>
 <%-
    topheader="Welcome Back!"
    subheading="As a final step, let's fill out your sharing preferences."
+   PageTitle="Sharing Prefrences"
 
-   buttons={
-           { text="Finish", icon="check", action="<%-s2e-Action-%>"}
-   }
-
-   sharable={
-	    { svc_name="Public Access Point", svc_value="ap",
-		svc_description="I would like to share a public access point.",
-		svc_help="These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
-	    },
-	    { svc_name="Secure Access Point", svc_value="sap",
-		svc_description="I would like to share a secure access point.",
-		svc_help="A secure access point allows any user with the password to use your network. Be sure to use a new password for node user accounts."
-	    },
-	    { svc_name="Gateway Sharing", svc_value="net",
-		svc_description="I would like to share my Internet access.",
-		svc_help="This option allows others to use your node as a gateway to the Internet."
-	    },
-	    { svc_name="Local Applications", svc_value="apps",
-		svc_description="I would like my node to advertise local applications.",
-		svc_help="This option allows you to create an application page, allowing others to see services running on nodes near yours.",
-	    },
-	    { svc_name="Network Key", svc_value="gpg",
-		svc_description="I would like to secure my network with a key.",
-		svc_help="This option allows you to upload or create a key that will be required for any other node to communicate with yours. This will also prevent you from communicating with other devices that do not have the same key."
-	    },
-	    { svc_name="Captive Portal", svc_value="captive",
-		svc_description="I would like to use a captive portal on my node.",
-		svc_help="A captive portal requires users to click through a web page before using other network services. This is a good place for you to set your expectations of users of your node."
-	    }
-   }
 -%>
 
-<% include("themes/" .. theme .. "/QS/modules/QS_infoBanner") %>
-<% include("themes/" .. theme .. "/QS/modules/QS_meshDisplay") %>
-<% include("themes/" .. theme .. "/QS/modules/QS_buttons") %>
+<% include("QS/module/QS_header") %>
+<% include("QS/module/QS_infoBanner") %>
+<% include("QS/module/QS_sharing") %>
+<div id="zone-button-wrapper">
+  <div id="zone-buttons">
+	<div class="button-wrapper">
+	  <figure>
+		<input type="image" src="<%=media%>/QS/images/plusm.png" alt="Submit button" value="Submit"></br>
+		<figcaption>Click Here to Finish</figcaption>
+	  </figure>
+	</div>
+  </div>
+</div>
+</form>
+<% include("QS/module/QS_footer") %>
 
-<%+footer%>
+<script type="text/javascript">
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+</script>

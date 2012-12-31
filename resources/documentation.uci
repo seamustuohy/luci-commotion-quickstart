@@ -3,7 +3,6 @@ config documentation
     option title 'settings'
 	option next_page 'olsrd'
 	option page_instructions 'Please name the various bits and bobs of your node here.'
-	option uci 'uci.ssid'
 
 config documentation
     option section 'name'
