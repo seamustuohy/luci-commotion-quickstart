@@ -1,4 +1,6 @@
-<style type="text/css">
+
+  /* Taken from - git://github.com/fofr/paulrhayes.com-experiments.git */
+
   /* Container */
   .modal {
 
@@ -188,16 +190,3 @@
   background: -webkit-linear-gradient(#fff, #ccc);
   background: -o-linear-gradient(#fff, #ccc);
   }
-</style>
-<%-
-   uploadType="key"
--%>
-
-<a href="#upload" class="openModal">Open modal</a>
-
-<aside id="upload" class="modal">
-  <div>
-	<%=include("QS/module/QS_upload")%>
-	<a href="#close" title="Close">Close</a>
-  </div>
-</aside>
