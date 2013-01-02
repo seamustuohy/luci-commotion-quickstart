@@ -35,9 +35,9 @@ function index()
 	entry({"QS", "basicInfo"}, call("basic_info")).dependent=false
 	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
 	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
+	entry({"QS", "sharingPrefs", "set"}, call("set_sharing_options")).dependent=false
 	entry({"QS", "chosenMeshDefault"}, call("mesh_defaults")).dependent=false
 	entry({"QS", "connectedNodes"}, call("connected_nodes")).dependent=false
-	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
 	entry({"QS", "bugReport"}, call("bug_report")).dependent=false
 	entry({"QS", "downloader"}, call("download_file")).dependent=false
 	entry({"QS", "uci"}, call("uci_loader")).dependent=false
@@ -46,6 +46,8 @@ function index()
 	entry({"QS", "end"}, call("complete")).dependent=false
 	entry({"QS", "tryNetwork"}, call("set_config")).dependent=false
 
+	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
+	entry({"QS", "sharingPrefs", "upload"}, call("upload_file", "sharingPrefs")).dependent=false
 	--template page to change the start page TO REMOVE BEFORE DEPLOYMENT
     --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
 
@@ -195,35 +197,30 @@ function find_nearby()
 		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks, test=test})
 end
 
+function set_sharing_options()
+--TODO: Create a switch that parses the svc_name and runs a function if the value passed to this function has clicked/unclicked checkboxes.
+
+if luci.http.formvaluetable("share") then
+sharing_prefs = luci.http.formvaluetable("share")
+for i,x in sharing_prefs do
+if x then
+log(x)
+end
+end
+end
+
+end
+
 function sharing_options()
-		 --TODO: Create a switch that parses the svc_name and runs a function if the value passed to this function has clicked/unclicked checkboxes.
-		 
-		 local share_service = {
-	    { svc_name="Public Access Point", svc_value="ap",
-		svc_description="I would like to share a public access point.",
-		svc_help="These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
-	    },
-	    { svc_name="Secure Access Point", svc_value="sap",
-		svc_description="I would like to share a secure access point.",
-		svc_help="A secure access point allows any user with the password to use your network. Be sure to use a new password for node user accounts."
-	    },
-	    { svc_name="Gateway Sharing", svc_value="net",
-		svc_description="I would like to share my Internet access.",
-		svc_help="This option allows others to use your node as a gateway to the Internet."
-	    },
-	    { svc_name="Local Applications", svc_value="apps",
-		svc_description="I would like my node to advertise local applications.",
-		svc_help="This option allows you to create an application page, allowing others to see services running on nodes near yours.",
-	    },
-	    { svc_name="Network Key", svc_value="gpg",
-		svc_description="I would like to secure my network with a key.",
-		svc_help="This option allows you to upload or create a key that will be required for any other node to communicate with yours. This will also prevent you from communicating with other devices that do not have the same key."
-	    },
-	    { svc_name="Captive Portal", svc_value="captive",
-		svc_description="I would like to use a captive portal on my node.",
-		svc_help="A captive portal requires users to click through a web page before using other network services. This is a good place for you to set your expectations of users of your node."
-	    }
-			   }
+
+--This grabs the shared services from the quickstart uci page
+	local share_service = {}
+	local uci = luci.model.uci.cursor()
+	uci:foreach("quickstart", "sharing",
+   		function(s)
+			table.insert(share_service,{svc_name=s.name, svc_value=s.value, svc_description=s.description, svc_help=s.help})
+   		end)
+	
 			   
 		luci.template.render("QS/QS_sharingPrefs_main", {share_service=share_service})
 end
@@ -304,7 +301,7 @@ function mesh_defaults(config, keyval)
 		
 end
 
-function upload_file(page)
+function upload_file(page, value)
    local sys = require "luci.sys"
    local fs = require "luci.fs"
    local tmp = "/tmp/"
@@ -332,7 +329,7 @@ function upload_file(page)
 		 end
 	end)
 
-   luci.template.render("QS/" .. page, {configName=configName})
+   luci.template.render("QS/" .. page, {value=value})
 end
 
 

@@ -8,3 +8,39 @@ config downloads errors
 
 config downloads configs
 	   option commotion '/www/config/commotion.conf'
+
+config sharing
+	   option name "Public Access Point"
+	   option value "pap"
+	   option description "I would like to share a public access point."
+	   option help "These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
+
+config sharing
+	   option name "Secure Access Point"
+	   option value "sap"
+	   option description "I would like to share a secure access point."
+	   option help "A secure access point allows any user with the password to use your network. Be sure to use a new password for node user accounts."
+
+config sharing
+	    option name "Gateway Sharing"
+		option value "gate"
+		option description "I would like to share my Internet access."
+		option help "This option allows others to use your node as a gateway to the Internet."
+
+config sharing
+	   option name "Local Applications"
+	   option value "apps"
+	   option description "I would like my node to advertise local applications."
+	   option help "This option allows you to create an application page, allowing others to see services running on nodes near yours."
+
+config sharing
+	   option name "Network Key"
+	   option value "key"
+	   option description "I would like to secure my network with a key."
+	   option help "This option allows you to upload or create a key that will be required for any other node to communicate with yours. This will also prevent you from communicating with other devices that do not have the same key."
+
+config sharing
+	   option name "Captive Portal"
+	   option value "cptv"
+	   option description "I would like to use a captive portal on my node."
+	   option help "A captive portal requires users to click through a web page before using other network services. This is a good place for you to set your expectations of users of your node."
