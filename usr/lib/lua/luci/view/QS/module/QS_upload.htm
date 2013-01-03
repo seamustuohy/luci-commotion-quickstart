@@ -1,4 +1,4 @@
-  <form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data">
+  <form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data" onsubmit="startUpload();">
   <div class="cbi-section-node">
 	<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
 	  <div class="cbi-value-field">
@@ -9,3 +9,21 @@
 	</div>
   </div>
 </form>
+
+
+
+function upload() {
+  var ajax = new XHR();
+  ajax.post(
+      <%-REQUEST_URI%> + '/upload',
+      formData,
+      function(resp) {
+          console.log(resp.status);
+          if (resp.status !== 200) {
+              console.log('error!');
+          }
+          else{ }
+      }
+  );
+  return false;
+  }
