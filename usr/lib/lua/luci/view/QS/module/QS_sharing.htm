@@ -1,0 +1,22 @@
+<div class="share_services">
+<%-
+  for i,x in ipairs(share_service) do
+	    svc_name = x.svc_name
+        svc_value = x.svc_value
+     	svc_help = x.svc_help
+        svc_description = x.svc_description	
+-%>
+<strong><%=svc_name%>:
+</strong>
+</br>
+<input name="share.<%=svc_name%>" value="<%=svc_value%>" type="checkbox" onclick="ReverseDisplay('<%=svc_value%>');">
+  <%=svc_description%>
+  
+<div class="help_text" id="<%=svc_value%>" style="display:none">
+  <%=svc_help%>
+  <% include("QS/module/sharing/" .. svc_value) %>
+</div></br>
+<%end%>
+</div>
+
+

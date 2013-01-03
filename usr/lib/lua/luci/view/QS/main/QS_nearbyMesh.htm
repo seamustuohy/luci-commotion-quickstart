@@ -1,0 +1,21 @@
+<%-
+   topheader="Here are the nearby networks."
+   subheading="Click on a network to make a compatible node."
+   PageTitle="Nearby Networks"
+   function_url = luci.dispatcher.build_url('QS', 'chosenMeshDefault')
+   buttons={
+           { text="Upload a Config", icon="arrow", action="uploadConfig"},
+           { text="Create New Network", icon="plus", action="uci?uci=name;last=nearbyMesh"},
+           { text="Use A Pre-Built Config", icon="target", action="chooseConfig"}
+   }   
+-%>
+<% include("QS/module/QS_header") %>
+<style>
+  .true {text-decoration:underline;
+  color:blue;}
+</style>
+<%= include("QS/module/QS_infoBanner") %>
+<%= include("QS/module/QS_meshDisplay") %>
+<%= include("QS/module/QS_buttons") %>
+<% include("QS/module/QS_footer") %>
+

@@ -1,0 +1,28 @@
+<%-
+   topheader="While we search for nearby networks..."
+   subheading="Give us some basic info about your node."
+   PageTitle="While we search..."
+-%>
+<% include("QS/module/QS_header") %>
+<% include("QS/module/QS_infoBanner") %>
+
+<h2 class="warning"><%=message%></h2>
+<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+<h2>Node Name</h2>
+<div class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</div>
+<input type="text" value="<%=current%>" name="node_name">
+<div class="help">The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information.</div>
+<h2>Password</h2>
+<div class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</div>
+<input type="password" name="pwd1">
+<div class="help">The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future.</div>
+<div class="flavor">Retype your password here</div>
+<input type="password" name="pwd2">
+<div class="help">Retype the password exactly</div>
+  <div class="button-wrapper"><figure><input type="image" src="<%=media%>/QS/images/plusm.png" alt="Submit button" value="Submit"></br>
+<figcaption>Click Here to Continue</figcaption></figure>
+  </div>
+
+</form>
+<% include("QS/module/QS_footer") %>
+

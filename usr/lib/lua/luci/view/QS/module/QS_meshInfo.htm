@@ -1,0 +1,74 @@
+<div>
+<%-
+   for _,x in ipairs(list_items) do
+       if x[1] == "gateway_sharing" then
+           gateway_sharing=x[2]
+       elseif x[1] == "app_sharing" then
+           app_sharing=x[2]
+       elseif x[1] == "network_key" then
+           network_key=x[2]
+       elseif x[1] == "security_counter" then
+           security_counter=x[2]
+       end
+   end
+   if security_counter == 0 then
+       sec_msg = "This network is insecure"
+   elseif security_counter == 2 then
+       sec_msg = "This network is somewhat secure"   
+   elseif security_counter == 4 then
+       sec_msg = "This network is moderately secure"
+   elseif security_counter == 6 then
+       sec_msg = "This network is secure against casual attackers"
+   elseif security_counter == 8 then
+          sec_msg = "This network has adequate security for most needs"
+   end
+   if network_key == false then
+       net_key_title = "Does NOT Require a Network Key"
+       net_key_help = "This network does NOT require a network password for new nodes"
+       net_key_subsection = "QS/module/null"
+   elseif network_key == "fail" then
+       net_key_title = "Require a Different Network Key"
+       net_key_help = "The network key you entered was incorect. Please upload the correct key."
+       net_key_subsection = "QS/module/QS_upload"
+   elseif network_key == "correct" then
+       net_key_title = "Uses the key you uploaded"
+       net_key_help = "You have uploaded the correct key for this network"
+       net_key_subsection = "QS/module/null"
+   else
+       net_key_title = "Requires A Network Key"
+       net_key_help = "This network requires a network password for new nodes"
+       --need to make upload use same backend but load different frontends when done.
+       file_instructions = "your network key here"
+       net_key_subsection = "QS/module/QS_upload"
+   end
+
+   if gate_share == true then
+       --We need to implement a check on the daemon to see if it can connect to the internet
+       gate_share_title = "Shares Gateway Connectivity"
+       gate_share_help = "This network has users currently sharing their access to the Internet"
+   else
+       gate_share_title = "Does NOT share Gateway Connectivity"
+       gate_share_help = "This network does NOT currently have access to the Internet"
+   end
+
+   if app_share == true then
+       --We need to do an MDNS check for this process
+       app_share_title = "Has Local Applications Running"
+       app_share_help = "This network currently has local applications running on it"
+   else
+       app_share_title = "Does NOT Require a Network Key"
+       app_share_help = "This network currently does NOT have local applications running on it"
+   end
+   
+   -%>
+<ul>
+<li><h3><%=sec_msg%></h3></li>
+<li><h3><%=net_key_title%></h3></li>
+<%=net_key_help%>
+<%include(net_key_subsection)%>
+<li><h3><%=gate_share_title%></h3></li>
+<%=gate_share_help%>
+<li><h3><%=app_share_title%></h3></li>
+<%=app_share_help%>
+</ul>
+</div>
