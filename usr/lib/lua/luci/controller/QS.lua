@@ -31,7 +31,7 @@ function index()
 	--any function call needs a template call at the end of the function
 
 	entry({"QS", "start"}, call("start"), "Quick Start").dependent=false
-	entry({"QS", "welcome"}, template("QS/QS_welcome_main"), "Quick Start").dependent=false
+	entry({"QS", "welcome"}, template("QS/QS_welcome"), "Quick Start").dependent=false
 	entry({"QS", "basicInfo"}, call("basic_info")).dependent=false
 	entry({"QS", "nearbyMesh"}, call("find_nearby")).dependent=false
 	entry({"QS", "sharingPrefs"}, call("sharing_options")).dependent=false
@@ -46,7 +46,7 @@ function index()
 	entry({"QS", "end"}, call("complete")).dependent=false
 	entry({"QS", "tryNetwork"}, call("set_config")).dependent=false
 
-	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig_main")).dependent=false
+	entry({"QS", "uploadConfig"}, call("upload_file", "QS_uploadConfig")).dependent=false
 	entry({"QS", "sharingPrefs", "upload"}, call("upload_file", "sharingPrefs")).dependent=false
 	--template page to change the start page TO REMOVE BEFORE DEPLOYMENT
     --entry({"QS", "changeStart"}, call("start", "nearbyMesh")).dependent=false
@@ -100,9 +100,9 @@ function download_file()
 		   fp:close()
 		   end
 		end
-		luci.template.render("QS/QS_downloader_main", {filename=filename, contents=contents})
+		luci.template.render("QS/QS_downloader", {filename=filename, contents=contents})
 	else
-		luci.template.render("QS/QS_downloader_main", {})
+		luci.template.render("QS/QS_downloader", {})
 	end
 end
 
@@ -126,21 +126,21 @@ function complete()
 	uci:set('quickstart', 'options', 'complete', 'true')
 	uci:save('quickstart')
 	uci:commit('quickstart')
-	luci.template.render("QS/QS_finished_main")
+	luci.template.render("QS/QS_finished")
 end
 
 
 function error(errorNo)
 --This should be called when the daemon returns a error, and passed the error number
 	local uci = luci.model.uci.cursor()
-	errorMsg = uci:get('errorman', errorNo, 'errorMsg')
-	errorLoc = uci:get('errorman', errorNo, 'errorLoc')
-	errorDesc = uci:get('errorman', errorNo, 'errorDesc')
+	errorMsg = uci:get('QS_error', errorNo, 'errorMsg')
+	errorLoc = uci:get('QS_error', errorNo, 'errorLoc')
+	errorDesc = uci:get('QS_error', errorNo, 'errorDesc')
 
 	if errorMsg and errorLoc and errorDesc and errorNo then
-	   luci.template.render("QS/QS_errorPage_main", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
+	   luci.template.render("QS/QS_errorPage", {errorMsg=errorMsg, errorLoc=errorLoc, errorDesc=errorDesc, errorNo=errorNo})
 	else
-		luci.template.render("QS/QS_errorPage_main", {})
+		luci.template.render("QS/QS_errorPage", {})
 	end
 end
 
@@ -151,7 +151,7 @@ function basic_info()
 			local node_name = luci.http.formvalue("node_name")
 			if node_name == '' then
 			   message = "Please enter a node name"
-			   luci.template.render("QS/QS_basicInfo_main", {message=message})
+			   luci.template.render("QS/QS_basicInfo", {message=message})
 			else
 			   uci:set('quickstart', 'options', 'name', node_name)
 		 	   uci:save('quickstart')
@@ -162,21 +162,21 @@ function basic_info()
 				  	 if p1 == p2 then
 					 	if p1 == '' then
 						   message = "Please enter a password"
-						   luci.template.render("QS/QS_basicInfo_main", {message=message, current=node_name})
+						   luci.template.render("QS/QS_basicInfo", {message=message, current=node_name})
 						else   
 					        luci.sys.user.setpasswd("root", p1)
 			 			    luci.http.redirect("nearbyMesh")
 						end
 					 else
 					    message = "Given password confirmation did not match, password not changed!"
-						luci.template.render("QS/QS_basicInfo_main", {message=message, current=node_name})
+						luci.template.render("QS/QS_basicInfo", {message=message, current=node_name})
 					 end
 				else
 				luci.http.redirect("nearbyMesh")
 				end
 			end
 		else
-			luci.template.render("QS/QS_basicInfo_main")
+			luci.template.render("QS/QS_basicInfo")
 		end
 end
 
@@ -194,7 +194,7 @@ function find_nearby()
 		 	   { name="Viva la' Revolution", config="true"},
 		}
 		
-		luci.template.render("QS/QS_nearbyMesh_main", {networks=networks, test=test})
+		luci.template.render("QS/QS_nearbyMesh", {networks=networks, test=test})
 end
 
 function set_sharing_options()
@@ -222,7 +222,7 @@ function sharing_options()
    		end)
 	
 			   
-		luci.template.render("QS/QS_sharingPrefs_main", {share_service=share_service})
+		luci.template.render("QS/QS_sharingPrefs", {share_service=share_service})
 end
 
 
@@ -297,7 +297,7 @@ function mesh_defaults(config, keyval)
 		end
 		
 		--send list of items to the template for parsing
-		luci.template.render("QS/QS_chosenMeshDefault_main", {list_items=list_items, network=network})
+		luci.template.render("QS/QS_chosenMeshDefault", {list_items=list_items, network=network})
 		
 end
 
@@ -381,7 +381,7 @@ function wait_4_reset(page, notice)
 	--set the new start page
 	start(page)
 	timer = 120
-	luci.template.render("QS/QS_wait4reset_main", {timer=timer, name=UName, notice=notice})
+	luci.template.render("QS/QS_wait4reset", {timer=timer, name=UName, notice=notice})
 	--TODO Uncomment the next line to make the node actually reset
 	--luci.sys.reboot()
 end
@@ -393,7 +393,7 @@ function uci_loader()
 		 --TODO see what data the daemon will keep about known configs for custom uci pages with required & missing info
 	if luci.http.formvalue("module") then
 	   template = luci.http.formvalue("module")
-	else template = "QS_uci_main"
+	else template = "QS_uci"
 	end
 	   
     uci_page = luci.http.formvalue("uci")
@@ -433,7 +433,7 @@ local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
 --    table.sort(data.Links, compare_links)
 	  --TODO remove trash variable below once actual data is being parsed.
 	neighbors = 0
-    luci.template.render("QS/QS_connectedNodes_main", {neighbors=neighbors})
+    luci.template.render("QS/QS_connectedNodes", {neighbors=neighbors})
 end
 
 
@@ -500,5 +500,5 @@ function choose_config()
 		 	   { name="Viva la' Education", type="We dont need no"},
 		}
 		
-		luci.template.render("QS/QS_chooseConfig_main", {configs=configs})
+		luci.template.render("QS/QS_chooseConfig", {configs=configs})
 end
