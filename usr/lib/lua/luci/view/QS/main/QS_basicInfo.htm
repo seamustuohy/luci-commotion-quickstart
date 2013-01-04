@@ -3,32 +3,141 @@
    subheading="Give us some basic info about your node."
    PageTitle="While we search..."
    -%>
-<% include("QS/module/QS_header") %>
-<% include("QS/module/QS_infoBanner") %>
+<%- include("QS/module/QS_header") -%>
+<!-- Begin QS Header -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<!-- Are the favicon and stylesheet paths static or dynamic? -->
+		<link type="image/png" href="<%=media%>/QS/images/favicon.ico" rel="shortcut icon" />
+		<link rel="stylesheet" href="<%=media%>/QS/css/quickstart.css" type="text/css" />
+		<!--script src="#" type="text/javascript"-->
+		<!-- NEED: page title var in each page to be used in title and h1 -->
+		<title><%=PageTitle%> | <%=node%></title>
+	</head>
+	<body>
+		<div id="page">
+<!-- End QS Header -->
+<%- include("QS/module/QS_infoBanner") -%>
+<!-- Begin QS infoBanner -->
+<!---
+		Seems like there should be a way to reuse this in logoInfoBanner
+				-->
+			<header>
+				<!-- top level navigational elements -->
+				<div class="navbar-inners">
+					<div class="color0"></div>
+					<div class="color1"></div>
+					<div class="color2"></div>
+					<div class="color3"></div>
+					<div class="color4"></div>
+				</div>
+				<div id="zone-preface-wrapper">
+					<div id="zone-preface">
+						<hr />
+						<!-- h1 functionally identical to title for accessibility -->
+						<h1><%=PageTitle%></h1>
+						<!-- Rest of header content -->
+						<h2><%=topheader%></h2>
+						<p><%=subheading%></p>
+					</div>
+				</div>
+			</header>
 
-<h2 class="warning"><%=message%></h2>
-<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
-  <h2>Node Name</h2>
-  <div class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</div>
-  <input type="text" value="<%=current%>" name="node_name">
-  <div class="help">The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information.</div>
-<h2>Password</h2>
-<div class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</div>
-<input type="password" name="pwd1">
-<div class="help">The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future.</div>
-<div class="flavor">Retype your password here</div>
-<input type="password" name="pwd2">
-<div class="help">Retype the password exactly</div>
-<div class="zone-button-wrapper">
-  <div id="zone-buttons">
-	<div class="button-wrapper">
-	  <figure>
-		<input type="image" src="<%=media%>/QS/images/plus.png" alt="Submit button" value="Submit"></br>
-		<figcaption>Click Here to Continue</figcaption>
-	  </figure>
-	</div>
-  </div>
-</div>
-</form>
-<% include("QS/module/QS_footer") %>
+<!-- End QS infoBanner -->
+<!-- Begin content (no module yet) -->
+			<!-- next 2 lines should be in infoBanner or logoInfoBanner -->
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
 
+					<h2 class="warning"><%=message%></h2>
+
+
+					<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+	  				<h2>Node Name</h2>
+						<p class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</p>
+					  <input type="text" value="<%=current%>" name="node_name">
+						<div class="help">
+							<p>The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information.</p>
+						</div>
+
+						<h2>Password</h2>
+						<p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+						<input type="password" name="pwd1">
+						<div class="help">
+							<p>The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future.</p>
+						</div>
+						<p class="flavor">Retype your password here</div>
+						<input type="password" name="pwd2">
+						<div class="help">
+							<p>Retype the password exactly</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="zone-button-wrapper">
+ 				 <div id="zone-buttons">
+					<div class="button-wrapper">
+						<figure>
+							<input type="image" src="<%=media%>/QS/images/plus.png" alt="Submit button" value="Submit"><br />
+							<figcaption>Click Here to Continue</figcaption>
+					  </figure>
+					</div>
+					</form>
+				</div>
+			</div>
+<!-- End content (no module yet) -->
+<%- include("QS/module/QS_footer") -%>
+<!-- Begin QS Footer -->
+
+			<!-- SSI in module -->
+			<%- include("QS/module/QS_adminButton") -%>
+			<!-- Begin QS adminButton -->
+
+			<div id="zone-footer-wrapper">
+				<div id="zone-footer">
+						<div class="button-wrapper">
+							<ul>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/target_admin.png" alt="Advanced Config Button" class="button" />
+											<figcaption>Advanced Config</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<figcaption>Help</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/equal_admin.png" alt="Admin Menu Button" class="button" />
+											<figcaption>Admin Menu</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/quit_admin.png" alt="Quit Quickstart Wizard Button" class="button" />
+											<figcaption>Quit</figcaption>
+										</figure>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- End QS adminButton -->
+		</div>
+	</body>
+</html>
+
+<!-- End QS Footer -->

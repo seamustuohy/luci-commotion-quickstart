@@ -1,17 +1,139 @@
 <%-
-   topheader=("Here is your file")
+   topheader="Here is your file"
    subheading="You can download & view it below"
    PageTitle="Download"
    function_url = luci.dispatcher.build_url('QS', 'downloader')
    buttons={
            { text="Go Back and Choose Again", icon="plus", action="nearbyMesh"},
    }
-
 --list_items is the list of values. list_items[1] = {"name", value}, etc.    
 -%>
-<% include("QS/module/QS_header") %>
-<%= include("QS/module/QS_infoBanner") %>
-<%= include("QS/module/QS_download") %>
-<%= include("QS/module/QS_buttons") %>
-<% include("QS/module/QS_footer") %>
+<%- include("QS/module/QS_header") -%>
+<!-- Begin QS Header -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<!-- Are the favicon and stylesheet paths static or dynamic? -->
+		<link type="image/png" href="<%=media%>/QS/images/favicon.ico" rel="shortcut icon" />
+		<link rel="stylesheet" href="<%=media%>/QS/css/quickstart.css" type="text/css" />
+		<!--script src="#" type="text/javascript"-->
+		<!-- NEED: page title var in each page to be used in title and h1 -->
+		<title><%=PageTitle%> | <%=node%></title>
+	</head>
+	<body>
+		<div id="page">
+<!-- End QS Header -->
+<%-= include("QS/module/QS_infoBanner") -%>
+<!-- Begin QS infoBanner -->
 
+<!---
+		Seems like there should be a way to reuse this in logoInfoBanner
+				-->
+			<header>
+				<!-- top level navigational elements -->
+				<div class="navbar-inners">
+					<div class="color0"></div>
+					<div class="color1"></div>
+					<div class="color2"></div>
+					<div class="color3"></div>
+					<div class="color4"></div>
+				</div>
+				<div id="zone-preface-wrapper">
+					<div id="zone-preface">
+						<hr />
+						<!-- h1 functionally identical to title for accessibility -->
+						<h1><%=PageTitle%></h1>
+						<!-- Rest of header content -->
+						<h2><%=topheader%></h2>
+						<p><%=subheading%></p>
+					</div>
+				</div>
+			</header>
+<!-- End QS infoBanner -->
+<%-= include("QS/module/QS_download") -%>
+<!-- Begin QS Download -->
+
+
+<a href="<%=function_url%>?filename=<%=filename%>&download">DOWNLOAD FILE HERE/</a><br>
+<code><%=contents%></code>
+<!-- End QS Download -->
+<%-= include("QS/module/QS_buttons") -%>
+<!-- Begin QS buttons -->
+
+			<div id="zone-button-wrapper">
+				<div id="zone-buttons">
+					<div class="button-wrapper">
+						<ul>
+							<%-
+							for i,x in ipairs(buttons) do
+									text = x.text
+								icon = x.icon
+								action = x.action
+								 -%>
+								<li>
+									<a href="/cgi-bin/luci/QS/<%=action%>">
+										<figure>
+										<img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
+										<figcaption><%=text%></figcaption>
+										</figure>
+									</a>
+								</li>
+							<%end%>
+						</ul>
+					</div>
+				</div>
+			</div>
+<!-- End QS buttons -->
+<%- include("QS/module/QS_footer") -%>
+<!-- Begin QS footer -->
+
+			<%- include("QS/module/QS_adminButton") -%>
+			<!-- Begin adminButton -->
+
+			<div id="zone-footer-wrapper">
+				<div id="zone-footer">
+						<div class="button-wrapper">
+							<ul>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/target_admin.png" alt="Advanced Config Button" class="button" />
+											<figcaption>Advanced Config</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<figcaption>Help</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/equal_admin.png" alt="Admin Menu Button" class="button" />
+											<figcaption>Admin Menu</figcaption>
+										</figure>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<figure>
+											<img src="<%=media%>/QS/images/quit_admin.png" alt="Quit Quickstart Wizard Button" class="button" />
+											<figcaption>Quit</figcaption>
+										</figure>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- End adminButton -->
+		</div>
+	</body>
+</html>
+<!-- End QS footer -->
