@@ -10,6 +10,17 @@ vertical-align: baseline;
 body, p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset {
     font: 13px/1.5 AsapRegular,Arial,sans-serif;
 }
+
+h1, h2, h3, strong, bold {
+	font-weight: bold;
+}
+
+h2 {
+	font: 1.25em;
+	margin-top: 2.25em;
+	/*border-bottom: 1px solid #FF739C;*/
+}
+
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
 }
@@ -113,7 +124,11 @@ margin-left: auto;
 margin-right: auto;
 width: 960px;
 vertical-align: baseline;
-text-align: center;
+text-align: justified;
+}
+
+.help {
+	/* image, alt text, and spacing */
 }
 
 .bigButton {
@@ -235,6 +250,7 @@ margin-right: auto;
 display: block;
 white-space: normal;
 vertical-align: top;
+text-align: center;
 }
 
 #zone-footer img.button {
