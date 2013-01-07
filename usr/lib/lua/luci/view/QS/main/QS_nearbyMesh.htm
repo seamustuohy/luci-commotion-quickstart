@@ -7,7 +7,7 @@
            { text="Upload a Config", icon="arrow", action="uploadConfig"},
            { text="Create New Network", icon="plus", action="uci?uci=name;last=nearbyMesh"},
            { text="Use A Pre-Built Config", icon="target", action="chooseConfig"}
-   }   
+   }
 -%>
 <!-- include("QS/module/QS_header") -->
 <!-- Begin QS header -->
@@ -67,7 +67,7 @@
 <div id="meshDisplay">
   <table summary="List of nearby meshes" class="near">
 	<caption>
-	  <img src="<%=media%>images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
+	  <img src="<%=media%>/QS/images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
 	</caption>
 	<tbody>
 	  <tr>
@@ -85,10 +85,10 @@
 		  <%-
 			 if config ~= nil then
 			 -%>
-		  <img src="<%=media%>/images/check.png" alt="Full configuration available" class="true" />
+		  <img src="<%=media%>/QS/images/check.png" alt="Full configuration available" class="true" />
 		  <%end%>
 		</td>
-		<td><a href="<%=function_url%>?config=<%=name%>"><%=name%>/</a></td>
+		<td><a href="<%=function_url%>?config=<%=name%>"><%=name%></a></td>
 	  </tr>
 	  <%end%>
 	</tbody>

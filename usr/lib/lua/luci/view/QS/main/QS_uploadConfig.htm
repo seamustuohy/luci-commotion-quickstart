@@ -1,4 +1,3 @@
-
 <%-
       topheader="Upload Your Custom Configuration Here"
       subheading="Choose a file from your computer to upload to the node."
@@ -56,44 +55,50 @@
 			</header>
 <!-- End QS infoBanner -->
 <!-- Begin content (no module yet) -->
-<center><h3>Upload <%=file_type%></h3></center>
+
+
 <!-- End content (no module yet) -->
 <!-- include("QS/module/QS_upload") -->
 <!-- Begin QS upload -->
-
-  <form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data" onsubmit="startUpload();">
-  <div class="cbi-section-node">
-	<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
-	  <div class="cbi-value-field">
-		<input type="file" name="<%=uploadType%>" id="media" />
-		<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px"/>
-		  <div class="cbi-section-descr"> Upload <%=file_instructions%> </div>
-	  </div>
-	</div>
-  </div>
-</form>
-
-
-
-function upload() {
-  var ajax = new XHR();
-  ajax.post(
-      <%-REQUEST_URI%> + '/upload',
-      formData,
-      function(resp) {
-          console.log(resp.status);
-          if (resp.status !== 200) {
-              console.log('error!');
-          }
-          else{ }
-      }
-  );
-  return false;
-  }
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<h2>Upload <%=file_type%></h2>
+						<script type="text/javascript">
+							function upload() {
+								var ajax = new XHR();
+								ajax.post(
+									<%-REQUEST_URI%> + '/upload',
+									formData,
+									function(resp) {
+										console.log(resp.status);
+										if (resp.status !== 200) {
+											console.log('error!');
+										} else {
+										}
+									}
+								);
+								return false;
+							}
+						</script>
+						<form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data" onsubmit="startUpload();">
+							<div class="cbi-section-node">
+								<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
+									<div class="cbi-value-field">
+										<input type="file" name="<%=uploadType%>" id="media" />
+										<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px"/>
+										<div class="cbi-section-descr">
+											Upload <%=file_instructions%>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 <!-- End QS upload -->
 <!-- include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
- 
+
 			<div id="zone-button-wrapper">
 				<div id="zone-buttons">
 					<div class="button-wrapper">

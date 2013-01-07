@@ -53,26 +53,28 @@
 
 					<h2 class="warning"><%=message%></h2>
 
+<!-- Add show/hide/tooltip to Help -->
 
 					<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
 	  				<h2>Node Name</h2>
 						<p class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</p>
-					  <input type="text" value="<%=current%>" name="node_name">
-						<div class="help">
-							<p>The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information.</p>
-						</div>
+						<span class="help">
+							<img src="<%=media%>/QS/images/help.png" class="tip" alt="The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information." />
+						</span>
+						<input type="text" value="<%=current%>" name="node_name">
+
 
 						<h2>Password</h2>
 						<p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
-						<div class="help">
-							<p>The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future.</p>
-						</div>
+						<span class="help">
+							<img src="<%=media%>/QS/images/help.png" class="tip" alt="The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future." />
+						</span>
 
 						<input type="password" name="pwd1">
 						<p class="flavor">Retype your password here</p>
-						<div class="help">
-							<p>Retype the password exactly</p>
-						</div>
+						<span class="help">
+							<img src="<%=media%>/QS/images/help.png" class="tip" alt="Retype the password exactly" />
+						</span>
 						<input type="password" name="pwd2">
 
 					</div>
@@ -112,7 +114,7 @@
 								<li>
 									<a href="#">
 										<figure>
-											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
 											<figcaption>Help</figcaption>
 										</figure>
 									</a>

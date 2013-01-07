@@ -55,20 +55,22 @@
 <!-- End QS infoBanner -->
 <!--= include("QS/module/QS_chooseConfig") -->
 <!-- Begin QS chooseConfig -->
-
-
-<center><ul>
-<%-
-   for _,x in ipairs(configs) do
-       name = x.name
-       type = x.type
-   -%>
-   <li class="configs">
-   <a href="<%=function_url%>?config=<%=name%>"><%=name%></a></br><%=type%></li>
-   
-
-<%end%>
-</ul></center>
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<h2 class="center">Available Configurations</h2>
+					<ul class="center">
+						<%-
+							for _,x in ipairs(configs) do
+								name = x.name
+								type = x.type
+						-%>
+							<li class="configs">
+								<a href="<%=function_url%>?config=<%=name%>"><%=name%></a></br><%=type%>
+							</li>
+						<%end%>
+					</ul>
+				</div>
+			</div>
 <!-- End QS chooseConfig -->
 <!--= include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
