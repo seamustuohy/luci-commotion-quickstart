@@ -56,24 +56,27 @@
 
 <!--= include("commotion/QS/module/QS_nodeNeighbors") -->
 <!-- Begin QS nodeNeighbors -->
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<%-
+						if neighbors <= 2 then
+							meaning = "YOU'RE INSECURE..  RUN RUN RUN"
+						elseif 2 < neighbors and neighbors < 4 then
+							meaning = "somewhat secure you are ~Yoda"
+						elseif 4 < neighbors and neighbors < 6 then
+							meaning = "Ohhhh a bunny"
+						elseif 6 < neighbors and neighbors < 8 then
+							meaning = "I Like Penguins"
+						elseif 10 < neighbors and neighbors < 12 then
+							meaning = "You are cheating"
+						end
+					-%>
 
-<%-
-if neighbors <= 2 then
-	meaning = "YOU'RE INSECURE..  RUN RUN RUN"
-elseif 2 < neighbors and neighbors < 4 then
-	meaning = "somewhat secure you are ~Yoda"
-elseif 4 < neighbors and neighbors < 6 then
-	meaning = "Ohhhh a bunny"
-elseif 6 < neighbors and neighbors < 8 then
-	meaning = "I Like Penguins"
-elseif 10 < neighbors and neighbors < 12 then
-	meaning = "You are cheating"
-end
-
--%>
-
-<%=neighbors%>
-<%=meaning%>
+					<p><strong><%=neighbors%>:</strong>
+					<%=meaning%>
+					</p>
+				</div>
+			</div>
 <!-- End QS nodeNeighbors -->
 
 <!--= include("commotion/QS/module/QS_buttons") -->
@@ -126,7 +129,7 @@ end
 								<li>
 									<a href="#">
 										<figure>
-											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
 											<figcaption>Help</figcaption>
 										</figure>
 									</a>

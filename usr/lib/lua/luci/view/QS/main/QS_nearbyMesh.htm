@@ -63,37 +63,40 @@
 <!-- Check my syntax. First for loop should render in column 2 with
 		all the known/nearby meshes. If statement in column 2 should print
 		the checkmark image if the full config is available -->
-
-<div id="meshDisplay">
-  <table summary="List of nearby meshes" class="near">
-	<caption>
-	  <img src="<%=media%>/QS/images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
-	</caption>
-	<tbody>
-	  <tr>
-		<th scope="col">Automatic</th>
-		<th scope="col">Type of network</th>
-	  </tr>
-	  <%-
-		 for _,x in ipairs(networks) do
-		     name = x.name
-		     config = x.config
-		     configID = x.configID
-		 -%>
-	  <tr>
-		<td>
-		  <%-
-			 if config ~= nil then
-			 -%>
-		  <img src="<%=media%>/QS/images/check.png" alt="Full configuration available" class="true" />
-		  <%end%>
-		</td>
-		<td><a href="<%=function_url%>?config=<%=name%>"><%=name%></a></td>
-	  </tr>
-	  <%end%>
-	</tbody>
-  </table>
-</div>
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<div id="meshDisplay">
+						<table summary="List of nearby meshes" class="near">
+						<caption>
+							<img src="<%=media%>/QS/images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
+						</caption>
+						<tbody>
+							<tr>
+							<th scope="col">Automatic</th>
+							<th scope="col">Type of network</th>
+							</tr>
+							<%-
+								for _,x in ipairs(networks) do
+									name = x.name
+									config = x.config
+									configID = x.configID
+							-%>
+							<tr>
+							<td>
+								<%-
+								 if config ~= nil then
+								 -%>
+								<img src="<%=media%>/QS/images/check.png" alt="Full configuration available" class="true" />
+								<%end%>
+							</td>
+							<td><a href="<%=function_url%>?config=<%=name%>"><%=name%></a></td>
+							</tr>
+							<%end%>
+						</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 <!-- End QS meshDisplay -->
 <!--= include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
@@ -143,7 +146,7 @@
 								<li>
 									<a href="#">
 										<figure>
-											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
 											<figcaption>Help</figcaption>
 										</figure>
 									</a>

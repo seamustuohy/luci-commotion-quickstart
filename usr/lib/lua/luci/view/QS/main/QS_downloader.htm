@@ -6,11 +6,11 @@
    buttons={
            { text="Go Back and Choose Again", icon="plus", action="nearbyMesh"},
    }
---list_items is the list of values. list_items[1] = {"name", value}, etc.    
+--list_items is the list of values. list_items[1] = {"name", value}, etc.
 -%>
 <!-- include("QS/module/QS_header") -->
 <!-- Begin QS Header -->
- 
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -54,10 +54,15 @@
 <!-- End QS infoBanner -->
 <!--= include("QS/module/QS_download") -->
 <!-- Begin QS Download -->
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
+					<p>
+					<a href="<%=function_url%>?filename=<%=filename%>&download">DOWNLOAD FILE HERE/</a><br />
+					<code><%=contents%></code>
+					</p>
+				</div>
+			</div>
 
-
-<a href="<%=function_url%>?filename=<%=filename%>&download">DOWNLOAD FILE HERE/</a><br>
-<code><%=contents%></code>
 <!-- End QS Download -->
 <!--= include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
@@ -89,7 +94,7 @@
 <!-- include("QS/module/QS_footer") -->
 <!-- Begin QS footer -->
 
-			<%- include("QS/module/QS_adminButton") -%>
+			<!-- include("QS/module/QS_adminButton") -->
 			<!-- Begin adminButton -->
 
 			<div id="zone-footer-wrapper">
@@ -107,7 +112,7 @@
 								<li>
 									<a href="#">
 										<figure>
-											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
 											<figcaption>Help</figcaption>
 										</figure>
 									</a>

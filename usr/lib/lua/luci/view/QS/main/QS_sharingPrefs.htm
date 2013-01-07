@@ -50,91 +50,123 @@
 <!-- End QS infoBanner -->
 <!-- include("QS/module/QS_sharing") -->
 <!-- Begin QS sharing -->
+			<div id="zone-content-wrapper">
+				<div id="zone-content">
 
-<div class="share_services">
-<%-
-  for i,x in ipairs(share_service) do
-	    svc_name = x.svc_name
-        svc_value = x.svc_value
-     	svc_help = x.svc_help
-        svc_description = x.svc_description	
--%>
-<strong><%=svc_name%>:
-</strong>
-</br>
-<input name="share.<%=svc_name%>" value="<%=svc_value%>" type="checkbox" onclick="ReverseDisplay('<%=svc_value%>');">
-  <%=svc_description%>
-  
-<div class="help_text" id="<%=svc_value%>" style="display:none">
-  <%=svc_help%>
-  <% include("QS/module/sharing/" .. svc_value) %>
-</div></br>
-<%end%>
-</div>
+					<div class="share_services">
+						<%-
+							for i,x in ipairs(share_service) do
+								svc_name = x.svc_name
+								svc_value = x.svc_value
+								svc_help = x.svc_help
+								svc_description = x.svc_description
+						-%>
+							<strong><%=svc_name%>:</strong><br />
+							<input name="share.<%=svc_name%>" value="<%=svc_value%>" type="checkbox" onclick="ReverseDisplay('<%=svc_value%>');">
+							<%=svc_description%>
+							<span class="help" id="<%=svc_value%>">
+								<img src="<%=media%>/QS/images/help.png" class="tip" alt="%=svc_help%" />
+							</span>
+							<div>
+								<% include("QS/module/sharing/" .. svc_value) %>
+							</div>
+						<%end%>
+					</div>
 
+					<script type="text/javascript">
+						function ReverseDisplay(d) {
+							if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+							else { document.getElementById(d).style.display = "none"; }
+						}
+					</script>
 
+					<div name="modals">
+
+						<aside id="upload" class="modal">
+							<div>
+								<!--=include("QS/module/QS_upload")-->
+								<!-- BEGIN QS Upload -->
+								<script type="text/javascript">
+									function upload() {
+										var ajax = new XHR();
+										ajax.post(
+											<%-REQUEST_URI%> + '/upload',
+											formData,
+											function(resp) {
+												console.log(resp.status);
+												if (resp.status !== 200) {
+													console.log('error!');
+												} else{ }
+											}
+										);
+										return false;
+									}
+								</script>
+								<form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data" onsubmit="startUpload();">
+									<div class="cbi-section-node">
+										<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
+											<div class="cbi-value-field">
+												<input type="file" name="<%=uploadType%>" id="media" />
+												<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px"/>
+												<div class="cbi-section-descr"> Upload <%=file_instructions%> </div>
+											</div>
+										</div>
+									</div>
+								</form>
+								<!-- END QS Upload -->
+								<!--TODO change close tag to be a submission of the form as well. -->
+								<p><a href="#close" title="Close">Close</a></p>
+							</div>
+						</aside>
+						<aside id="captive" class="modal">
+							<div>
+								<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+									<strong>Title</strong><br />
+									<input type="text" name="<%=svc_value%>_title"><br />
+									<strong>Main Text</strong><br />
+									<textarea name="<%=svc_value%>_main" cols="60" royws="5"></textarea>
+								</form>
+						<!--TODO change close tag to be a submission of the form as well. -->
+								<p><a href="#close" title="Close">Close</a></p>
+							</div>
+						</aside>
+
+						<aside id="sap" class="modal">
+							<div>
+								<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+									<h2>Secure Access Point Password</h2>
+									<p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+									<span class="help">
+										<img src="<%=media%>/QS/images/help.png" class="tip" alt="The password that your private network will use. This password MUST be different than your node password if anyone else will use the private access point." />
+									</span>
+									<input type="password" name="pwd1">
+									<p class="flavor">Retype your password here</p>
+									<span class="help">
+										<img src="<%=media%>/QS/images/help.png" class="tip" alt="Retype the password exactly." />
+									</span>
+									<input type="password" name="pwd2">
+								</form>
+								<!--TODO change close tag to be a submission of the form as well. -->
+								<p><a href="#close" title="Close">Close</a></p>
+							</div>
+						</aside>
+					</div>
+				</div>
+			</div>
 <!-- End QS sharing -->
 <!-- Fix this busted order -->
-<div id="zone-button-wrapper">
-  <div id="zone-buttons">
-	<div class="button-wrapper">
-	  <figure>
-		<input type="image" src="<%=media%>/QS/images/plus.png" alt="Submit button" value="Submit"></br>
-		<figcaption>Click Here to Finish</figcaption>
-	  </figure>
-	</div>
-  </div>
-</div>
-</form>
-
-<script type="text/javascript">
-function ReverseDisplay(d) {
-if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-else { document.getElementById(d).style.display = "none"; }
-}
-</script>
-
-<div name="modals">
-
-  <aside id="upload" class="modal">
-	<div>
-  	  <%=include("QS/module/QS_upload")%>
-	  <!--TODO change close tag to be a submission of the form as well. -->
-	  <a href="#close" title="Close">Close</a>
-	</div>
-  </aside>
-  
-  
-  <aside id="captive" class="modal">
-	<div>
-	  <form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
-		<strong>Title</strong><br>
-		<input type="text" name="<%=svc_value%>_title"><br>
-		<strong>Main Text</strong><br>
-		<textarea name="<%=svc_value%>_main" cols="60" royws="5"></textarea>
-	  </form>
-	  <!--TODO change close tag to be a submission of the form as well. -->
-	  <a href="#close" title="Close">Close</a>
-	</div>
-  </aside>
-
-  <aside id="sap" class="modal">
-	<div>	  
-	  <form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
-		<h2>Secure Access Point Password</h2>
-		<div class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters. </div>
-		<input type="password" name="pwd1">
-		<div class="help">The password that your private network will use. This password MUST be different than your node password if anyone else will use the private access point. </div>
-		<div class="flavor">Retype your password here</div>
-		<input type="password" name="pwd2">
-		<div class="help">Retype the password exactly</div>
-		<!--TODO change close tag to be a submission of the form as well. -->
-		<a href="#close" title="Close">Close</a>
-	</div>
-  </aside>
-
-</div>
-<!-- Fix busted order -->
+			<div id="zone-button-wrapper">
+				<div id="zone-buttons">
+					<div class="button-wrapper">
+						<figure>
+							<input type="image" src="<%=media%>/QS/images/plus.png" alt="Submit button" value="Submit"></br>
+							<figcaption>Click Here to Finish</figcaption>
+							</form>
+						</figure>
+					</div>
+				</div>
+			</div>
+<!-- Fix busted form order -->
 <!-- include("QS/module/QS_footer") -->
 <!-- Begin QS footer -->
 
@@ -156,7 +188,7 @@ else { document.getElementById(d).style.display = "none"; }
 								<li>
 									<a href="#">
 										<figure>
-											<img src="<%=media%>/QS/images/greendot_admin.png" alt="Help Button" class="button" />
+											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
 											<figcaption>Help</figcaption>
 										</figure>
 									</a>
@@ -186,4 +218,3 @@ else { document.getElementById(d).style.display = "none"; }
 	</body>
 </html>
 <!-- End QS footer -->
-
