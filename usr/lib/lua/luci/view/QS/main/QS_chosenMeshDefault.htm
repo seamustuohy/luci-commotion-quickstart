@@ -4,7 +4,6 @@
    PageTitle="Network Configuration"
    buttons={
            { text="Go Back and Choose Again", icon="x", action="nearbyMesh"},
-           { text="Continue With This Network", icon="plus", action="tryNetwork?config=" .. network},
            { text="Customize This Network", icon="dot", action="uci?uci=name;last=chosenMeshDefault"}
    }
 
@@ -27,10 +26,10 @@
 	<body>
 		<div id="page">
 <!-- End QS Header -->
-<!--= include("QS/module/QS_infoBanner") -->
+<!-- include("QS/module/QS_infoBanner") -->
 <!-- Begin QS infoBanner -->
 
-<!---
+<!--
 		Seems like there should be a way to reuse this in logoInfoBanner
 				-->
 			<header>
@@ -46,15 +45,14 @@
 					<div id="zone-preface">
 						<hr />
 						<!-- h1 functionally identical to title for accessibility -->
-						<h1><%=PageTitle%></h1>
+						<h1 style="font-size:3em"><%=topheader%></h1>
 						<!-- Rest of header content -->
-						<h2><%=topheader%></h2>
-						<p><%=subheading%></p>
+						<h2 style="font-size:1.5em"><%=subheading%></h2>
 					</div>
 				</div>
 			</header>
 <!-- End QS infoBanner -->
-<!--= include("QS/module/QS_meshInfo") -->
+<!-- include("QS/module/QS_meshInfo") -->
 <!-- Begin QS meshInfo -->
 			<div id="zone-content-wrapper">
 				<div id="zone-content">
@@ -124,91 +122,126 @@
 							<li><strong><%=sec_msg%></strong></li>
 							<li><strong><%=net_key_title%>:</strong>
 								<%=net_key_help%>
-								<%include(net_key_subsection)%>
+								<%if net_key_subsection then%>
+								<!-- include(net_key_subsection) -->
+								<%uploadType = "key"%>
+								<form method="post" action="/cgi-bin/luci/QS/upload" enctype="multipart/form-data">
+								  <div class="cbi-section-node">
+									<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
+									  <div class="cbi-value-field">
+										<input type="file" name="<%=uploadType%>" id="media" />
+										<input type="hidden" name="next" value="tryNetwork">
+										<input type="hidden" name="config" value="<%=network%>">
+										<div class="cbi-section-descr"> Upload <%=file_instructions%> </div>
+									  </div>
+									</div>
+								  </div>
+								  <%end%>
 							</li>
-
+							
 							<li><strong><%=gate_share_title%>:</strong>
-								<%=gate_share_help%>
+							  <%=gate_share_help%>
 							</li>
 							<li><strong><%=app_share_title%></strong>
-								<%=app_share_help%>
+							  <%=app_share_help%>
 							</li>
 						</ul>
-					</div>
-				</div>
-<!-- End QS meshInfo -->
-<!--= include("QS/module/QS_buttons") -->
-<!-- Begin QS buttons -->
-
-			<div id="zone-button-wrapper">
-				<div id="zone-buttons">
-					<div class="button-wrapper">
-						<ul>
-							<%-
-							for i,x in ipairs(buttons) do
-									text = x.text
-								icon = x.icon
-								action = x.action
-								 -%>
-								<li>
-									<a href="/cgi-bin/luci/QS/<%=action%>">
-										<figure>
-										<img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
-										<figcaption><%=text%></figcaption>
-										</figure>
-									</a>
-								</li>
-							<%end%>
-						</ul>
-					</div>
 				</div>
 			</div>
-<!-- End QS buttons -->
-<!-- include("QS/module/QS_footer") -->
-<!-- Begin QS Footer -->
-
+			<!-- End QS meshInfo -->
+			<!-- include("QS/module/QS_buttons") -->
+			<!-- Begin QS buttons -->
+			
+			<div id="zone-button-wrapper">
+			  <div id="zone-buttons">
+				<div class="button-wrapper">
+				  <ul>
+					<%-
+					   for i,x in ipairs(buttons) do
+					       text = x.text
+					       icon = x.icon
+					       action = x.action
+					   -%>
+					<li>
+					  <a href="/cgi-bin/luci/QS/<%=action%>">
+						<figure>
+						  <img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
+						  <figcaption><%=text%></figcaption>
+						</figure>
+					  </a>
+					</li>
+					<%end%>
+					  <%if net_key_subsection then%>
+					<li>
+					  <a href="/cgi-bin/luci/QS/tryNetwork?config=<%=network%>">
+						<figure>
+						  <input type="image" src="<%=media%>/QS/images/plus.png" alt="Continue With This Network Button" value="Submit"><br />
+						  <figcaption>Continue With This Network</figcaption>
+						</figure>
+					  </a>
+					</li>
+					
+					<%else%>
+ 					<li>
+					  <a href="/cgi-bin/luci/QS/tryNetwork?config=<%=network%>">
+						<figure>
+			  			  <img src="<%=media%>/QS/images/plus.png" alt="Continue With This Network Button" class="button" />
+						  <figcaption>Continue With This Network</figcaption>
+						</figure>
+					  </a>
+					</li>
+					<%end%>
+				  </ul>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- End QS buttons -->
+			<!-- include("QS/module/QS_footer") -->
+			<!-- Begin QS Footer -->
+			
 			<!-- include("QS/module/QS_adminButton") -->
 			<!-- Begin QS adminButton -->
-
+			
 			<div id="zone-footer-wrapper">
-				<div id="zone-footer">
-						<div class="button-wrapper">
-							<ul>
-								<li>
-									<a href="#">
-										<figure>
-											<img src="<%=media%>/QS/images/target_admin.png" alt="Advanced Config Button" class="button" />
-											<figcaption>Advanced Config</figcaption>
-										</figure>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<figure>
-											<img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
-											<figcaption>Help</figcaption>
-										</figure>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<figure>
-											<img src="<%=media%>/QS/images/equal_admin.png" alt="Admin Menu Button" class="button" />
-											<figcaption>Admin Menu</figcaption>
-										</figure>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<figure>
-											<img src="<%=media%>/QS/images/quit_admin.png" alt="Quit Quickstart Wizard Button" class="button" />
-											<figcaption>Quit</figcaption>
-										</figure>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
+			  <div id="zone-footer">
+				<div class="button-wrapper">
+				  <ul>
+					<li>
+					  <a href="#">
+						<figure>
+						  <img src="<%=media%>/QS/images/target_admin.png" alt="Advanced Config Button" class="button" />
+						  <figcaption>Advanced Config</figcaption>
+						</figure>
+					  </a>
+					</li>
+					<li>
+					  <a href="#">
+						<figure>
+						  <img src="<%=media%>/QS/images/help_admin.png" alt="Help Button" class="button" />
+						  <figcaption>Help</figcaption>
+						</figure>
+					  </a>
+					</li>
+					<li>
+					  <a href="#">
+						<figure>
+						  <img src="<%=media%>/QS/images/equal_admin.png" alt="Admin Menu Button" class="button" />
+						  <figcaption>Admin Menu</figcaption>
+						</figure>
+					  </a>
+					</li>
+					<li>
+					  <a href="#">
+						<figure>
+						  <img src="<%=media%>/QS/images/quit_admin.png" alt="Quit Quickstart Wizard Button" class="button" />
+						  <figcaption>Quit</figcaption>
+						</figure>
+					  </a>
+					</li>
+				  </ul>
+				</div>
+			  </div>
 			</div>
 			<!-- End QS adminButton -->
 		</div>

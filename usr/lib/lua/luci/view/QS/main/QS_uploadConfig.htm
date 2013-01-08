@@ -46,10 +46,9 @@
 					<div id="zone-preface">
 						<hr />
 						<!-- h1 functionally identical to title for accessibility -->
-						<h1><%=PageTitle%></h1>
+						<h1 style="font-size:3em"><%=topheader%></h1>
 						<!-- Rest of header content -->
-						<h2><%=topheader%></h2>
-						<p><%=subheading%></p>
+						<h2 style="font-size:1.5em"><%=subheading%></h2>
 					</div>
 				</div>
 			</header>
@@ -60,41 +59,25 @@
 <!-- End content (no module yet) -->
 <!-- include("QS/module/QS_upload") -->
 <!-- Begin QS upload -->
-			<div id="zone-content-wrapper">
-				<div id="zone-content">
-					<h2>Upload <%=file_type%></h2>
-						<script type="text/javascript">
-							function upload() {
-								var ajax = new XHR();
-								ajax.post(
-									<%-REQUEST_URI%> + '/upload',
-									formData,
-									function(resp) {
-										console.log(resp.status);
-										if (resp.status !== 200) {
-											console.log('error!');
-										} else {
-										}
-									}
-								);
-								return false;
-							}
-						</script>
-						<form method="post" action="<%=REQUEST_URI%>/upload" enctype="multipart/form-data" onsubmit="startUpload();">
-							<div class="cbi-section-node">
-								<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
-									<div class="cbi-value-field">
-										<input type="file" name="<%=uploadType%>" id="media" />
-										<input type="submit" class="cbi-button cbi-input-apply" value="<%:upload%>" style="width:100px"/>
-										<div class="cbi-section-descr">
-											Upload <%=file_instructions%>
-										</div>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<h2>Upload <%=file_type%></h2>
+	<script type="text/javascript">
+	</script>
+	<form method="post" action="/cgi-bin/luci/QS/uploadConfig" enctype="multipart/form-data">
+	  <div class="cbi-section-node">
+		<div class="cbi-value cbi-value-last<% if image_invalid then %> cbi-value-error<% end %>">
+		  <div class="cbi-value-field">
+			<input type="file" name="<%=uploadType%>" id="media" />
+			<input type="hidden" name="page" value="chosenMeshDefault">
+			<div class="cbi-section-descr">
+			  Upload <%=file_instructions%>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  </div>
+</div>
 <!-- End QS upload -->
 <!-- include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
@@ -108,20 +91,28 @@
 									text = x.text
 								icon = x.icon
 								action = x.action
-								 -%>
-								<li>
-									<a href="/cgi-bin/luci/QS/<%=action%>">
-										<figure>
-										<img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
-										<figcaption><%=text%></figcaption>
-										</figure>
-									</a>
-								</li>
+							   -%>
+							<li>
+							  <a href="/cgi-bin/luci/QS/<%=action%>">
+								<figure>
+								  <img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
+								  <figcaption><%=text%></figcaption>
+								</figure>
+							  </a>
+							</li>
 							<%end%>
+							<li>
+							  <figure>
+								<input type="image" src="<%=media%>/QS/images/plus.png" alt="Submit button" value="upload">
+								<figcaption>Click Here to Continue</figcaption>
+							  </figure>
+							</li>		
 						</ul>
 					</div>
 				</div>
 			</div>
+</form>
+
 <!-- End QS buttons -->
 <!-- include("QS/module/QS_footer") -->
 <!-- Begin QS footer -->

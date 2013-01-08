@@ -46,10 +46,9 @@
 					<div id="zone-preface">
 						<hr />
 						<!-- h1 functionally identical to title for accessibility -->
-						<h1><%=PageTitle%></h1>
+						<h1 style="font-size:3em"><%=topheader%></h1>
 						<!-- Rest of header content -->
-						<h2><%=topheader%></h2>
-						<p><%=subheading%></p>
+						<h2 style="font-size:1.5em"><%=subheading%></h2>
 					</div>
 				</div>
 			</header>
@@ -58,27 +57,28 @@
 <!-- Begin QS uci -->
 			<div id="zone-content-wrapper">
 				<div id="zone-content">
+				  <form method="post" action="<%=REQUEST_URI%>/submit" enctype="multipart/form-data">
 					<%-
-						 for _, r in pairs(documentation) do
-									if r.uci then
-										value = r.uci
-										    title = r.title
-										    flavor = r.flavor
-										    help = r.help
-									end
-					-%>
-					<form method="post" action="<%=REQUEST_URI%>/submit" enctype="multipart/form-data">
-						<h2><%=title%></h2>
-						<p class="flavor"><%=flavor%></p>
-						<span class="help">
-							<img src="<%=media%>/QS/images/help.png" class="tip" alt="<%=help%>" /></span>
-						<input type="text" name="uci.<%=value%>">
+					   for _, r in pairs(documentation) do
+					   if r.uci then
+					   value = r.uci
+					   title = r.title
+					   flavor = r.flavor
+					   help = r.help
+					   end
+					   -%>
+					
+					<h2><%=title%></h2>
+					<p class="flavor"><%=flavor%></p>
+					<span class="help">
+					  <img src="<%=media%>/QS/images/help.png" class="tip" alt="<%=help%>" /></span>
+					<input type="text" name="uci.<%=value%>">
 					<%end%>
-						<input type="submit" value="Submit">
-					</form>
+					<input type="submit" value="Submit">
+				  </form>
 				</div>
 			</div>
-<!-- End QS uci -->
+	<!-- End QS uci -->
 <!-- include("QS/module/QS_buttons") -->
 <!-- Begin QS buttons -->
 
