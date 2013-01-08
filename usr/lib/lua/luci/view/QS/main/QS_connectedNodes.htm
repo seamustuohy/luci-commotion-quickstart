@@ -45,10 +45,9 @@
 					<div id="zone-preface">
 						<hr />
 						<!-- h1 functionally identical to title for accessibility -->
-						<h1><%=PageTitle%></h1>
+						<h1 style="font-size:3em"><%=topheader%></h1>
 						<!-- Rest of header content -->
-						<h2><%=topheader%></h2>
-						<p><%=subheading%></p>
+						<h2 style="font-size:1.5em"><%=subheading%></h2>
 					</div>
 				</div>
 			</header>
@@ -59,7 +58,7 @@
 				<div id="zone-content">
 					<%-
 						if neighbors <= 2 then
-							meaning = "YOU'RE INSECURE..  RUN RUN RUN"
+							meaning = "You have no neighbors. That's too bad. Here are a few things you can try...(insert text here)"
 						elseif 2 < neighbors and neighbors < 4 then
 							meaning = "somewhat secure you are ~Yoda"
 						elseif 4 < neighbors and neighbors < 6 then
