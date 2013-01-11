@@ -1,10 +1,8 @@
 <%-
-      topheader = uci_page
+      topheader = uci_header
       subheading = page_instructions
-      PageTitle = uci_page
-      buttons={
-              { text="Next", icon="arrow", action = next_page .. "?last=" .. uci_page},
-      }
+      PageTitle = uci_header
+      buttons={}
       if uci_last_page then
           table.insert(buttons,{ text="Go Back", icon="x", action = uci_last_page})
       end
@@ -55,9 +53,12 @@
 <!-- End QS infoBanner -->
 <!-- include("QS/module/QS_uci") -->
 <!-- Begin QS uci -->
+<%=message%>
 			<div id="zone-content-wrapper">
 				<div id="zone-content">
-				  <form method="post" action="<%=REQUEST_URI%>/submit" enctype="multipart/form-data">
+				  <form method="post" action="/cgi-bin/luci/QS/uci/submit" enctype="multipart/form-data">
+					<input type="hidden" name="uci" value="<%=next_page%>" />
+					<input type="hidden" name="last" value="<%=uci_page%>" />
 					<%-
 					   for _, r in pairs(documentation) do
 					   if r.uci then
@@ -74,37 +75,45 @@
 					  <img src="<%=media%>/QS/images/help.png" class="tip" alt="<%=help%>" /></span>
 					<input type="text" name="uci.<%=value%>">
 					<%end%>
-					<input type="submit" value="Submit">
-				  </form>
 				</div>
 			</div>
-	<!-- End QS uci -->
-<!-- include("QS/module/QS_buttons") -->
-<!-- Begin QS buttons -->
-
+			<!-- End QS uci -->
+			<!-- include("QS/module/QS_buttons") -->
+			<!-- Begin QS buttons -->
+			
 			<div id="zone-button-wrapper">
-				<div id="zone-buttons">
-					<div class="button-wrapper">
-						<ul>
-							<%-
-							for i,x in ipairs(buttons) do
-									text = x.text
-								icon = x.icon
-								action = x.action
-								 -%>
-								<li>
-									<a href="/cgi-bin/luci/QS/<%=action%>">
-										<figure>
-										<img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
-										<figcaption><%=text%></figcaption>
-										</figure>
-									</a>
-								</li>
-							<%end%>
-						</ul>
-					</div>
+			  <div id="zone-buttons">
+				<div class="button-wrapper">
+				  <ul>
+					<%-
+					   for i,x in ipairs(buttons) do
+					   text = x.text
+					   icon = x.icon
+					   action = x.action
+					   -%>
+					<li>
+					  <a href="/cgi-bin/luci/QS/<%=action%>">
+						<figure>
+						  <img src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=text%> Button" class="button" />
+						  <figcaption><%=text%></figcaption>
+						</figure>
+					  </a>
+					</li>
+					<%end%>
+					<li>
+					  <figure>
+						<input type="image" src="<%=media%>/QS/images/plus.png" alt="Next" value="Submit"><br />
+						<figcaption>Next</figcaption>
+					  </figure>
+					</li>
+				  </ul>
 				</div>
+			</form>
 			</div>
+			</div>
+			
+			
+			
 <!-- End QS buttons -->
 <!-- include("QS/module/QS_footer") -->
 <!-- Begin QS footer -->
