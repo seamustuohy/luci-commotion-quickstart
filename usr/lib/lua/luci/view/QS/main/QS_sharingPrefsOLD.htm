@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8" />
+	<!-- Are the favicon and stylesheet paths static or dynamic? -->
+	<link type="image/png" href="/luci-static/openwrt.org/QS/images/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" href="/luci-static/openwrt.org/QS/css/quickstart.css" type="text/css" />
+	<!--script src="#" type="text/javascript"-->
+	<!-- NEED: page title var in each page to be used in title and h1 -->
+	<title>Sharing Prefrences | </title>
+  </head>
+  <body>
+	<div id="page">
+	  <!-- End QS Header -->
+	  <!-- include("QS/module/QS_infoBanner") -->
+	  <!-- Begin QS infoBanner -->
+	  
+	  <!---
+		  Seems like there should be a way to reuse this in logoInfoBanner
+		-->
+	  <header>
+		<!-- top level navigational elements -->
+		<div class="navbar-inners">
+		  <div class="color0"></div>
+		  <div class="color1"></div>
+		  <div class="color2"></div>
+		  <div class="color3"></div>
+		  <div class="color4"></div>
+		</div>
+		<div id="zone-preface-wrapper">
+		  <div id="zone-preface">
+			<hr />
+			<!-- h1 functionally identical to title for accessibility -->
+			<h1 style="font-size:3em">Welcome Back!</h1>
+			<!-- Rest of header content -->
+			<h2 style="font-size:1.5em">As a final step, let's fill out your sharing preferences.</h2>
+		  </div>
+		</div>
+	  </header>
+	  <!-- End QS infoBanner -->
+	  <!-- include("QS/module/QS_sharing") -->
+	  <!-- Begin QS sharing -->
+	  <div id="zone-content-wrapper">
+		<div id="zone-content">
+		  
+		  <div class="share_services">
+			<form method="post" action="/cgi-bin/luci/QS/sharingPrefs" enctype="multipart/form-data"><strong>Public Access Point:</strong><br />
+			  <input name="share.Public Access Point" value="pap" type="checkbox" onclick="ReverseDisplay('pap');">
+			  I would like to share a public access point.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" />
+			  <span class="help" id="pap" style="display:none">
+				<div>
+				  
+				</div>
+			  </span>
+									  </br>
+									  <strong>Secure Access Point:</strong><br />
+									  <input name="share.Secure Access Point" value="sap" type="checkbox" onclick="ReverseDisplay('sap');">
+									  I would like to share a secure access point.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" />
+									  <span class="help" id="sap" style="display:none">
+										<div>
+										  <h2>Secure Access Point Password</h2>
+										  <p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+										  <span class="help">
+											<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The password that your private network will use. This password MUST be different than your node password if anyone else will use the private access point." />
+										  </span>
+										  <input type="password" name="pwd1">
+										  <p class="flavor">Retype your password here</p>
+										  <span class="help">
+											<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="Retype the password exactly." />
+										  </span>
+										  <input type="password" name="pwd2">
+										  <p><a href="#close" title="Close">Close</a></p>
+										</div>
+									  </span>
+									  </br>
+									  <strong>Gateway Sharing:</strong><br />
+									  <input name="share.Gateway Sharing" value="gate" type="checkbox" onclick="ReverseDisplay('gate');">
+									  I would like to share my Internet access.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" />
+									  <span class="help" id="gate" style="display:none">
+										<div>
+										  Gateway prefs
+										  
+										</div>
+									  </span>
+									  </br>
+									  <strong>Network Key:</strong><br />
+									  <input name="share.Network Key" value="key" type="checkbox" onclick="ReverseDisplay('key');">
+									  I would like to secure my network with a key.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" />
+									  <span class="help" id="key" style="display:none">
+										<div>
+										  
+										</div>
+									  </span>
+									  </br>
+									  <strong>Captive Portal:</strong><br />
+									  <input name="share.Captive Portal" value="cptv" type="checkbox" onclick="ReverseDisplay('cptv');">
+									  I would like to use a captive portal on my node.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" />
+									  <span class="help" id="cptv" style="display:none">
+										<div>
+										  <a href="#captive" class="openModal">Customize your Captive Portal</a>
+										  
+										</div>
+									  </span>
+									  </br>
+									  
+		  </div>
+		  
+		  <script type="text/javascript">
+			function ReverseDisplay(d) {
+			if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+			else { document.getElementById(d).style.display = "none"; }
+			}
+		  </script>
+		  
+		  <div name="modals">
+			
+			<aside id="upload" class="modal">
+			  <div>
+				<!--=include("QS/module/QS_upload")-->
+				<!-- BEGIN QS Upload -->
+				<script type="text/javascript">
+				</script>
+				<div class="cbi-section-node">
+				  <div class="cbi-value cbi-value-last">
+					<div class="cbi-value-field">
+					  <input type="file" name="" id="media" />
+					  <input type="submit" class="cbi-button cbi-input-apply" value="upload" style="width:100px"/>
+					  <div class="cbi-section-descr"> Upload  </div>
+					</div>
+				  </div>
+				</div>
+				<!-- END QS Upload -->
+				<!--TODO change close tag to be a submission of the form as well. -->
+				<p><a href="#close" title="Close">Close</a></p>
+			  </div>
+			</aside>
+			<aside id="captive" class="modal">
+			  <div>
+				<strong>Title</strong><br />
+				<input type="text" name="cptv_title"><br />
+				<strong>Main Text</strong><br />
+				<textarea name="cptv_main" cols="60" royws="5"></textarea>
+				<!--TODO change close tag to be a submission of the form as well. -->
+				<p><a href="#close" title="Close">Close</a></p>
+			  </div>
+			</aside>
+			
+		  </div>
+		</div>
+	  </div>
+	  <!-- End QS sharing -->
+	  <!-- Fix this busted order -->
+	  <div id="zone-button-wrapper">
+		<div id="zone-buttons">
+		  <div class="button-wrapper">
+			<figure>
+			  <input type="image" src="/luci-static/openwrt.org/QS/images/plus.png" alt="Submit button" value="Submit">
+											  </br>
+											  <figcaption>Click Here to Finish</figcaption>
+	  </form>
+	  </figure>
+	  </div>
+	  </div>
+	  </div>
+	  <!-- Fix busted form order -->
+	  <!-- include("QS/module/QS_footer") -->
+	  <!-- Begin QS footer -->
+	  
+	  <!-- include("QS/module/QS_adminButton") -->
+	  <!-- Begin QS adminButton -->
+	  
+	  <div id="zone-footer-wrapper">
+		<div id="zone-footer">
+		  <div class="button-wrapper">
+			<ul>
+			  <li>
+				<a href="#">
+				  <figure>
+					<img src="/luci-static/openwrt.org/QS/images/target_admin.png" alt="Advanced Config Button" class="button" />
+					<figcaption>Advanced Config</figcaption>
+				  </figure>
+				</a>
+			  </li>
+			  <li>
+				<a href="#">
+				  <figure>
+					<img src="/luci-static/openwrt.org/QS/images/help_admin.png" alt="Help Button" class="button" />
+					<figcaption>Help</figcaption>
+				  </figure>
+				</a>
+			  </li>
+			  <li>
+				<a href="#">
+				  <figure>
+					<img src="/luci-static/openwrt.org/QS/images/equal_admin.png" alt="Admin Menu Button" class="button" />
+					<figcaption>Admin Menu</figcaption>
+				  </figure>
+				</a>
+			  </li>
+			  <li>
+				<a href="#">
+				  <figure>
+					<img src="/luci-static/openwrt.org/QS/images/quit_admin.png" alt="Quit Quickstart Wizard Button" class="button" />
+					<figcaption>Quit</figcaption>
+				  </figure>
+				</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	  <!-- End QS adminButton -->
+	</div>
+  </body>
+</html>
+<!-- End QS footer -->

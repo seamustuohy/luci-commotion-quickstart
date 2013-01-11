@@ -1,12 +1,26 @@
-
 <%-
-   topheader="Welcome"
-   subheading="You are only 10 minutes away from having a node set up."
-   bigButtonText="Click Here to Start"
-   bigButtonImage="plus.png"
-   bigButtonAction="basicInfo"
-   PageTitle="Welcome"
+local uci = luci.model.uci.cursor()
+    if uci:get('quickstart', 'options', 'complete') ~= true then
+      startpage = uci:get('quickstart', 'options', 'startpage') 
+    end
+   
+if startpage == "basicInfo" then 
+   status = " start"                            
+   salute = ''
+   howfar = "ten"
+else                                                                      
+   status = " continue"                                                   
+   salute = " Back"
+   howfar = "a few"
+end                                                                       
+   topheader="Welcome" .. salute                                          
+   subheading="You are only ".. howfar .. " minutes away from having a node set up."
+   bigButtonText="Click Here to" .. status                    
+   bigButtonImage="plus.png"                                  
+   bigButtonAction=startpage                                  
+   PageTitle="Welcome"                                   
 -%>
+
 <!-- include("QS/module/QS_header") -->
 <!-- Begin QS header -->
 

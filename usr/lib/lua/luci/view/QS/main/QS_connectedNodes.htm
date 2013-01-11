@@ -59,20 +59,20 @@
 					<%-
 						if neighbors <= 2 then
 							meaning = "You have no neighbors. That's too bad. Here are a few things you can try...(insert text here)"
-						elseif 2 < neighbors and neighbors < 4 then
-							meaning = "somewhat secure you are ~Yoda"
-						elseif 4 < neighbors and neighbors < 6 then
+						elseif 3 <= neighbors and neighbors <= 4 then
+							meaning = "somewhat neighborly you are ~Yoda"
+						elseif 5 <= neighbors and neighbors <= 7 then
 							meaning = "Ohhhh a bunny"
-						elseif 6 < neighbors and neighbors < 8 then
+						elseif 8 <= neighbors and neighbors <= 10 then
 							meaning = "I Like Penguins"
-						elseif 10 < neighbors and neighbors < 12 then
+						elseif 11 <= neighbors and neighbors <= 15 then
 							meaning = "You are cheating"
 						end
 					-%>
 
-					<p><strong><%=neighbors%>:</strong>
-					<%=meaning%></p>
-
+					<div class="bigNumbers" style="font-size:8em; text-align:center;"><center><span style="background-color:grey;"> <%=neighbors%> </span></div>
+					<div class="explanation" style="font-size:2em; text-align:center; border-style:dashed; border-color:grey;"><%=meaning%></div>
+</center>
 				</div>
 			</div>
 <!-- End QS nodeNeighbors -->
