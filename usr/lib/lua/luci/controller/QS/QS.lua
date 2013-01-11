@@ -331,6 +331,12 @@ function set_sharing_options()
 				  else
 					 title = ("<h1>" .. x .. "</h1>")
 				  end
+			   elseif i == "home" then
+				  uci_values = 1
+				  uci:set('luci_splash', 'general', 'homepage', x)
+			   elseif i == "time" then
+				  uci_values = 1
+				  uci:set('luci_splash', 'general', 'leasetime', x) 				  
 			   end
 			end
 			data = (title .. main)
@@ -340,6 +346,10 @@ function set_sharing_options()
 			   fs.unlink(splashtextfile)
 			else
 			   fs.writefile(splashtextfile, data:gsub("\r\n", "\n"))
+			end
+			if uci_values then
+			   uci:save('luci_splash')
+			   uci:commit('luci_splash')
 			end
 		 end
 		 --GATEWAY 
@@ -415,7 +425,7 @@ function mesh_defaults(config, keyval)
    local list_items = {}
    
    -- parse config of network/ call daemon for network values
-   -- values below are temporary fakes
+   -- TODO FIX values below are temporary fakes
    network = config
    local defaults = {
 	  OLSR_secure = true,
@@ -442,8 +452,6 @@ function mesh_defaults(config, keyval)
    
    for i, value in pairs(defaults) do
 	  default_switch:case(i, value)
-	  --print(results[1])
-	  --print(results[2])
 	  if results[1] == "sec" then
 		 security_counter = security_counter + results[2]
 	  else
@@ -463,15 +471,11 @@ function mesh_defaults(config, keyval)
 end
 
 function upload_file(page, value)
-   --File handler does not work... WH please fix :)
+   --TODO File handler does not work... WH please fix :)
    log("upload_file")
    local sys = require "luci.sys"
    local fs = require "luci.fs"
    local tmp = "/tmp/"
-   if luci.http.formvalue("config") then
-	  file = luci.http.formvalue("config")
-	  --log(file)
-   end
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
    luci.http.setfilehandler(
@@ -500,6 +504,11 @@ function upload_file(page, value)
 			end
 		 end
 	  end)
+   if luci.http.formvalue("config") then
+	  file = luci.http.formvalue("config")
+	  --log(file)
+   end
+   
    if luci.http.formvalue("page") then
 	  page = luci.http.formvalue("page")
    end
@@ -520,7 +529,7 @@ end
 function set_config(config)
    if not config then
 	  config = luci.http.formvalue("config")
-   end   
+   end
    --TODO remove the following if statement that shows both conditions. Keep the "result =" as stated in later comments
    if config == "Big Bobs Mesh Network" then
 	  result = 666
@@ -537,12 +546,10 @@ function set_config(config)
 end
 
 function wait_4_reset(page, notice)
-   
    --TODO add the wait_4_reset function to all pages that have setting changes that require reset.
    local uci = luci.model.uci.cursor()
    --make the node name unique for restart
    local name = uci:get('quickstart', 'options', 'name')
-   
    
    UName = name .. "_" .. luci.sys.uniqueid(5)
    uci:foreach("wireless", "wifi-iface",
@@ -565,21 +572,24 @@ function wait_4_reset(page, notice)
    start(page)
    timer = 120
    luci.template.render("QS/main/QS_wait4reset", {timer=timer, name=UName, notice=notice})
-   --luci.sys.reboot()
+   luci.sys.reboot()
 end
 
-function uci_loader()
-   --TODO create settings uci config option for each page
-   --TODO create a set of simple docuemntation sections to test on
-   --TODO get a list of all configurations users will want access to and how to group them
-   --TODO see what data the daemon will keep about known configs for custom uci pages with required & missing info
+function uci_loader(message)
    if luci.http.formvalue("module") then
 	  template = luci.http.formvalue("module")
    else template = "QS_uci"
    end
-   
-   uci_page = luci.http.formvalue("uci")
-   uci_last_page = luci.http.formvalue("last")
+   if message == null then
+	  uci_page = luci.http.formvalue("uci")
+	  uci_last_page = luci.http.formvalue("last")
+   else
+	  uci_page = luci.http.formvalue("last")
+   end
+   if uci_page == "finish" then
+	  sharing_options()
+	  do return end
+   end
    local documentation = {}
    local settings = {}
    local uci = luci.model.uci.cursor()
@@ -589,52 +599,36 @@ function uci_loader()
 					 if s.title == "settings" then
 						page_instructions = s.page_instructions
 						next_page = s.next_page
+						uci_header = s.header
 					 elseif s.title ~= "settings" then
 						table.insert(documentation,s)
 					 end end end)
    
-   luci.template.render("QS/main/" .. template, {uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
-end
-
-function connected_nodes()
-   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
-   -- this should be done over a period of time to update the page.
-   
-   --		 local data = fetch_txtinfo("links") 
-   --the next two lines used to live in fetch_txtinfo() in olsrd.lua
-   local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
-   local tables = luci.util.split(luci.util.trim(rawdata), "\r?\n\r?\n", nil, true)
-   
-   -- This was under the local data = ... that exists above.
-   
-   --	    if not data or not data.Links then
-   --		        neighbors = 0
-   --		        return nil
-   --	    end
-   
-   --    table.sort(data.Links, compare_links)
-   --TODO remove trash variable below once actual data is being parsed.
-   neighbors = 0
-   luci.template.render("QS/main/QS_connectedNodes", {neighbors=neighbors})
+   luci.template.render("QS/main/" .. template, {message=message, uci_header=uci_header, uci_page=uci_page, page_instructions=page_instructions, uci_last_page=uci_last_page, next_page=next_page, documentation=documentation})
 end
 
 
 function set_uci()
    local uci = luci.model.uci.cursor()
+   message = null
    uci_values = luci.http.formvaluetable("uci")
-   --TODO find how to make the functions wait for the last one to complete before starting the next and as such segfaulting
    for i,value in pairs(uci_values) do
-	  uci_call(i, value)
-	  luci.sys.call("sleep 2")
+	  if value ~= "" then
+		 ret = uci_call(i, value)
+		 if ret ~= 0 then
+			message = ret
+		 end
+		 luci.sys.call("sleep 1")
+	  end 
    end
+   uci_loader(message)
 end
 
 function uci_call(type, value)
-   log(type .. "= type")
-   log(value .. "= value")
    local uci = luci.model.uci.cursor()
    --Set AP SSID
-   if type == SSID_AP then
+   if type == "SSID_AP" then
+	  --Parse value and set message to return if not correct format
 	  uci:foreach("wireless", "wifi-iface",
 				  function(s)
 					 if s.mode == "ap" and s.ssid ~= value then
@@ -644,7 +638,8 @@ function uci_call(type, value)
 					 end
 				  end)
 	  --Set Mesh SSID
-   elseif type == SSID_MESH then
+   elseif type == "SSID_MESH" then
+	  --Parse value and set message to return if not correct format
 	  uci:foreach("wireless", "wifi-iface",
 				  function(s)
 					 if s.mode == "adhoc" and s.ssid ~= value then
@@ -654,7 +649,8 @@ function uci_call(type, value)
 					 end
 				  end)
 	  --Set Mesh BSSID
-   elseif type == BSSID_MESH then
+   elseif type == "BSSID_MESH" then
+	  --Parse value and set message to return if not correct format
 	  uci:foreach("wireless", "wifi-iface",
 				  function(s)
 					 if s.mode == "adhoc" and s.bssid ~= value then
@@ -663,9 +659,36 @@ function uci_call(type, value)
 						uci:commit('wireless')
 					 end
 				  end)
+   else
+	  return "UCI option " .. type .. " not implemented"
    end
    return 0
 end
+
+function connected_nodes()
+   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
+   -- TODO switch this rawdata call out with one below
+   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
+   --TODO remove the false raw data below and implement the one above... just like the other comment says.
+   local rawdata =[[Table: Neighbors
+IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
+10.10.0.152		YES		NO		NO		6		0
+5.10.0.152		YES		NO		NO		6		34
+10.2.0.152		YES		NO		NO		6		1
+10.10.0.142		YES		NO		NO		6		5]]
+local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
+neighbors = 0
+for i,x in ipairs(tables) do
+   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
+	  neighbors = neighbors + 1
+   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
+		 neighbors = neighbors + 1
+   end
+end
+
+   luci.template.render("QS/main/QS_connectedNodes", {neighbors=neighbors})
+end
+
 
 function choose_config()
    --TODO : this would eventually call the daemon to check the hardware and provide the appropriate mesh configs. For now we just send some falsified data over.
