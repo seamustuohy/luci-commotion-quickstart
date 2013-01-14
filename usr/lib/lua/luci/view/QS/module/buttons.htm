@@ -1,0 +1,42 @@
+<%- if form ~= true then -%>
+<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
+<%end%>
+
+<%-
+    local uci = luci.model.uci.cursor()
+	buttons = {
+	{text = uci:get('quickstart', back, 'buttonText'), icon = "dot", name = 'back'},
+	{text = uci:get('quickstart', next, 'buttonText'), icon = "plus", name = 'next'}
+	}
+    if pv.buttons then
+	    for i,button in pairs(pv.buttons) do
+   --lazy mans way to force button weighting :)
+	        table.insert(buttons,2,{button})
+	    end
+    end
+-%>
+
+<div id="zone-button-wrapper">
+  <div id="zone-buttons">
+	<div class="button-wrapper">
+	  <ul>
+		<%-
+		   for i,x in ipairs(buttons) do
+		   text = x.text
+		   icon = x.icon
+		   name = x.name
+		 -%>
+		<li>
+		  <figure>
+			<input type="image" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=name%>" value="Submit">
+			<figcaption><%=text%></figcaption>
+		  </figure>
+		</li>
+		<%end%>
+	  </ul>
+	</div>
+  </div>
+</div>
+
+
+
