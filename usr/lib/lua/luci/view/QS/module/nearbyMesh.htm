@@ -1,0 +1,34 @@
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="nearbyMesh" />
+	<div id="meshDisplay">
+	  <table summary="List of nearby meshes" class="near">
+		<caption>
+		  <img src="<%=media%>/QS/images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
+		</caption>
+		<tbody>
+		  <tr>
+			<th scope="col">Automatic</th>
+			<th scope="col">Type of network</th>
+		  </tr>
+		  <%-
+			 for _,x in ipairs(pv.modules.nearbyMesh) do
+			 name = x.name
+			 config = x.config
+			 -%>
+		  <tr><td></td>
+			<td><input type="radio" name="nearbyMesh" value="<%=name%>"/><%=name%></td>
+			<td>
+			  <%-
+				 if config ~= 'false' then
+				 -%>
+			  <img src="<%=media%>/QS/images/check.png" alt="Full configuration available" class="true" />
+			  <%end%>
+			</td>
+		  </tr>
+		  <%end%>
+		</tbody>
+	  </table>
+	</div>
+  </div>
+</div>

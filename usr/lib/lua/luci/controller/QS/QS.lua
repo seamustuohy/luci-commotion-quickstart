@@ -10,25 +10,26 @@ function index()
 end
 
  function main()
-   -- FIRST if return values get them and pass them to return value parser
+	-- if return values get them and pass them to return value parser
    if luci.http.formvalue then
 	  errorMsg = checkPage()
    end
-   --1) call uci parser, returning dict of pages
+      --1) call uci parser, returning dict of pages
    local uci = luci.model.uci.cursor()
    local pageNo = uci:get('quickstart', 'options', 'pageNo')
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
    --Create/clear a space for pageValues and populate with page
-   local pageValues = {modules = {}, buttons ={}, page = {['pageNo'] = pageNo, ['lastPg'] = lastPg}}
+   local pageValues = {modules = {}, buttons = {}, page = {['pageNo'] = pageNo, ['lastPg'] = lastPg}}
    local pageContext = uci:get_all('quickstart', pageNo)
+
    -- iterate through the list of page content from the UCI file and run corresponding functions, populating a dictionary with the values required by each module
    for i,x in pairs(pageContext) do
 	  if i == 'modules' then
-		 for y,z in ipairs(x) do
+		 for _,z in ipairs(x) do
 			pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
 		 end
 	  elseif i == 'buttons' then
-		 for y,z in ipairs(x) do
+		 for _,z in ipairs(x) do
 			--2) run button function returning values and adding them to the variable page
 			pageValues.buttons[z]=true
 		 end
@@ -36,7 +37,6 @@ end
 		 pageValues[i]=x
 	  end
    end
-   
    if errorMsg then
 	  pageValues['errorMsg'] = errorMsg
    end
@@ -77,17 +77,26 @@ function parseSubmit(returns)
 		 end
 		 if next(errors) == nil then
 			page = uci:get('quickstart', 'options', 'pageNo')
-			uci:get('quickstart', 'options', 'lastPg')
-			uci:set('quickstart', 'options', 'pageNo', page)
-			uci:set('quickstart', 'options', 'pageNo', page+1)
+			if tonumber(page) then
+			   uci:set('quickstart', 'options', 'pageNo', page+1)
+			else
+			   nxtPg = uci:get('quickstart', page, 'nxtPg')
+			   uci:set('quickstart', 'options', 'pageNo', nxtPg)
+			end
+			uci:set('quickstart', 'options', 'lastPg', page)
 			uci:save('quickstart')
 			uci:commit('quickstart')
 		 else
 			return(errors)
 		 end
 	  elseif submit == 'back' then
-		 return nil
-	  else
+		 	page = uci:get('quickstart', 'options', 'pageNo')
+			lastPg = uci:get('quickstart', 'options', 'lastPg')
+			uci:set('quickstart', 'options', 'pageNo', lastPg)
+			uci:set('quickstart', 'options', 'lastPg', 1)
+			uci:save('quickstart')
+			uci:commit('quickstart')
+	  elseif submit ~= nil then
 		 return luci.controller.QS.QS[submit .. "Button"]()
 	  end
 end
@@ -143,19 +152,53 @@ function basicInfoParser(val)
 end
 
 function nearbyMeshRenderer()
-
-end
-
-function nearbyMeshParser()
    local networks = commotionDaemon('nearbyNetworks')
    return networks
 end
 
+function nearbyMeshParser()
+   --TODO copy any network with configs into a nodeConf file
+   --TODO any network without configs ask daemon for info
+   -- if no config take daemons response and build a nodeConf file
+return nil
+end
+
+
+function uploadConfRenderer()
+--TODO check uploader module to see if it needs any values
+end
+
+function uploadConfParser()
+--add actual uploader here
+--take uploaded configs and use them to create the nodeConf
+end
+
+function preBuiltRenderer()
+--talk to daemon for configs
+end
+
+function preBuiltParser()
+-- copy preexisting config into a new nodeConf file
+end
 
 function uploadConfButton()
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   uci:set('quickstart', 'options', 'lastPg', page)
+   uci:set('quickstart', 'options', 'pageNo', 'uploadConf')
+   uci:save('quickstart')
+   uci:commit('quickstart')   
 end
 
 function preBuiltButton()
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   uci:set('quickstart', 'options', 'lastPg', page)
+   uci:set('quickstart', 'options', 'pageNo', 'preBuilt')
+   uci:save('quickstart')
+   uci:commit('quickstart')
 end
 
 function commotionDaemon(request)

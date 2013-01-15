@@ -11,15 +11,7 @@ config page '1'
 	   list modules 'logo'
 	   list modules 'welcome'
 
-
 config page '2'
-	   option pageTitle 'Basic Info'
-	   option buttonText 'Click Here to Continue'
-	   option topheader 'While we search for nearby networks...'
-   	   option subheading 'Give us some basic info about your node.'
-	   list modules 'basicInfo'
-
-config page '3'
    option topheader 'Here are the nearby networks.'
    option subheading 'Click on a network to make a compatible node.'
    option PageTitle 'Nearby Networks'
@@ -28,8 +20,28 @@ config page '3'
    list buttons 'uploadConf'
    list buttons 'preBuilt'
 
+config page '3'
+	   option pageTitle 'Basic Info'
+	   option buttonText 'Click Here to Continue'
+	   option topheader 'While we search for nearby networks...'
+   	   option subheading 'Give us some basic info about your node.'
+	   list modules 'basicInfo'
+
+
 config page '4'		
    list modules 'finish'
 
 
 config page 'preBuilt'
+	   option buttonText 'Use a Pre-Built Config'
+	   option pageTitle 'Choose a Config'
+	   option topheader 'Here are some of our pre-built configurations'
+   	   option subheading 'Choose one and we will continue from here'
+	   option nxtPg '3'
+
+config page 'uploadConf'
+	   option buttonText 'Upload a Config'
+	   option pageTitle 'Upload A Config'
+	   option topheader 'Upload Your Custom Config Here' 
+   	   option subheading 'Choose a file from your computer to upload to the node.'
+	   option nxtPg '3'
