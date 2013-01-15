@@ -9,14 +9,27 @@ config page '1'
 	   option topheader 'Welcome'
    	   option subheading 'You are only ten minutes away from setting up your node'
 	   list modules 'logo'
+	   list modules 'welcome'
 
 
 config page '2'
 	   option pageTitle 'Basic Info'
-	   option buttonText 'Click Here to Start'
+	   option buttonText 'Click Here to Continue'
 	   option topheader 'While we search for nearby networks...'
    	   option subheading 'Give us some basic info about your node.'
 	   list modules 'basicInfo'
 
 config page '3'
-	   list modules 'finish'
+   option topheader 'Here are the nearby networks.'
+   option subheading 'Click on a network to make a compatible node.'
+   option PageTitle 'Nearby Networks'
+   option buttonText 'Find Nearby Networks'
+   list modules 'nearbyMesh'
+   list buttons 'uploadConf'
+   list buttons 'preBuilt'
+
+config page '4'		
+   list modules 'finish'
+
+
+config page 'preBuilt'

@@ -1,3 +1,3 @@
-config confInfo
+config info confInfo
 	   option name 'Commotion'
 	   

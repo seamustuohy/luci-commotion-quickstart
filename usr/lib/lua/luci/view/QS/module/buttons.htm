@@ -1,17 +1,30 @@
-<%- if form ~= true then -%>
-<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">
-<%end%>
-
 <%-
     local uci = luci.model.uci.cursor()
-	buttons = {
-	{text = uci:get('quickstart', back, 'buttonText'), icon = "dot", name = 'back'},
-	{text = uci:get('quickstart', next, 'buttonText'), icon = "plus", name = 'next'}
+   icons = {
+   "arrow",
+   "bigstart",
+   "black_tri",
+   "bookmark",
+   "check",
+   "diamond",
+   "dot",
+   "equal",
+   "header",
+   "help",
+   "plus",
+   "target",
+   "white_tri",
+   "x",
+   }
+      buttons = {
+   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'},
+   {text = uci:get('quickstart', pv.page.pageNo+1, 'buttonText'), icon = "plus", name = 'next'}
 	}
     if pv.buttons then
-	    for i,button in pairs(pv.buttons) do
+	    for i,x in pairs(pv.buttons) do
+            local current = {text = uci:get('quickstart', i, 'buttonText'), icon = icons[math.random(#icons)], name = i}
    --lazy mans way to force button weighting :)
-	        table.insert(buttons,2,{button})
+	        table.insert(buttons,2,{current})
 	    end
     end
 -%>
@@ -28,7 +41,7 @@
 		 -%>
 		<li>
 		  <figure>
-			<input type="image" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" alt="<%=name%>" value="Submit">
+			<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">
 			<figcaption><%=text%></figcaption>
 		  </figure>
 		</li>
