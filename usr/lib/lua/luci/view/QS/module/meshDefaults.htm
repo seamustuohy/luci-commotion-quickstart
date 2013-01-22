@@ -1,0 +1,25 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.meshDefaults then secErr = pv.errorMsg.meshDefaults end
+   end
+ -%>
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="meshDefaults" />
+	<h2 class="center">Available Configurations</h2>
+	<h2 class="warning"><%=secErr%></h2>
+	<%-for type,desc in pairs(pv.modules.meshDefaults.routing) do-%>
+	<h2>Routing Protocol : <%=type%></h2>
+	<p><%=desc%></p>
+	<%end%>
+	  <ul>
+	  <%-
+		 for i,x in pairs(pv.modules.meshDefaults.types) do
+		 name = i
+		 description = x
+		 -%>
+	  <li><strong><%=name%></strong>: <%=description%></br></li>
+	  <%end%>
+  </div>
+</div>
+

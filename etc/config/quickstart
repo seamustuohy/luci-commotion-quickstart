@@ -10,6 +10,7 @@ config page '1'
    	   option subheading 'You are only ten minutes away from setting up your node'
 	   list modules 'logo'
 	   list modules 'welcome'
+	   list buttons 'noBack'
 
 config page '2'
    option topheader 'Here are the nearby networks.'
@@ -27,21 +28,68 @@ config page '3'
    	   option subheading 'Give us some basic info about your node.'
 	   list modules 'basicInfo'
 
+config page '4'
+	   option pageTitle 'Network Chairicteristics'
+	   option buttonText 'Continue with this network'
+	   option topheader 'While we search for nearby networks...'
+   	   option subheading "This Network..."
+	   option fileType 'key'	   
+	   list modules 'meshDefaults'
+	   list modules 'upload'
 
-config page '4'		
-   list modules 'finish'
+config page '5'
+	   option pageTitle "Sharing Prefrences"
+	   option buttonText "Click here to Continue"
+	   option topheader "Welcome Back"
+	   option subheading "As a final step, lets fill out your sharing prefrences"
+	   option fileType 'key'
+	   list modules "sharingPrefs"
+	   
+config page '6'
+	   option pageTitle "Please Wait"
+	   option buttonText "Accept and Set Configuration"
+	   option topheader "Please Wait"
+	   option subheading "Please reconnect to this "
+	   list modules 'settingPrefs'
+	   list buttons 'noNext'
+	   list buttons 'noBack'
 
+config page '7'
+	   option pageTitle "Connected Nodes"
+	   option buttonText ""
+	   option subheading "You are connected to a network that is connected to ..."
+	   option topheader "Congratulations!"
+	   list modules "connectedNodes"
 
+config page '8'
+	   option pageTitle "Customization Completed"
+	   option subheading "You Have configured your node."
+	   option topheader "Congratulations!"
+	   option buttonText "Click here to finish" 
+	   list modules "complete"
+	   
 config page 'preBuilt'
 	   option buttonText 'Use a Pre-Built Config'
 	   option pageTitle 'Choose a Config'
 	   option topheader 'Here are some of our pre-built configurations'
    	   option subheading 'Choose one and we will continue from here'
 	   option nxtPg '3'
+	   list modules 'configs'
 
 config page 'uploadConf'
 	   option buttonText 'Upload a Config'
 	   option pageTitle 'Upload A Config'
 	   option topheader 'Upload Your Custom Config Here' 
    	   option subheading 'Choose a file from your computer to upload to the node.'
+	   option fileType 'config'
 	   option nxtPg '3'
+	   list modules 'upload'
+
+config page 'quickNEasy'
+	   
+	   
+config page 'startOver'
+	   option buttonText 'Start Over'
+	   
+config page 'finish'
+	   option buttonText 'Finish'

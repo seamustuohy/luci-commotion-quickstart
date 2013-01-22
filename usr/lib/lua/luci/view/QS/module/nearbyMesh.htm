@@ -1,3 +1,9 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.nearbyMesh then nmErr = pv.errorMsg.nearbyMesh end
+   end
+ -%>
+
 <div id="zone-content-wrapper">
   <div id="zone-content">
 	<input type="hidden" name="moduleName" value="nearbyMesh" />
@@ -6,6 +12,7 @@
 		<caption>
 		  <img src="<%=media%>/QS/images/check.png" alt="Checkmark Icon" /> = Full automatic configuration available
 		</caption>
+		<h2 class="warning"><%=nmErr%></h2>
 		<tbody>
 		  <tr>
 			<th scope="col">Automatic</th>

@@ -19,18 +19,24 @@
    if tonumber(pv.page.pageNo) then
    nextPg = pv.page.pageNo+1
    else
-   nextPg = pv.page.pageNo
+   nextPg = uci:get('quickstart', pv.page.pageNo, 'nxtPg') 
    end
-
    buttons = {
    {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'},
    {text = uci:get('quickstart', nextPg, 'buttonText'), icon = "plus", name = 'next'}
 	}
     if pv.buttons then
 	    for i,x in pairs(pv.buttons) do
-            local current = {text = uci:get('quickstart', i, 'buttonText'), icon = icons[math.random(#icons)], name = i}
+            if i == "noNext" then
+                table.remove(buttons, #buttons)
+            elseif i == "noBack" then
+                table.remove(buttons, 1)
+            end
+            if i ~= 'noNext' and i ~= 'noBack' and i~='startOver'  then
+                local current = {text = uci:get('quickstart', i, 'buttonText'), icon = icons[math.random(#icons)], name = i}
    --lazy mans way to force button weighting :)
-	        table.insert(buttons,2,current)
+	            table.insert(buttons,2,current)
+            end
 	    end
     end
 -%>
