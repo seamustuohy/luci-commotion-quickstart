@@ -1,0 +1,9 @@
+config info confInfo
+	   option name 'Commotion'
+
+config info defaults
+	   option routing 'olsr'	
+   	   list sec 'olsr_mdp'
+	   list sec 'wpa_none'
+
+config info sharingPrefs

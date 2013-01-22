@@ -1,46 +1,95 @@
 config quickstart options
-	   option name 'my_node'
-	   option startpage 'basicInfo'
+	   option pageNo '1'
+	   option lastPg '1'
 	   option complete 'false'
 	   
-config downloads errors
-	   option 5 '/tmp/olsrd.conf'
+config page '1'
+	   option pageTitle 'Welcome'
+	   option buttonText 'Start Over'
+	   option topheader 'Welcome'
+   	   option subheading 'You are only ten minutes away from setting up your node'
+	   list modules 'logo'
+	   list modules 'welcome'
+	   list buttons 'noBack'
 
-config downloads configs
-	   option commotion '/www/config/commotion.conf'
+config page '2'
+   option topheader 'Here are the nearby networks.'
+   option subheading 'Click on a network to make a compatible node.'
+   option PageTitle 'Nearby Networks'
+   option buttonText 'Find Nearby Networks'
+   list modules 'nearbyMesh'
+   list buttons 'uploadConf'
+   list buttons 'preBuilt'
 
-config sharing
-	   option name "Public Access Point"
-	   option value "pap"
-	   option description "I would like to share a public access point."
-	   option help "These access points have no password and allow anyone with a wifi-enabled device to user your node to access the network."
+config page '3'
+	   option pageTitle 'Basic Info'
+	   option buttonText 'Click Here to Continue'
+	   option topheader 'While we search for nearby networks...'
+   	   option subheading 'Give us some basic info about your node.'
+	   list modules 'basicInfo'
 
-config sharing
-	   option name "Secure Access Point"
-	   option value "sap"
-	   option description "I would like to share a secure access point."
-	   option help "A secure access point allows any user with the password to use your network. Be sure to use a new password for node user accounts."
+config page '4'
+	   option pageTitle 'Network Chairicteristics'
+	   option buttonText 'Continue with this network'
+	   option topheader 'While we search for nearby networks...'
+   	   option subheading "This Network..."
+	   option fileType 'key'	   
+	   list modules 'meshDefaults'
+	   list modules 'upload'
 
-config sharing
-	    option name "Gateway Sharing"
-		option value "gate"
-		option description "I would like to share my Internet access."
-		option help "This option allows others to use your node as a gateway to the Internet."
+config page '5'
+	   option pageTitle "Sharing Prefrences"
+	   option buttonText "Click here to Continue"
+	   option topheader "Welcome Back"
+	   option subheading "As a final step, lets fill out your sharing prefrences"
+	   option fileType 'key'
+	   list modules "sharingPrefs"
+	   
+config page '6'
+	   option pageTitle "Please Wait"
+	   option buttonText "Accept and Set Configuration"
+	   option topheader "Please Wait"
+	   option subheading "Please reconnect to this "
+	   list modules 'settingPrefs'
+	   list buttons 'noNext'
+	   list buttons 'noBack'
 
-config sharing
-	   option name "Local Applications"
-	   option value "apps"
-	   option description "I would like my node to advertise local applications."
-	   option help "This option allows you to create an application page, allowing others to see services running on nodes near yours."
+config page '7'
+	   option pageTitle "Connected Nodes"
+	   option buttonText ""
+	   option subheading "You are connected to a network that is connected to ..."
+	   option topheader "Congratulations!"
+	   list modules "connectedNodes"
 
-config sharing
-	   option name "Network Key"
-	   option value "key"
-	   option description "I would like to secure my network with a key."
-	   option help "This option allows you to upload or create a key that will be required for any other node to communicate with yours. This will also prevent you from communicating with other devices that do not have the same key."
+config page '8'
+	   option pageTitle "Customization Completed"
+	   option subheading "You Have configured your node."
+	   option topheader "Congratulations!"
+	   option buttonText "Click here to finish" 
+	   list modules "complete"
+	   
+config page 'preBuilt'
+	   option buttonText 'Use a Pre-Built Config'
+	   option pageTitle 'Choose a Config'
+	   option topheader 'Here are some of our pre-built configurations'
+   	   option subheading 'Choose one and we will continue from here'
+	   option nxtPg '3'
+	   list modules 'configs'
 
-config sharing
-	   option name "Captive Portal"
-	   option value "cptv"
-	   option description "I would like to use a captive portal on my node."
-	   option help "A captive portal requires users to click through a web page before using other network services. This is a good place for you to set your expectations of users of your node."
+config page 'uploadConf'
+	   option buttonText 'Upload a Config'
+	   option pageTitle 'Upload A Config'
+	   option topheader 'Upload Your Custom Config Here' 
+   	   option subheading 'Choose a file from your computer to upload to the node.'
+	   option fileType 'config'
+	   option nxtPg '3'
+	   list modules 'upload'
+
+config page 'quickNEasy'
+	   
+	   
+config page 'startOver'
+	   option buttonText 'Start Over'
+	   
+config page 'finish'
+	   option buttonText 'Finish'
