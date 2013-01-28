@@ -135,23 +135,28 @@ end
 function basicInfoRenderer()
    --check current node_name and return it as nodename
    local uci = luci.model.uci.cursor()
-   local nodeName = assert(uci:get('nodeConf', 'confInfo', 'name'), 'No nodeConf File Found.')
-   if nodeName then
-	  return {['name'] = nodeName}
+   local changable = uci:get('nodeConf', 'confInfo', 'changableName')
+   if changable == 'true' then
+	  local nodeName = uci:get('nodeConf', 'confInfo', 'name')
+	  if nodeName then
+		 return {['name'] = nodeName}
+	  end
    else
-	  return nil
+	  return {['name'] = 'static'}
    end
 end
 
 function basicInfoParser(val)
    local errors = {}
    local uci = luci.model.uci.cursor()
-   if val.basicInfo_nodeName == '' then
-	  errors['node_name'] = "Please enter a node name"
-   else
-	  uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
-	  uci:save('nodeConf')
-	  uci:commit('nodeConf')
+   if val.basicInfo_nodeName then
+	  if val.basicInfo_nodeName == '' then
+		 errors['node_name'] = "Please enter a node name"
+	  else
+		 uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
+		 uci:save('nodeConf')
+		 uci:commit('nodeConf')
+	  end
    end
    local p1 = val.basicInfo_pwd1
    local p2 = val.basicInfo_pwd2 
@@ -180,8 +185,10 @@ end
 
 function nearbyMeshParser(val)
    if val.nearbyMesh then
-	  if luci.fs.isfile("/usr/share/commotion/configs" .. val.nearbyMesh) then
-		 configFile = val.nearbymesh
+	  log(val.nearbyMesh)
+	  if luci.fs.isfile("/usr/share/commotion/configs/" .. val.nearbyMesh) then
+		 log("WIN")
+		 configFile = val.nearbyMesh
 		 local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
 		 if returns ~= 0 then
 			error = "Error parsing config file. Please choose another config file or find and upload correct config" 
@@ -198,6 +205,9 @@ function nearbyMeshParser(val)
    end
 end
 
+function oneClickRenderer()
+   luci.sys.call("cp /usr/share/commotion/configs/Commotion /etc/config/nodeConf")
+end
 
 function uploadRenderer()
    local uci = luci.model.uci.cursor()
@@ -321,6 +331,16 @@ function preBuiltButton()
    uci:commit('quickstart')
 end
 
+function oneClickButton()
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   uci:set('quickstart', 'options', 'lastPg', page)
+   uci:set('quickstart', 'options', 'pageNo', 'oneClick')
+   uci:save('quickstart')
+   uci:commit('quickstart')
+end
+   
 
 function connectedNodesRenderer()
    return nil
