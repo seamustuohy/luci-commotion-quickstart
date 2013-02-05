@@ -1,4 +1,7 @@
 <%-
+   if pv.errorMsg then
+       if pv.errorMsg.upload then upErr = pv.errorMsg.upload end
+   end
    for mod,data in pairs(pv.modules) do
        for name,data2 in pairs(data) do
            if name == 'uploadTitle' then
@@ -11,6 +14,7 @@
 <div id="zone-content-wrapper">
   <div id="zone-content">
 	<input type="hidden" name="moduleName" value="upload">
+	<div class="error"><%=upErr%></div>
 	<h2>Upload <%=uploadTitle%></h2>
 	<input type="file" name="<%=pv.modules.upload.fileType%>" id="media" />
 	<div class="upload-description">

@@ -13,47 +13,38 @@ function main()
 	-- if return values get them and pass them to return value parser
 	setFileHandler()
 	if luci.http.formvalue then
-	  errorMsg = checkPage()
-   end
+	  errorMsg = checkPage() 
+	end
       --1) call uci parser, returning dict of pages
-   local uci = luci.model.uci.cursor()
-   local pageNo,lastPg = pages()
-   --Create/clear a space for pageValues and populate with page
-   local pageValues = {modules = {}, buttons = {}, page = {['pageNo'] = pageNo, ['lastPg'] = lastPg}}
-   local pageContext = uci:get_all('quickstart', pageNo)
-   -- iterate through the list of page content from the UCI file and run corresponding functions, populating a dictionary with the values required by each module
-   local removeUpload = nil
-   for i,x in pairs(pageContext) do
-	  if i == 'modules' then
-		 for _,z in ipairs(x) do
-
-			pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
-			if type(pageValues.modules[z]) == 'table' and pageValues.modules[z]['upload'] then removeUpload = true end
-		 end
-	  elseif i == 'buttons' then
-		 for _,z in ipairs(x) do
-			--Add buttons to page
-			pageValues.buttons[z]=true
-		 end
-	  else
-		 pageValues[i]=x
-	  end
-   end
-   if removeUpload == true and pageValues.modules.upload then
-	  pageValues.modules.upload = nil
-   end
-   --TODO remove this next Stanza (only for debugging)
-   if errorMsg then
-	  pageValues['errorMsg'] = errorMsg
-	 -- log(pageValues.errorMsg)
-   end
---   if pageValues.modules.meshDefaults then
---   log("STUFF")
---   end
-   --3) pass dictionary to the main page loader luci.http.loadtemplate("quickstart")
-   luci.template.render("QS/main/Quickstart", {pv=pageValues})
+	local uci = luci.model.uci.cursor()
+	local pageNo,lastPg = pages()
+	--Create/clear a space for pageValues and populate with page
+	local pageValues = {modules = {}, buttons = {}, page = {['pageNo'] = pageNo, ['lastPg'] = lastPg}}
+	local pageContext = uci:get_all('quickstart', pageNo)
+	-- iterate through the list of page content from the UCI file and run corresponding functions, populating a dictionary with the values required by each module
+	local removeUpload = nil
+	for i,x in pairs(pageContext) do
+	   if i == 'modules' then
+		  for _,z in ipairs(x) do
+			 
+			 pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
+			 if type(pageValues.modules[z]) == 'table' and pageValues.modules[z]['upload'] then removeUpload = true end
+		  end
+	   elseif i == 'buttons' then
+		  for _,z in ipairs(x) do
+			 --Add buttons to page
+			 pageValues.buttons[z]=true
+		  end
+	   else
+		  pageValues[i]=x
+	   end
+	end
+	if removeUpload == true and pageValues.modules.upload then
+	   pageValues.modules.upload = nil
+	end
+	luci.template.render("QS/main/Quickstart", {pv=pageValues})
 end
- 
+
 function pages()
    local uci = luci.model.uci.cursor()
    local pageNo = uci:get('quickstart', 'options', 'pageNo')
@@ -68,10 +59,6 @@ end
 function checkPage()
    local returns = luci.http.formvalue()
    errors = parseSubmit(returns)
-   --1) TODO check for return values
-   -- 2) TODO send values to parser for each module
-   --3) TODO if values good set them in custom config, iterate pageNo, set lastPg number to current page, and call main()
-   --4) TODO if values bad, send main(errorMsg) and DO NOT ITERATE pageNo, so that page is reloaded with errrors, if redirected to a error page, etc lastPg needs to be modified to save state.
    return errors
 end
 
@@ -135,23 +122,28 @@ end
 function basicInfoRenderer()
    --check current node_name and return it as nodename
    local uci = luci.model.uci.cursor()
-   local nodeName = assert(uci:get('nodeConf', 'confInfo', 'name'), 'No nodeConf File Found.')
-   if nodeName then
-	  return {['name'] = nodeName}
+   local changable = uci:get('nodeConf', 'confInfo', 'changableName')
+   if changable == 'true' then
+	  local nodeName = uci:get('nodeConf', 'confInfo', 'name')
+	  if nodeName then
+		 return {['name'] = nodeName}
+	  end
    else
-	  return nil
+	  return {['name'] = 'static'}
    end
 end
 
 function basicInfoParser(val)
    local errors = {}
    local uci = luci.model.uci.cursor()
-   if val.basicInfo_nodeName == '' then
-	  errors['node_name'] = "Please enter a node name"
-   else
-	  uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
-	  uci:save('nodeConf')
-	  uci:commit('nodeConf')
+   if val.basicInfo_nodeName then
+	  if val.basicInfo_nodeName == '' then
+		 errors['node_name'] = "Please enter a node name"
+	  else
+		 uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
+		 uci:save('nodeConf')
+		 uci:commit('nodeConf')
+	  end
    end
    local p1 = val.basicInfo_pwd1
    local p2 = val.basicInfo_pwd2 
@@ -180,15 +172,17 @@ end
 
 function nearbyMeshParser(val)
    if val.nearbyMesh then
-	  if luci.fs.isfile("/usr/share/commotion/configs" .. val.nearbyMesh) then
-		 configFile = val.nearbymesh
+	  log(val.nearbyMesh)
+	  if luci.fs.isfile("/usr/share/commotion/configs/" .. val.nearbyMesh) then
+		 log("WIN")
+		 configFile = val.nearbyMesh
 		 local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
 		 if returns ~= 0 then
 			error = "Error parsing config file. Please choose another config file or find and upload correct config" 
 			return error 
 		 end
 	  else
-		 commotionDaemon('I NEED A CONFIG JOSH')
+		 commotionDaemon('apply', val.nearbyMesh)
 		 --TODO find out what data Josh can pass me to build a nodeConf
 		 --log('the daemon now passes me config data like magic and I place it in a nodeConf')
 	  end
@@ -198,6 +192,9 @@ function nearbyMeshParser(val)
    end
 end
 
+function oneClickRenderer()
+   luci.sys.call("cp /usr/share/commotion/configs/Commotion /etc/config/nodeConf")
+end
 
 function uploadRenderer()
    local uci = luci.model.uci.cursor()
@@ -213,35 +210,83 @@ function uploadRenderer()
 end
 
 function uploadParser()
---add actual uploader here
---take uploaded configs and use them to create the nodeConf
+   local uci = luci.model.uci.cursor()
    if luci.http.formvalue("config") then
 	  file = luci.http.formvalue("config")
    elseif luci.http.formvalue("key") then
 	  file = luci.http.formvalue("key")
    end
+   error = ''
+   if file then
+	  if luci.http.formvalue("config") then
+		 --TODO we need to check that each file is actually the file type that we are looking for!!!
+		 if uci:get('nodeConf', 'confInfo', 'name') then
+		 --check if a key is required in the conf and set next page to a key file uploader if it is.
+			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
+			log(string.len(confKeySum))
+			if string.len(confKeySum) == 32 then
+			   if luci.fs.isfile(keyLoc .. "network.keyring") then
+				  local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
+				  if keyring ~= confKey then
+					 currentNext = uci:get('quickstart', 'options', 'pageNo')
+					 uci:set('quickstart', 'uploadKey', 'nextPg', currentNext)
+					 uci:set('quickstart', 'options', 'pageNo', 'uploadKey')
+					 uci:save('quickstart')
+					 uci:commit('quickstart')
+				  end
+			   else
+				  currentNext = uci:get('quickstart', 'options', 'pageNo')
+				  uci:set('quickstart', 'uploadKey', 'nxtPg', currentNext)
+				  uci:set('quickstart', 'options', 'pageNo', 'uploadKey')
+				  uci:save('quickstart')
+				  uci:commit('quickstart')
+			   end
+			end
+		 else
+			error = 'This file is not a configuration file. Please check the file and upload a working config file or go back and choose a pre-built config'
+		 end
+	  elseif luci.http.formvalue("key") then
+		 --TODO swap out commented correct line for line below
+		 if luci.sys.call("pwd") == '0' then
+	   --if luci.sys.call("servald keyring list") == '0' then
+			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
+			if string.len(confKey) == 33 then
+			   local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
+			   if keyring ~= confKey then
+				  currentNext = uci:get('quickstart', 'options', 'pageNo')
+				  uci:set('quickstart', 'uploadKey', 'nextPg', currentNext)
+				  uci:set('quickstart', 'options', 'pageNo', uploadKey)
+				  uci:save('quickstart')
+				  uci:commit('quickstart')
+			   end
+			   --TODO swap out commented correct line for line below
+			   elseif luci.sys.call("pwd") = '1' then
+			 --elseif luci.sys.call("servald keyring list") == '1' then
+			   error = 'The file uploaded is either not a proper keyring or has a pin that is required to access the key within. If you do not think that your keyring has a pin please upload a proper servald keyring for your network key. If your keyring is pin protected, please click continue below.'
+			end
+		 end
+	  end
+   end
+   if error ~= '' then
+	  return error
+   end
 end
 
-
 function setFileHandler()
+   local uci = luci.model.uci.cursor()
    local sys = require "luci.sys"
    local fs = require "luci.fs"
-   local tmp = "/tmp/"
+   local keyLoc = "/usr/share/serval/"
    local configLoc = '/etc/config/'
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
    luci.http.setfilehandler(
 	  function(meta, chunk, eof)
 		 if not fp then
-			if meta and meta.name == "config" then
-			   --TODO we need to check that each file is actually the file type that we are looking for!!!
+			if meta and meta.name == "config" then			   
 			   fp = io.open(configLoc .. "nodeConf", "w")
 			elseif meta and meta.name == "key" then
-			   fp = io.open(tmp .. meta.file, "w")
-			   --TODO we need to check that each file is actually the file type that we are looking for!!!
-			   --TODO create hash of key
-			   --TODO check key hash against hash of key in config
-			   --TODO send result "false" or "correct" back to mesh_defaults with mesh_defaults(config, keyval)
+			   fp = io.open(keyLoc .. "network.keyring", "w")
 			end
 			if chunk then
 			   fp:write(chunk)
@@ -252,6 +297,7 @@ function setFileHandler()
 		 end
 	  end)
 end
+
 
 function configsRenderer()
 --talk to daemon for configs
@@ -321,6 +367,16 @@ function preBuiltButton()
    uci:commit('quickstart')
 end
 
+function oneClickButton()
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   uci:set('quickstart', 'options', 'lastPg', page)
+   uci:set('quickstart', 'options', 'pageNo', 'oneClick')
+   uci:save('quickstart')
+   uci:commit('quickstart')
+end
+   
 
 function connectedNodesRenderer()
    return nil
@@ -333,9 +389,8 @@ function connectedNodesParser()
 end
 
 function settingPrefsRenderer()
-   --TODO commotion daemon actually working
    local uci = luci.model.uci.cursor()
-   commotionDaemon("GO GO GADGET SET THE ROUTER UP!")
+   commotionDaemon("engage")
    page = uci:get('quickstart', 'options', 'pageNo')
    if tonumber(page) then
 	  uci:set('quickstart', 'options', 'pageNo', page+1)
@@ -350,7 +405,6 @@ function settingPrefsRenderer()
    --TODO figure our where the daemon will pull the ssid from
    name = uci:get('nodeConf', 'confInfo', 'name')
    return {['time'] = time, ['name'] = name}
-   --TODO modify reset page into sharing module without reset (as the daemon will do that)
 end
 
 function sharingPrefsRenderer()
@@ -556,9 +610,12 @@ end
 function connectedNodesParser()
 end
 
-function commotionDaemon(request)
+function commotionDaemon(request, value)
 --TODO have this function make Ubus calls to the commotion daemon instead of pass back dummy variables
 --This if statement FAKES grabbing nearby mesh networks from the commotion daemon
+   errors = {}
+   --TODO UBUS uncomment
+   --load ubus module
    if request == 'nearbyNetworks' then
 	  local networks = {
 		 { name="Commotion", config="true"},
@@ -585,13 +642,11 @@ function commotionDaemon(request)
 	  return networks
    elseif request == 'I NEED A CONFIG JOSH' then
 	  return nil
+   elseif request ='engage' then
+	  --TODO incorporate the final ubus add/select sections ehre
+	  end
    end
 end
-
-function error(errorType)
---TODO add submitButton error
-end
-
 
 
 

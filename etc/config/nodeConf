@@ -1,5 +1,6 @@
 config info confInfo
 	   option name 'Commotion'
+	   option key '0'
 
 config info defaults
 	   option routing 'olsr'	
