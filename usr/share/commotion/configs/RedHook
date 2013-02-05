@@ -1,6 +1,6 @@
 config info confInfo
-	   option name 'Commotion'
-	   option changableName 'false'
+	   option name 'RedHooks'
+	   option changableName 'true'
 
 config info defaults
 	   option routing 'olsr'	

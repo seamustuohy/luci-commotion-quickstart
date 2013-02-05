@@ -135,23 +135,28 @@ end
 function basicInfoRenderer()
    --check current node_name and return it as nodename
    local uci = luci.model.uci.cursor()
-   local nodeName = assert(uci:get('nodeConf', 'confInfo', 'name'), 'No nodeConf File Found.')
-   if nodeName then
-	  return {['name'] = nodeName}
+   local changable = uci:get('nodeConf', 'confInfo', 'changableName')
+   if changable == 'true' then
+	  local nodeName = uci:get('nodeConf', 'confInfo', 'name')
+	  if nodeName then
+		 return {['name'] = nodeName}
+	  end
    else
-	  return nil
+	  return {['name'] = 'static'}
    end
 end
 
 function basicInfoParser(val)
    local errors = {}
    local uci = luci.model.uci.cursor()
-   if val.basicInfo_nodeName == '' then
-	  errors['node_name'] = "Please enter a node name"
-   else
-	  uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
-	  uci:save('nodeConf')
-	  uci:commit('nodeConf')
+   if val.basicInfo_nodeName then
+	  if val.basicInfo_nodeName == '' then
+		 errors['node_name'] = "Please enter a node name"
+	  else
+		 uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
+		 uci:save('nodeConf')
+		 uci:commit('nodeConf')
+	  end
    end
    local p1 = val.basicInfo_pwd1
    local p2 = val.basicInfo_pwd2 
@@ -180,15 +185,17 @@ end
 
 function nearbyMeshParser(val)
    if val.nearbyMesh then
-	  if luci.fs.isfile("/usr/share/commotion/configs" .. val.nearbyMesh) then
-		 configFile = val.nearbymesh
+	  log(val.nearbyMesh)
+	  if luci.fs.isfile("/usr/share/commotion/configs/" .. val.nearbyMesh) then
+		 log("WIN")
+		 configFile = val.nearbyMesh
 		 local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
 		 if returns ~= 0 then
 			error = "Error parsing config file. Please choose another config file or find and upload correct config" 
 			return error 
 		 end
 	  else
-		 commotionDaemon('I NEED A CONFIG JOSH')
+		 commotionDaemon('apply', val.nearbyMesh)
 		 --TODO find out what data Josh can pass me to build a nodeConf
 		 --log('the daemon now passes me config data like magic and I place it in a nodeConf')
 	  end
@@ -198,6 +205,9 @@ function nearbyMeshParser(val)
    end
 end
 
+function oneClickRenderer()
+   luci.sys.call("cp /usr/share/commotion/configs/Commotion /etc/config/nodeConf")
+end
 
 function uploadRenderer()
    local uci = luci.model.uci.cursor()
@@ -321,6 +331,16 @@ function preBuiltButton()
    uci:commit('quickstart')
 end
 
+function oneClickButton()
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   uci:set('quickstart', 'options', 'lastPg', page)
+   uci:set('quickstart', 'options', 'pageNo', 'oneClick')
+   uci:save('quickstart')
+   uci:commit('quickstart')
+end
+   
 
 function connectedNodesRenderer()
    return nil
@@ -559,32 +579,55 @@ end
 function commotionDaemon(request)
 --TODO have this function make Ubus calls to the commotion daemon instead of pass back dummy variables
 --This if statement FAKES grabbing nearby mesh networks from the commotion daemon
-   if request == 'nearbyNetworks' then
-	  local networks = {
-		 { name="Commotion", config="true"},
-		 { name="RedHooks", config="true"},
-		 { name="Ninux", config="false"},
-		 { name="Byzantium", config="true"},
-		 { name="Funkfeuer", config="false"},
-		 { name="FreiFunk", config="false"},
-		 { name="Big Bobs Mesh Network", config="false"},
-		 { name="Viva la' Revolution", config="true"},
-	  }
-	  return networks
-   elseif request == 'configs' then
-	  local networks = {
-		 { name="Commotion", config="This is the commotion network"},
-		 { name="RedHooks", config="Tidepool Pride WHAZZAP"},
-		 { name="Ninux", config="This is teh Ninux network"},
-		 { name="Byzantium", config="Byzantine network"},
-		 { name="Funkfeuer", config="DAS da commotion network"},
-		 { name="FreiFunk", config="This esta  the commotion network"},
-		 { name="Big Bobs Mesh Network", config="This is noda the commotion network"},
-		 { name="Viva la' Revolution", config="This is not the commotion network"},
-	  }
-	  return networks
-   elseif request == 'I NEED A CONFIG JOSH' then
-	  return nil
+   errors = {}
+   --TODO UBUS uncomment
+   --load ubus module
+   --[[require "ubus"
+   --establish ubus connection
+   local conn = ubus.connect()
+   if not conn then
+	  errors["ubusd"] = "failed to connect to Ubusd"
+   end
+   if conn then]]--
+	  if request == 'nearbyNetworks' then
+		 --TODO UBUS uncomment
+		 --[[local networks = conn:call("commotion.interfaces." {name = wlan0})
+		 --once we have networks check to see formatting below
+		 if networks then
+			for i, x in pairs(networks) do
+			   log(i .. " : " .. x)
+			end
+		 else
+			return "none"
+		 end]]--
+		local networks = {
+			{ name="Commotion", config="true"},
+			{ name="RedHooks", config="true"},
+			{ name="Ninux", config="false"},
+			{ name="Byzantium", config="true"},
+			{ name="Funkfeuer", config="false"},
+			{ name="FreiFunk", config="false"},
+			{ name="Big Bobs Mesh Network", config="false"},
+			{ name="Viva la' Revolution", config="true"},
+		   }
+		 return networks
+	  elseif request == 'configs' then
+		 --[[local networks = {
+			{ name="Commotion", config="This is the commotion network"},
+			{ name="RedHooks", config="Tidepool Pride WHAZZAP"},
+			{ name="Ninux", config="This is teh Ninux network"},
+			{ name="Byzantium", config="Byzantine network"},
+			{ name="Funkfeuer", config="DAS da commotion network"},
+			{ name="FreiFunk", config="This esta  the commotion network"},
+			{ name="Big Bobs Mesh Network", config="This is noda the commotion network"},
+			{ name="Viva la' Revolution", config="This is not the commotion network"},
+		   }]]--
+		 return networks
+	  elseif request == 'I NEED A CONFIG JOSH' then
+		 return nil
+	  end
+	  --TODO UBUS uncomment
+	  --conn:close()
    end
 end
 

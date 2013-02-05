@@ -19,9 +19,16 @@
 			<th scope="col">Type of network</th>
 		  </tr>
 		  <%-
-			 for _,x in ipairs(pv.modules.nearbyMesh) do
-			 name = x.name
-			 config = x.config
+			 if networks == 'none' then
+			 --TODO fix the missing networks DIV below to actually do stuff
+			 -%>
+		  <div> There are no networks here </div>
+
+			 <%-
+			 else
+			     for _,x in ipairs(pv.modules.nearbyMesh) do
+			     name = x.name
+			     config = x.config
 			 -%>
 		  <tr><td></td>
 			<td><input type="radio" name="nearbyMesh" value="<%=name%>"/><%=name%></td>
@@ -33,7 +40,7 @@
 			  <%end%>
 			</td>
 		  </tr>
-		  <%end%>
+		  <%end end%>
 		</tbody>
 	  </table>
 	</div>
