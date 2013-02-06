@@ -31,7 +31,7 @@ function main()
 	-- if return values get them and pass them to return value parser
 	setFileHandler()
 	if luci.http.formvalue then
-	  errorMsg = checkPage() 
+	  errorMsg = checkPage()
 	end
       --1) call uci parser, returning dict of pages
 	local uci = luci.model.uci.cursor()
@@ -590,40 +590,7 @@ function completeRenderer()
 end
 
 function connectedNodesRenderer()
-   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
-   -- TODO switch this rawdata call out with one below
-   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
-   --TODO remove the false raw data below and implement the one above... just like the other comment says.
-   local rawdata = [[Table: Neighbors
-IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
-10.10.0.152		YES		NO		NO		6		0
-5.10.0.152		YES		NO		NO		6		34
-10.2.0.152		YES		NO		NO		6		1
-10.10.0.142		YES		NO		NO		6		5]]
-local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
-neighbors = 0
-for i,x in ipairs(tables) do
-   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
-	  neighbors = neighbors + 1
-   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
-	  neighbors = neighbors + 1
-   end
-   neighborText = {
-	  "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
-
-   --TODO actually create meaning text for this section. 
-   if neighbors <= 4 then
-	  meaning = neighborText[neighbors+1]
-   else
-	  meaning = neighborText[6]
-   end
-end
-return {['neighbors'] = neighbors, ['meaning'] = meaning}
+   return nil
 end
 
 function connectedNodesParser()

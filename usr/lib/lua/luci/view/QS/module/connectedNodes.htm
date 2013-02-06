@@ -1,13 +1,11 @@
-<!-- TODO
-	 1) Have this page refresh every 4 seconds or so
-	 2)fix the inline css and etc in this section and replce with work-dept content-->
 <div id="zone-content-wrapper">
   <div id="zone-content">
+	<p>"Below is a map of your network. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds.</p>
+<p>If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, your node is in a location that is not being reached by neighboring nodes like a basement, behind a wall, or in dense foliage, or you just may not be near any other nodes. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",</p>
 	<div>
 	  <iframe style="width:100%; height:640px; border:none" scrolling="no" src="/cgi-bin/olsr-viz.sh">
 	  </iframe>
 	</div>
-	<div class="explanation" style="font-size:2em; text-align:center; border-style:dashed; border-color:grey;"><%=pv.modules.connectedNodes.meaning%>
 	</div>
   </div>
 </div>
