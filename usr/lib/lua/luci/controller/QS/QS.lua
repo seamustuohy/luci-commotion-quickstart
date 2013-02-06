@@ -4,10 +4,28 @@ require "luci.model.uci"
 
 function index()
    local uci = luci.model.uci.cursor()
+   require("luci.i18n").loadc("commotion")
+   local i18n = luci.i18n.translate
+   
+   entry({"admin", "commotion", "QuickStartReset"}, call("reset"), i18n("Reset Commotion Quickstart"), 60)
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
    end
 end
+
+
+function reset()
+   local uci = luci.model.uci.cursor()
+   if luci.http.formvaluetable("reset") then
+	  uci:set('quickstart', 'options', 'complete', 'false')
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+	  main()
+   else
+	  luci.template.render("QS/main/Reset")
+   end
+end
+
 
 function main()
 	-- if return values get them and pass them to return value parser
@@ -507,7 +525,7 @@ function sharingPrefsParser()
 		 end
 		 uci:save('nodeConf')
 		 uci:commit('nodeConf')
-		 
+		 --APPLICATIONS
 		 if id == "apps" then
 			if luci.http.formvalue("app.type") then
 			   types = {}
@@ -526,6 +544,7 @@ function sharingPrefsParser()
 			else
 			   errors["apps"] = "Please pick a ammount of time for apps to last. May I suggest 60?"
 			end
+			--TODO add app.renew, app.approve, and app.connectivity checks HERE
 			uci:save('applications')
 			uci:commit('applications')
 		 end
