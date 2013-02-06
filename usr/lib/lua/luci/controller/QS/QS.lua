@@ -218,7 +218,6 @@ function uploadRenderer()
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local fileType = uci:get('quickstart', page, 'fileType')
-   --TODO check uploader module to see if it needs any values
    if fileType == 'config' then
    fileInstructions="and submit a config file from your own computer. You will be able to customize this configuration once it has been applied to the node."
    elseif fileType == 'key' then
@@ -237,7 +236,6 @@ function uploadParser()
    error = ''
    if file then
 	  if luci.http.formvalue("config") then
-		 --TODO we need to check that each file is actually the file type that we are looking for!!!
 		 if uci:get('nodeConf', 'confInfo', 'name') then
 		 --check if a key is required in the conf and set next page to a key file uploader if it is.
 			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
