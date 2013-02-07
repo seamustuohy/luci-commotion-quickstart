@@ -36,10 +36,7 @@ endef
 
 define Package/commotion-quick-start/install
 	echo "Testing"
-	$(INSTALL_DIR) $(1)
-	$(CP) -a ./files/usr/* $(1)/usr/ || true
-	$(CP) -a ./files/etc/* $(1)/etc/ || true
-	$(CP) -a ./files/www/* $(1)/www/ || true
+	$(CP) -a ./files/* $(1)/ || true
 endef
 
-$(eval $(call BuildPackage,commotion-quick-start))
+(eval $(call BuildPackage,commotion-quick-start))
