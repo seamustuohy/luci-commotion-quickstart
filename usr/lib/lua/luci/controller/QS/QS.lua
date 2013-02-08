@@ -25,8 +25,7 @@ function main()
 	local removeUpload = nil
 	for i,x in pairs(pageContext) do
 	   if i == 'modules' then
-		  for _,z in ipairs(x) do
-			 
+		  for _,z in ipairs(x) do			 
 			 pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
 			 if type(pageValues.modules[z]) == 'table' and pageValues.modules[z]['upload'] then removeUpload = true end
 		  end
@@ -82,7 +81,7 @@ function parseSubmit(returns)
 			   end
 			end
 		 end
-		 log(errors)
+
 		 if next(errors) == nil then
 			page = uci:get('quickstart', 'options', 'pageNo')
 			if tonumber(page) then
@@ -172,9 +171,9 @@ end
 
 function nearbyMeshParser(val)
    if val.nearbyMesh then
-	  log(val.nearbyMesh)
+
 	  if luci.fs.isfile("/usr/share/commotion/configs/" .. val.nearbyMesh) then
-		 log("WIN")
+
 		 configFile = val.nearbyMesh
 		 local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
 		 if returns ~= 0 then
@@ -184,7 +183,7 @@ function nearbyMeshParser(val)
 	  else
 		 commotionDaemon('apply', val.nearbyMesh)
 		 --TODO find out what data Josh can pass me to build a nodeConf
-		 --log('the daemon now passes me config data like magic and I place it in a nodeConf')
+
 	  end
    else
 	  error  = "Please choose a network if you would like to continue." 
@@ -223,7 +222,7 @@ function uploadParser()
 		 if uci:get('nodeConf', 'confInfo', 'name') then
 		 --check if a key is required in the conf and set next page to a key file uploader if it is.
 			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
-			log(string.len(confKeySum))
+
 			if string.len(confKeySum) == 32 then
 			   if luci.fs.isfile(keyLoc .. "network.keyring") then
 				  local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
@@ -246,9 +245,7 @@ function uploadParser()
 			error = 'This file is not a configuration file. Please check the file and upload a working config file or go back and choose a pre-built config'
 		 end
 	  elseif luci.http.formvalue("key") then
-		 --TODO swap out commented correct line for line below
-		 if luci.sys.call("pwd") == '0' then
-	   --if luci.sys.call("servald keyring list") == '0' then
+	   if luci.sys.call("servald keyring list") == '0' then
 			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
 			if string.len(confKey) == 33 then
 			   local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
@@ -259,9 +256,7 @@ function uploadParser()
 				  uci:save('quickstart')
 				  uci:commit('quickstart')
 			   end
-			   --TODO swap out commented correct line for line below
-			   elseif luci.sys.call("pwd") = '1' then
-			 --elseif luci.sys.call("servald keyring list") == '1' then
+			 elseif luci.sys.call("servald keyring list") == '1' then
 			   error = 'The file uploaded is either not a proper keyring or has a pin that is required to access the key within. If you do not think that your keyring has a pin please upload a proper servald keyring for your network key. If your keyring is pin protected, please click continue below.'
 			end
 		 end
@@ -344,7 +339,7 @@ function meshDefaultsRenderer()
 end
 
 function meshDefaultsParser(val)
-   --log(val)
+
 end
 
 function uploadConfButton()
@@ -460,9 +455,7 @@ function sharingPrefsParser()
 			   captive =  luci.http.formvaluetable("cptv")
 			end
 			local fs = require "nixio.fs"
-			local splashtextfile = "/www/splash.htm"
-			--TODO change splashtext file to below...
-			--local splashtextfile = "/usr/lib/luci-splash/splashtext.html"
+			local splashtextfile = "/usr/lib/luci-splash/splashtext.html"
 			for i,x in pairs(captive) do
 			   if i == "main" then
 				  if x == "" then
@@ -571,79 +564,84 @@ function completeRenderer()
 end
 
 function connectedNodesRenderer()
-   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
-   -- TODO switch this rawdata call out with one below
-   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
-   --TODO remove the false raw data below and implement the one above... just like the other comment says.
-   local rawdata = [[Table: Neighbors
-IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
-10.10.0.152		YES		NO		NO		6		0
-5.10.0.152		YES		NO		NO		6		34
-10.2.0.152		YES		NO		NO		6		1
-10.10.0.142		YES		NO		NO		6		5]]
-local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
-neighbors = 0
-for i,x in ipairs(tables) do
-   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
-	  neighbors = neighbors + 1
-   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
-	  neighbors = neighbors + 1
-   end
-   neighborText = {
-	  "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
-
-   --TODO actually create meaning text for this section. 
-   if neighbors <= 4 then
-	  meaning = neighborText[neighbors+1]
-   else
-	  meaning = neighborText[6]
-   end
-end
-return {['neighbors'] = neighbors, ['meaning'] = meaning}
+return nil
 end
 
 function connectedNodesParser()
 end
 
 function commotionDaemon(request, value)
---TODO have this function make Ubus calls to the commotion daemon instead of pass back dummy variables
---This if statement FAKES grabbing nearby mesh networks from the commotion daemon
-   errors = {}
-   --TODO UBUS uncomment
    --load ubus module
-   if request == 'nearbyNetworks' then
-	  local networks = {
-		 { name="Commotion", config="true"},
-		 { name="RedHooks", config="true"},
-		 { name="Ninux", config="false"},
-		 { name="Byzantium", config="true"},
-		 { name="Funkfeuer", config="false"},
-		 { name="FreiFunk", config="false"},
-		 { name="Big Bobs Mesh Network", config="false"},
-		 { name="Viva la' Revolution", config="true"},
-	  }
-	  return networks
-   elseif request == 'configs' then
-	  local networks = {
-		 { name="Commotion", config="This is the commotion network"},
-		 { name="RedHooks", config="Tidepool Pride WHAZZAP"},
-		 { name="Ninux", config="This is teh Ninux network"},
-		 { name="Byzantium", config="Byzantine network"},
-		 { name="Funkfeuer", config="DAS da commotion network"},
-		 { name="FreiFunk", config="This esta  the commotion network"},
-		 { name="Big Bobs Mesh Network", config="This is noda the commotion network"},
-		 { name="Viva la' Revolution", config="This is not the commotion network"},
-	  }
-	  return networks
-   elseif request == 'I NEED A CONFIG JOSH' then
-	  return nil
-   elseif request ='engage' then
-	  --TODO incorporate the final ubus add/select sections ehre
+   require "ubus"
+   --establish ubus connection
+   local conn = ubus.connect()
+   if not conn then
+	  errors["ubusd"] = "failed to connect to Ubusd"
+   end
+   if conn then
+	  if request == 'nearbyNetworks' then
+		 --Check that a radio interface exists
+		 --I don't know the returns of this, I assume that we just need a wireless interface to scan, but if we need  a specific interface (non-mesh etc.) let me know.
+		 local interfaces = conn:call("commotion.interfaces", "list", {})
+		 for name, type in pairs(interfaces) do
+			if type == radio then
+			   interface = name
+			else
+			   interface = nil
+			end
+		 end
+		 if interface == nil then
+			errors["DeviceIssue"] = "No radio found, Please make sure you are using a wirelessly enabled device"
+		 else
+			--one more check to make sure that a scan returns somthing here. Once I know the returns from the daemons ubus we can be more strategic about this 
+			if conn:call("commotion.interfaces." .. interface, "scan", {}) then
+			   --actually scan the network
+			   local networks = conn:call("commotion.interfaces." .. interface, "scan", {})
+			   --once we have networks check to see formatting below
+			   return networks
+			else
+			   return "none"
+			end
+		 end
+	  elseif request == 'configs' then
+		 --Check for existing configs
+		 if conn:call("commotion.profiles", "list", {}) then
+			local configs = conn:call("commotion.profiles", "list", {})
+			return configs
+		 else
+			return "none"
+		 end
+	  elseif request == 'apply' then
+		 --Check that a radio interface exists
+		 --I don't know the returns of this, I assume that we just need a wireless interface to scan, but if we need  a specific interface (non-mesh etc.) let me know.
+		 local interfaces = conn:call("commotion.interfaces", "list", {})
+		 for name, type in pairs(interfaces) do
+			if type == radio then
+			   interface = name
+			else
+			   interface = nil
+			end
+		 end
+		 if interface == nil then
+			errors["DeviceIssue"] = "No radio found, Please make sure you are using a wirelessly enabled device"
+		 else
+			--one more check to make sure that a scan returns somthing here. Once I know the returns from the daemons ubus we can be more strategic about this 
+			if conn:call("commotion.interfaces" .. interface, "match", {'profiles' : [value]}) then
+			   --actually scan the network
+			   local profile = conn:call("commotion.interfaces" .. interface, "match", {'profiles' : [value]})
+			   --once we have networks check to see formatting below
+			   return profile
+			else
+			   return "none"
+			end
+		 end
+	  elseif request = 'commit' then
+ 		 conn:call("commotion.profiles.nodeConf", "select", {})
+		 conn:call("commotion.profiles.nodeConf", "apply", {})
+	  end
+	  conn:close()
+	  if next(errors) ~= nil then
+		 return errors
 	  end
    end
 end
