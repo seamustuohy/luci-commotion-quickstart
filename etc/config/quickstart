@@ -1,9 +1,9 @@
 config quickstart options
-	   option pageNo '1'
-	   option lastPg '1'
+	   option pageNo 'welcome'
+	   option lastPg '0'
 	   option complete 'false'
 	   
-config page '1'
+config page 'welcome'
 	   option pageTitle 'Welcome'
 	   option buttonText 'Start Over'
 	   option topheader 'Welcome'
@@ -13,14 +13,124 @@ config page '1'
 	   list buttons 'noBack'
 	   list buttons 'noNext'
 
+config page 'newNetwork'
+	   option buttonText 'Use the one click setup'
+	   option pageTitle 'Quick Start'
+	   option topheader 'Please fill out the information below'
+   	   option subheading 'This will allow us to configure your node'
+	   option nxtPg 'setConfig'
+	   list modules 'basicInfo'
+	   list modules 'oneClick'
+	   
+config page 'joinMesh'
+   option topheader 'Here are the nearby networks.'
+   option subheading 'Click on a network to make a compatible node.'
+   option PageTitle 'Nearby Networks'
+   option buttonText 'Find Nearby Networks'
+   list modules 'nearbyMesh'
+   option nxtPg 'settings'
+
+config page 'settings'
+   option topheader 'you clicked on a network'
+   option subheading 'This page also has a subheading'
+   option PageTitle 'PAGE TITLES ARE IMPORTANT'
+   option buttonText 'Find Nearby Networks'
+   option nxtPg 'configReqs'
+   list buttons 'tryNetwork'
+   list buttons 'noNext'
+   list buttons 'haveSettings'
+
+#tryNetwork leads to nxtPg
+
+config page 'haveSettings'
+	   option buttonText 'I have a settings file'
+	   option pageTitle 'Upload A Settings File'
+	   option topheader 'Upload Your Settings File Here' 
+   	   option subheading 'Choose a file from your device to upload to the node.'
+	   option fileType 'config'
+	   option nxtPg 'configReqs'
+	   list modules 'upload'
+
+config page 'configReqs'
+	   option nxtPg 'setConfig'		
+
+
+
+
+
+#This section sets a network and shows the user the result
+
+config page 'setConfig'
+	   option pageTitle "Please Wait"
+	   option buttonText "Accept and Set Config"
+	   option topheader "Please Wait"
+	   option subheading "Please reconnect to this "
+	   list modules 'settingPrefs'
+	   list buttons 'noNext'
+	   list buttons 'noBack'
+
+config page 'seeNetwork'
+	   option pageTitle "Connected Nodes"
+	   option buttonText ""
+	   option subheading "You are connected to a network that is connected to ..."
+	   option nxtPg 'finish'
+	   option topheader "Congratulations!"
+	   list modules "connectedNodes"
+
+config page 'finish'
+	   option buttonText 'Click here to go to the admin interface'
+	   list modules "complete"
+	   list buttons 'noNext'
+	   list buttons 'noBack'
+
+
+#----------------------------------------------------
+
+
+
+
+   
+config page 'uploadKey'
+	   option buttonText 'Upload a Key'
+	   option pageTitle 'Upload A Key'
+	   option topheader 'Your Config Requires a Specific Key' 
+   	   option subheading 'Choose this networks key from your computer to upload to the node.'
+	   option fileType 'key'
+	   option nxtPg '6'
+	   list modules 'upload'
+	   
+config page 'startOver'
+	   option buttonText 'Start Over'
+	   
+
+config page 'preBuilt'
+	   option buttonText 'Use a Pre-Built Config'
+	   option pageTitle 'Choose a Config'
+	   option topheader 'Here are some of our pre-built configurations'
+   	   option subheading 'Choose one and we will continue from here'
+	   option nxtPg '3'
+	   list modules 'configs'
+
+config page 'uploadConf'
+	   option buttonText 'Upload a Config'
+	   option pageTitle 'Upload A Config'
+	   option topheader 'Upload Your Custom Config Here' 
+   	   option subheading 'Choose a file from your computer to upload to the node.'
+	   option fileType 'config'
+	   option nxtPg '3'
+	   list modules 'upload'
+
+	   
 config page '2'
    option topheader 'Here are the nearby networks.'
    option subheading 'Click on a network to make a compatible node.'
    option PageTitle 'Nearby Networks'
    option buttonText 'Find Nearby Networks'
    list modules 'nearbyMesh'
+   list buttons 'noNext'
    list buttons 'uploadConf'
    list buttons 'preBuilt'
+   list buttons 'tryNetwork'
 
 config page '3'
 	   option pageTitle 'Basic Info'
@@ -55,57 +165,5 @@ config page '6'
 	   list buttons 'noNext'
 	   list buttons 'noBack'
 
-config page '7'
-	   option pageTitle "Connected Nodes"
-	   option buttonText ""
-	   option subheading "You are connected to a network that is connected to ..."
-	   option topheader "Congratulations!"
-	   list modules "connectedNodes"
 
-config page '8'
-	   option pageTitle "Customization Completed"
-	   option subheading "You Have configured your node."
-	   option topheader "Congratulations!"
-	   option buttonText "Click here to finish" 
-	   list modules "complete"
 	   
-config page 'preBuilt'
-	   option buttonText 'Use a Pre-Built Config'
-	   option pageTitle 'Choose a Config'
-	   option topheader 'Here are some of our pre-built configurations'
-   	   option subheading 'Choose one and we will continue from here'
-	   option nxtPg '3'
-	   	   list modules 'configs'
-
-config page 'uploadConf'
-	   option buttonText 'Upload a Config'
-	   option pageTitle 'Upload A Config'
-	   option topheader 'Upload Your Custom Config Here' 
-   	   option subheading 'Choose a file from your computer to upload to the node.'
-	   option fileType 'config'
-	   option nxtPg '3'
-	   list modules 'upload'
-
-config page 'oneClick'
-	   option buttonText 'Use the one click setup'
-	   option pageTitle 'Quick Start'
-	   option topheader 'Please fill out the information below'
-   	   option subheading 'This will allow us to configure your node'
-	   option nxtPg '6'
-	   list modules 'basicInfo'
-	   list modules 'oneClick'
-
-config page 'uploadKey'
-	   option buttonText 'Upload a Key'
-	   option pageTitle 'Upload A Key'
-	   option topheader 'Your Config Requires a Specific Key' 
-   	   option subheading 'Choose this networks key from your computer to upload to the node.'
-	   option fileType 'key'
-	   option nxtPg '6'
-	   list modules 'upload'
-	   
-config page 'startOver'
-	   option buttonText 'Start Over'
-	   
-config page 'finish'
-	   option buttonText 'Finish'

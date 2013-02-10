@@ -45,12 +45,6 @@ function main()
 	luci.template.render("QS/main/Quickstart", {pv=pageValues})
 end
 
-function pages()
-   local uci = luci.model.uci.cursor()
-   local pageNo = uci:get('quickstart', 'options', 'pageNo')
-   local lastPg = uci:get('quickstart', 'options', 'lastPg')   
-   return pageNo, lastPg
-end
 
 function logoRenderer()
    return 'true'
@@ -70,8 +64,9 @@ function parseSubmit(returns)
 	  if submit == 'next' then
 		 local errors = {}
 		 local modules = {}
-		 for types,val in pairs(returns) do
-			if types == 'moduleName' then
+		 --Run the return values through each module's parser and check for returns. Module Parser's only return errors. 
+		 for kind,val in pairs(returns) do
+			if kind == 'moduleName' then
 			   if type(val) == 'table' then
 				  for _, value in ipairs(val) do
 					 errors[value]= luci.controller.QS.QS[value .. "Parser"](returns)
@@ -82,28 +77,13 @@ function parseSubmit(returns)
 			   end
 			end
 		 end
-		 log(errors)
 		 if next(errors) == nil then
-			page = uci:get('quickstart', 'options', 'pageNo')
-			if tonumber(page) then
-			   uci:set('quickstart', 'options', 'pageNo', page+1)
-			else
-			   nxtPg = uci:get('quickstart', page, 'nxtPg')
-			   uci:set('quickstart', 'options', 'pageNo', nxtPg)
-			end
-			uci:set('quickstart', 'options', 'lastPg', page)
-			uci:save('quickstart')
-			uci:commit('quickstart')
+			pages('next')
 		 else
 			return(errors)
 		 end
 	  elseif submit == 'back' then
-		 	page = uci:get('quickstart', 'options', 'pageNo')
-			lastPg = uci:get('quickstart', 'options', 'lastPg')
-			uci:set('quickstart', 'options', 'pageNo', lastPg)
-			uci:set('quickstart', 'options', 'lastPg', 1)
-			uci:save('quickstart')
-			uci:commit('quickstart')
+		 pages('back')
 	  elseif submit ~= nil then
 		 --parse button functions to be run
 		 return luci.controller.QS.QS[submit .. "Button"]()
@@ -112,7 +92,8 @@ end
 
 
 function welcomeRenderer()
-   return 'true'
+   num = commotionDaemon("numNetworks")
+   return {['count'] = num}
 end
 
 function welcomeParser()
@@ -171,24 +152,15 @@ function nearbyMeshRenderer()
 end
 
 function nearbyMeshParser(val)
+   local uci = luci.model.uci.cursor()
    if val.nearbyMesh then
 	  log(val.nearbyMesh)
-	  if luci.fs.isfile("/usr/share/commotion/configs/" .. val.nearbyMesh) then
-		 log("WIN")
-		 configFile = val.nearbyMesh
-		 local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
-		 if returns ~= 0 then
-			error = "Error parsing config file. Please choose another config file or find and upload correct config" 
-			return error 
-		 end
-	  else
-		 commotionDaemon('apply', val.nearbyMesh)
-		 --TODO find out what data Josh can pass me to build a nodeConf
-		 --log('the daemon now passes me config data like magic and I place it in a nodeConf')
-	  end
+	  uci:set('quickstart', 'options', 'meshName', val.nearbyMesh)
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
    else
 	  error  = "Please choose a network if you would like to continue." 
-	  return error 
+	  return error
    end
 end
 
@@ -197,6 +169,7 @@ function oneClickRenderer()
 end
 
 function uploadRenderer()
+   --creates an uploader based upon the fileType of the page config
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local fileType = uci:get('quickstart', page, 'fileType')
@@ -210,6 +183,7 @@ function uploadRenderer()
 end
 
 function uploadParser()
+   --Parses uploaded data 
    local uci = luci.model.uci.cursor()
    if luci.http.formvalue("config") then
 	  file = luci.http.formvalue("config")
@@ -219,51 +193,15 @@ function uploadParser()
    error = ''
    if file then
 	  if luci.http.formvalue("config") then
-		 --TODO we need to check that each file is actually the file type that we are looking for!!!
-		 if uci:get('nodeConf', 'confInfo', 'name') then
-		 --check if a key is required in the conf and set next page to a key file uploader if it is.
-			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
-			log(string.len(confKeySum))
-			if string.len(confKeySum) == 32 then
-			   if luci.fs.isfile(keyLoc .. "network.keyring") then
-				  local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
-				  if keyring ~= confKey then
-					 currentNext = uci:get('quickstart', 'options', 'pageNo')
-					 uci:set('quickstart', 'uploadKey', 'nextPg', currentNext)
-					 uci:set('quickstart', 'options', 'pageNo', 'uploadKey')
-					 uci:save('quickstart')
-					 uci:commit('quickstart')
-				  end
-			   else
-				  currentNext = uci:get('quickstart', 'options', 'pageNo')
-				  uci:set('quickstart', 'uploadKey', 'nxtPg', currentNext)
-				  uci:set('quickstart', 'options', 'pageNo', 'uploadKey')
-				  uci:save('quickstart')
-				  uci:commit('quickstart')
-			   end
-			end
-		 else
+		 --check that each file is actually the file type that we are looking for!!!
+		 if not uci:get('nodeConf', 'confInfo', 'name') then
 			error = 'This file is not a configuration file. Please check the file and upload a working config file or go back and choose a pre-built config'
 		 end
 	  elseif luci.http.formvalue("key") then
 		 --TODO swap out commented correct line for line below
-		 if luci.sys.call("pwd") == '0' then
-	   --if luci.sys.call("servald keyring list") == '0' then
-			local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
-			if string.len(confKey) == 33 then
-			   local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
-			   if keyring ~= confKey then
-				  currentNext = uci:get('quickstart', 'options', 'pageNo')
-				  uci:set('quickstart', 'uploadKey', 'nextPg', currentNext)
-				  uci:set('quickstart', 'options', 'pageNo', uploadKey)
-				  uci:save('quickstart')
-				  uci:commit('quickstart')
-			   end
-			   --TODO swap out commented correct line for line below
-			   elseif luci.sys.call("pwd") = '1' then
-			 --elseif luci.sys.call("servald keyring list") == '1' then
-			   error = 'The file uploaded is either not a proper keyring or has a pin that is required to access the key within. If you do not think that your keyring has a pin please upload a proper servald keyring for your network key. If your keyring is pin protected, please click continue below.'
-			end
+		 if luci.sys.call("pwd") == '1' then
+			--elseif luci.sys.call("servald keyring list") == '1' then
+			error = 'The file uploaded is either not a proper keyring or has a pin that is required to access the key within. If you do not think that your keyring has a pin please upload a proper servald keyring for your network key. If your keyring is pin protected, please click continue below.'
 		 end
 	  end
    end
@@ -271,6 +209,23 @@ function uploadParser()
 	  return error
    end
 end
+
+function keyCheck()
+   --check if a key is required in the conf
+   local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
+   log(string.len(confKeySum))
+   if string.len(confKeySum) == 32 then
+	  if luci.fs.isfile(keyLoc .. "network.keyring") then
+		 local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
+		 if keyring ~= confKey then
+			--TODO create value to pass if keyring key does not match network required key
+		 end
+	  else
+		 --TODO cretae value to send if no keyring exists
+	  end
+   end
+end
+
 
 function setFileHandler()
    local uci = luci.model.uci.cursor()
@@ -348,35 +303,61 @@ function meshDefaultsParser(val)
 end
 
 function uploadConfButton()
-   local uci = luci.model.uci.cursor()
-   local page = uci:get('quickstart', 'options', 'pageNo')
-   local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   uci:set('quickstart', 'options', 'lastPg', page)
-   uci:set('quickstart', 'options', 'pageNo', 'uploadConf')
-   uci:save('quickstart')
-   uci:commit('quickstart')   
+   pages('next', 'uploadConf')
 end
 
 function preBuiltButton()
-   local uci = luci.model.uci.cursor()
-   local page = uci:get('quickstart', 'options', 'pageNo')
-   local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   uci:set('quickstart', 'options', 'lastPg', page)
-   uci:set('quickstart', 'options', 'pageNo', 'preBuilt')
-   uci:save('quickstart')
-   uci:commit('quickstart')
+   pages('next', 'preBuilt')
 end
 
 function oneClickButton()
-   local uci = luci.model.uci.cursor()
-   local page = uci:get('quickstart', 'options', 'pageNo')
-   local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   uci:set('quickstart', 'options', 'lastPg', page)
-   uci:set('quickstart', 'options', 'pageNo', 'oneClick')
-   uci:save('quickstart')
-   uci:commit('quickstart')
+   pages('next', 'oneclick')
 end
-   
+
+
+function tryNetworkButton()
+   --sets chosen  network config from on router or through commotion daemon
+   local uci = luci.model.uci.cursor()
+   nearbyMesh = uci:get('quickstart', 'options', 'meshName')
+   if luci.fs.isfile("/usr/share/commotion/configs/" .. nearbyMesh) then
+	  log("WIN")
+	  configFile = nearbyMesh
+	  local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
+	  if returns ~= 0 then
+		 error = "Error parsing config file. Please choose another config file or find and upload correct config" 
+		 return error 
+	  end
+   else
+	  commotionDaemon('apply', nearbyMesh)
+	  --TODO find out what data Josh can pass me to build a nodeConf
+	  --log('the daemon now passes me config data like magic and I place it in a nodeConf')
+   end
+   pages("next")
+end
+
+function pages(command, next, skip)
+   --manipulates the rendered pages for a user
+	  local uci = luci.model.uci.cursor()
+	  if not next then
+		 local next = uci:get('quickstart', page, 'nxtPg') 
+	  end
+	  local lastPg = uci:get('quickstart', 'options', 'lastPg')
+	  local page = uci:get('quickstart', 'options', 'pageNo')
+   if command == 'next' then
+	  if not skip then
+		 uci:set('quickstart', 'options', 'lastPg', page)
+	  end
+	  uci:set('quickstart', 'options', 'pageNo', next)
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+   elseif command == 'back' then
+	  uci:set('quickstart', 'options', 'pageNo', lastPg)
+	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+   end
+end
+
 
 function connectedNodesRenderer()
    return nil
@@ -391,16 +372,7 @@ end
 function settingPrefsRenderer()
    local uci = luci.model.uci.cursor()
    commotionDaemon("engage")
-   page = uci:get('quickstart', 'options', 'pageNo')
-   if tonumber(page) then
-	  uci:set('quickstart', 'options', 'pageNo', page+1)
-   else
-	  nxtPg = uci:get('quickstart', page, 'nxtPg')
-	  uci:set('quickstart', 'options', 'pageNo', nxtPg)
-   end
-   uci:set('quickstart', 'options', 'lastPg', '1')
-   uci:save('quickstart')
-   uci:commit('quickstart')
+   pages('next', 'seeNetwork', 'skip')
    time = 120
    --TODO figure our where the daemon will pull the ssid from
    name = uci:get('nodeConf', 'confInfo', 'name')
@@ -628,6 +600,22 @@ function commotionDaemon(request, value)
 		 { name="Viva la' Revolution", config="true"},
 	  }
 	  return networks
+   elseif request == "numNetworks" then
+	  local networks = {
+		 { name="Commotion", config="true"},
+		 { name="RedHooks", config="true"},
+		 { name="Ninux", config="false"},
+		 { name="Byzantium", config="true"},
+		 { name="Funkfeuer", config="false"},
+		 { name="FreiFunk", config="false"},
+		 { name="Big Bobs Mesh Network", config="false"},
+		 { name="Viva la' Revolution", config="true"},
+	  }
+	  count = 0
+	  for _ in pairs(networks) do
+		 count = count +1
+	  end
+	  return count
    elseif request == 'configs' then
 	  local networks = {
 		 { name="Commotion", config="This is the commotion network"},
@@ -640,13 +628,19 @@ function commotionDaemon(request, value)
 		 { name="Viva la' Revolution", config="This is not the commotion network"},
 	  }
 	  return networks
+   elseif request = 'apply' then
+	  if not value then
+		 value = uci:get('quickstart', 'options', 'meshName')
+	  end
+	  --TODO ubus calls to commotion daemon telling it what seen network to apply
+   --TODO figure out what josh needs me to do to try to apply to an existing network, also we need to get info for configReqs page on what the network requires so we can get that from the user.
    elseif request == 'I NEED A CONFIG JOSH' then
 	  return nil
-   elseif request ='engage' then
+   elseif request == 'engage' then
 	  --TODO incorporate the final ubus add/select sections ehre
-	  end
    end
 end
+
 
 
 

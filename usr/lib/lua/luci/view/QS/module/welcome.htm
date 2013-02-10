@@ -1,19 +1,22 @@
+<%- count = pv.modules.welcome.count -%>
 <input type="hidden" name="page" value="welcome" />
-
+<h2>We have detected <%=count%> nearby networks.</h2>
 <div id="zone-button-wrapper">
   <div id="zone-buttons">
 	<div class="button-wrapper">
 	  <ul>
+		<%- if count >= 1 then -%>
 		<li>
 		  <figure>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/bigArrow.png" value="oneClick">
-			<figcaption>Click here for a quick install. </figcaption>
+			<input type="submit" name="submit" src="<%=media%>/QS/images/bigArrow.png" value="joinMesh">
+			<figcaption>Click here to try to join a network.</figcaption>
 		  </figure>
 		</li>
+		<%end%>
 		<li>
 		  <figure>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/bigStart.png" value="next">
-			<figcaption>Click here for the custom install.</figcaption>
+			<input type="submit" name="submit" src="<%=media%>/QS/images/bigStart.png" value="newNetwork">
+			<figcaption>Click here to create a new network</figcaption>
 		  </figure>
 		</li>
 	  </ul>
