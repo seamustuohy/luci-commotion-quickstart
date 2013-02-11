@@ -39,4 +39,4 @@ define Package/commotion-quick-start/install
 	$(CP) -a ./files/* $(1)/ || true
 endef
 
-(eval $(call BuildPackage,commotion-quick-start))
+$(eval $(call BuildPackage,commotion-quick-start))
