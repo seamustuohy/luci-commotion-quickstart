@@ -35,7 +35,7 @@ define Package/commotion-quick-start/description
 endef
 
 define Package/commotion-quick-start/install
-	echo "Testing"
+	echo "Installing commotion-quick-start"
 	$(CP) -a ./files/* $(1)/ || true
 endef
 
