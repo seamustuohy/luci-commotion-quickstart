@@ -1,6 +1,6 @@
 config quickstart options
 	   option pageNo 'welcome'
-	   option lastPg '0'
+	   option lastPg 'welcome'
 	   option complete 'false'
 	   
 config page 'welcome'
@@ -8,28 +8,69 @@ config page 'welcome'
 	   option buttonText 'Start Over'
 	   option topheader 'Welcome'
    	   option subheading 'You are only ten minutes away from setting up your node'
+	   option nxtPg 'none'
 	   list modules 'logo'
 	   list modules 'welcome'
 	   list buttons 'noBack'
 	   list buttons 'noNext'
 
-config page 'newNetwork'
-	   option buttonText 'Use the one click setup'
-	   option pageTitle 'Quick Start'
-	   option topheader 'Please fill out the information below'
-   	   option subheading 'This will allow us to configure your node'
-	   option nxtPg 'setConfig'
-	   list modules 'basicInfo'
-	   list modules 'oneClick'
-	   
-config page 'joinMesh'
-   option topheader 'Here are the nearby networks.'
-   option subheading 'Click on a network to make a compatible node.'
-   option PageTitle 'Nearby Networks'
-   option buttonText 'Find Nearby Networks'
-   list modules 'nearbyMesh'
-   option nxtPg 'settings'
 
+#-------NEW NETWORK PATH---------------
+
+config page 'newNetSettings'
+   option topheader 'you clicked on a network'
+   option subheading 'This page also has a subheading'
+   option PageTitle 'PAGE TITLES ARE IMPORTANT'
+   option buttonText 'Find Nearby Networks'
+   option nxtPg 'configReqs'
+   list buttons 'preBuilt'
+   list buttons 'noNext'
+   list buttons 'haveSettingsNew'
+
+config page 'preBuilt'
+	   option buttonText 'Use a Pre-Built Config'
+	   option pageTitle 'Choose a Config'
+	   option topheader 'Here are some of our pre-built configurations'
+   	   option subheading 'Choose one and we will continue from here'
+	   option nxtPg 'newNetwork'
+	   list modules 'configs'
+   
+config page 'haveSettingsNew'
+	   option buttonText 'I have a settings file'
+	   option pageTitle 'Upload A Settings File'
+	   option topheader 'Upload Your Settings File Here' 
+   	   option subheading 'Choose a file from your device to upload to the node.'
+	   option fileType 'config'
+	   option nxtPg 'newNetwork'
+	   list modules 'upload'
+
+config page 'newNetwork'
+	option buttonText 'Use the one click setup'
+    option pageTitle 'Quick Start'
+	option topheader 'Please fill out the information below'
+   	option subheading 'This will allow us to configure your node'
+	option nxtPg 'configReqs'
+	list modules 'basicInfo'
+	list modules 'oneClick'
+	list modules 'networkRandomizer'
+
+#----------Join Network Path
+config page 'joinMesh'
+       option topheader 'Here are the nearby networks.'
+       option subheading 'Click on a network to make a compatible node.'
+       option PageTitle 'Nearby Networks'
+       option buttonText 'Find Nearby Networks'
+	   option nxtPg 'joinSetup'
+       list modules 'nearbyMesh'
+
+config page 'joinSetup'
+	option buttonText 'This Button Leads to nameing and password stuff'
+    option pageTitle 'I AM TITLED THINGS'
+	option topheader 'Please fill out the information below'
+   	option subheading 'This will allow us to configure your node'
+	option nxtPg 'settings'
+	list modules 'basicInfo'
+	   
 config page 'settings'
    option topheader 'you clicked on a network'
    option subheading 'This page also has a subheading'
@@ -40,7 +81,9 @@ config page 'settings'
    list buttons 'noNext'
    list buttons 'haveSettings'
 
-#tryNetwork leads to nxtPg
+#tryNetwork leads to nxtPg but needs button text
+config page 'tryNetwork'
+   option buttonText "I don't have a settings file"
 
 config page 'haveSettings'
 	   option buttonText 'I have a settings file'
@@ -51,14 +94,19 @@ config page 'haveSettings'
 	   option nxtPg 'configReqs'
 	   list modules 'upload'
 
-config page 'configReqs'
-	   option nxtPg 'setConfig'		
 
-
-
-
-
+#----------------CHECK AND CLEAN UP---------------------
 #This section sets a network and shows the user the result
+
+config page 'configReqs'
+	   option buttonText 'PINEAPPLE!'
+	   option pageTitle 'REQUIRE ALL THE THINGS!' 
+	   option topheader 'This network requires some things'
+   	   option subheading 'THEN DO ALL THE THINGS!'
+	   option nxtPg 'setConfig'
+	   option fileType 'key'		
+	   list modules 'configReqs'
+	   list modules 'upload'
 
 config page 'setConfig'
 	   option pageTitle "Please Wait"
@@ -67,6 +115,7 @@ config page 'setConfig'
 	   option subheading "Please reconnect to this "
 	   list modules 'settingPrefs'
 	   list buttons 'noNext'
+	   option nxtPg 'none'
 	   list buttons 'noBack'
 
 config page 'seeNetwork'
@@ -82,13 +131,10 @@ config page 'finish'
 	   list modules "complete"
 	   list buttons 'noNext'
 	   list buttons 'noBack'
+	   option nxtPg 'none'	
 
 
-#----------------------------------------------------
-
-
-
-
+#--------------GENERIC PAGES-------------------
    
 config page 'uploadKey'
 	   option buttonText 'Upload a Key'
@@ -101,69 +147,4 @@ config page 'uploadKey'
 	   
 config page 'startOver'
 	   option buttonText 'Start Over'
-	   
-
-config page 'preBuilt'
-	   option buttonText 'Use a Pre-Built Config'
-	   option pageTitle 'Choose a Config'
-	   option topheader 'Here are some of our pre-built configurations'
-   	   option subheading 'Choose one and we will continue from here'
-	   option nxtPg '3'
-	   list modules 'configs'
-
-config page 'uploadConf'
-	   option buttonText 'Upload a Config'
-	   option pageTitle 'Upload A Config'
-	   option topheader 'Upload Your Custom Config Here' 
-   	   option subheading 'Choose a file from your computer to upload to the node.'
-	   option fileType 'config'
-	   option nxtPg '3'
-	   list modules 'upload'
-
-	   
-config page '2'
-   option topheader 'Here are the nearby networks.'
-   option subheading 'Click on a network to make a compatible node.'
-   option PageTitle 'Nearby Networks'
-   option buttonText 'Find Nearby Networks'
-   list modules 'nearbyMesh'
-   list buttons 'noNext'
-   list buttons 'uploadConf'
-   list buttons 'preBuilt'
-   list buttons 'tryNetwork'
-
-config page '3'
-	   option pageTitle 'Basic Info'
-	   option buttonText 'Click Here to Continue'
-	   option topheader 'While we search for nearby networks...'
-   	   option subheading 'Give us some basic info about your node.'
-	   list modules 'basicInfo'
-
-config page '4'
-	   option pageTitle 'Network Chairicteristics'
-	   option buttonText 'Continue with this network'
-	   option topheader 'While we search for nearby networks...'
-   	   option subheading "This Network..."
-	   option fileType 'key'	   
-	   list modules 'meshDefaults'
-	   list modules 'upload'
-
-config page '5'
-	   option pageTitle "Sharing Prefrences"
-	   option buttonText "Click here to Continue"
-	   option topheader "Welcome Back"
-	   option subheading "As a final step, lets fill out your sharing prefrences"
-	   option fileType 'key'
-	   list modules "sharingPrefs"
-	   
-config page '6'
-	   option pageTitle "Please Wait"
-	   option buttonText "Accept and Set Configuration"
-	   option topheader "Please Wait"
-	   option subheading "Please reconnect to this "
-	   list modules 'settingPrefs'
-	   list buttons 'noNext'
-	   list buttons 'noBack'
-
-
 	   

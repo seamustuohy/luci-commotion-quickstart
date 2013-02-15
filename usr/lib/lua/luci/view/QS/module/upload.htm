@@ -1,6 +1,6 @@
 <%-
    if pv.errorMsg then
-       if pv.errorMsg.upload then upErr = pv.errorMsg.upload end
+       upErr = pv.errorMsg.upload
    end
    for mod,data in pairs(pv.modules) do
        for name,data2 in pairs(data) do

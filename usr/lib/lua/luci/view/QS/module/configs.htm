@@ -12,8 +12,9 @@
 		 for _,x in ipairs(pv.modules.configs) do
 		 name = x.name
 		 description = x.config
+		 file = x.file
 		 -%>
-	  <input type="radio" name="configFile" value="<%=name%>"/><%=name%></br>
+	  <input type="radio" name="configFile" value="<%=file%>"/><%=name%></br>
 	  <%=description%></br>
 	  <%end%>
   </div>

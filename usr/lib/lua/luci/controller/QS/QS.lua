@@ -17,7 +17,7 @@ function main()
 	end
       --1) call uci parser, returning dict of pages
 	local uci = luci.model.uci.cursor()
-	local pageNo,lastPg = pages()
+	local pageNo,lastPg = pages('get')
 	--Create/clear a space for pageValues and populate with page
 	local pageValues = {modules = {}, buttons = {}, page = {['pageNo'] = pageNo, ['lastPg'] = lastPg}}
 	local pageContext = uci:get_all('quickstart', pageNo)
@@ -26,9 +26,15 @@ function main()
 	for i,x in pairs(pageContext) do
 	   if i == 'modules' then
 		  for _,z in ipairs(x) do
-			 
-			 pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
-			 if type(pageValues.modules[z]) == 'table' and pageValues.modules[z]['upload'] then removeUpload = true end
+			 -- Check for renderer function and run if it exists
+			 for i,x in pairs(luci.controller.QS.QS) do
+				if i == (z .. "Renderer") then
+				   pageValues.modules[z]=luci.controller.QS.QS[z .. "Renderer"]()
+				   if type(pageValues.modules[z]) == 'table' and pageValues.modules[z]['upload'] then
+					  removeUpload = true
+				   end
+				end
+			 end
 		  end
 	   elseif i == 'buttons' then
 		  for _,z in ipairs(x) do
@@ -39,16 +45,49 @@ function main()
 		  pageValues[i]=x
 	   end
 	end
+	if errorMsg then
+	   pageValues['errorMsg'] = errorMsg
+	   -- log(pageValues.errorMsg)
+	end
 	if removeUpload == true and pageValues.modules.upload then
 	   pageValues.modules.upload = nil
 	end
+	log(pageValues.modules)
 	luci.template.render("QS/main/Quickstart", {pv=pageValues})
 end
 
 
+
+function pages(command, next, skip)
+   --manipulates the rendered pages for a user
+   local uci = luci.model.uci.cursor()
+   local page = uci:get('quickstart', 'options', 'pageNo')
+   local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   if next == nil then
+	  next = uci:get('quickstart', page, 'nxtPg')
+   end
+   if command == 'next' then
+	  if skip == nil then
+		 uci:set('quickstart', 'options', 'lastPg', page)
+	  end
+	  uci:set('quickstart', 'options', 'pageNo', next)
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+   elseif command == 'back' then
+	  uci:set('quickstart', 'options', 'pageNo', lastPg)
+	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+   elseif command == 'get' then
+	  return page,lastPg
+   end
+end
+
 function logoRenderer()
    return 'true'
 end
+
+
 
 function checkPage()
    local returns = luci.http.formvalue()
@@ -58,38 +97,58 @@ end
 
 function parseSubmit(returns)
 	  --check for submission value
-      local uci = luci.model.uci.cursor()
-	  local submit = returns.submit
-	  returns.submit = nil
-	  if submit == 'next' then
-		 local errors = {}
-		 local modules = {}
-		 --Run the return values through each module's parser and check for returns. Module Parser's only return errors. 
-		 for kind,val in pairs(returns) do
-			if kind == 'moduleName' then
-			   if type(val) == 'table' then
-				  for _, value in ipairs(val) do
-					 errors[value]= luci.controller.QS.QS[value .. "Parser"](returns)
+   local uci = luci.model.uci.cursor()
+   local submit = returns.submit
+   returns.submit = nil
+   if submit == 'back' then
+	  pages('back')
+   else
+	  local errors = {}
+	  local modules = {}
+	  --Run the return values through each module's parser and check for returns. Module Parser's only return errors.   
+	  for kind,val in pairs(returns) do
+		 if kind == 'moduleName' then
+			if type(val) == 'table' then
+			   for _, value in ipairs(val) do
+				  -- Check for Parser function and run if it exists
+				  for i,x in pairs(luci.controller.QS.QS) do
+					 if i == (value .. "Parser") then
+						errors[value]= luci.controller.QS.QS[value .. "Parser"](returns)
+					 end
 				  end
-			   else if type(val) == 'string' then
+			   end
+			elseif type(val) == 'string' then
+			   -- Check for parser function and run if it exists
+			   for i,x in pairs(luci.controller.QS.QS) do
+				  if i == (val .. "Parser") then
 					 errors[val]= luci.controller.QS.QS[val .. "Parser"](returns)
-					end
+				  end
 			   end
 			end
 		 end
-		 if next(errors) == nil then
-			pages('next')
-		 else
-			return(errors)
-		 end
-	  elseif submit == 'back' then
-		 pages('back')
-	  elseif submit ~= nil then
-		 --parse button functions to be run
-		 return luci.controller.QS.QS[submit .. "Button"]()
 	  end
-end
+	  if next(errors) == nil then
+		 if submit == 'next' then
+			pages('next')
+		 elseif submit ~= nil then
+			buttonFound = 0
+			--parse button, and if a function associated run the function, else just go to page.
+			for i,x in pairs(luci.controller.QS.QS) do
+			   if i == (submit .. "Button") then
+				  buttonFound = 1
+				  luci.controller.QS.QS[submit .. "Button"]()
+			   end
+			end
+			if buttonFound == 0 then
+			   pages('next', submit)
+			end
+		 end
+	  else
 
+		 return(errors)
+	  end
+   end
+end
 
 function welcomeRenderer()
    num = commotionDaemon("numNetworks")
@@ -148,13 +207,18 @@ end
 
 function nearbyMeshRenderer()
    local networks = commotionDaemon('nearbyNetworks')
+   if networks == nil then
+	  networks = 'none'
+   end
    return networks
 end
+
+
 
 function nearbyMeshParser(val)
    local uci = luci.model.uci.cursor()
    if val.nearbyMesh then
-	  log(val.nearbyMesh)
+	  --log(val.nearbyMesh)
 	  uci:set('quickstart', 'options', 'meshName', val.nearbyMesh)
 	  uci:save('quickstart')
 	  uci:commit('quickstart')
@@ -185,12 +249,14 @@ end
 function uploadParser()
    --Parses uploaded data 
    local uci = luci.model.uci.cursor()
-   if luci.http.formvalue("config") then
+      error = ''
+   if luci.http.formvalue("config") ~= '' then
 	  file = luci.http.formvalue("config")
-   elseif luci.http.formvalue("key") then
+   elseif luci.http.formvalue("config") == '' then
+	  error = "Please upload a setting file."
+   elseif luci.http.formvalue("key") ~= '' then
 	  file = luci.http.formvalue("key")
    end
-   error = ''
    if file then
 	  if luci.http.formvalue("config") then
 		 --check that each file is actually the file type that we are looking for!!!
@@ -210,10 +276,28 @@ function uploadParser()
    end
 end
 
+
+function configReqsRenderer()
+   local uci = luci.model.uci.cursor()
+   --TODO see if a serval key is used on the config and tell view to display key upload
+   --TODO The following is NOT where the wpa password will be, get correct info from Josh
+   if uci:get('nodeConf', 'confInfo', 'password') then
+	  --TODO tell view to display the wpa password viewer
+   end
+   --TODO if none are needed then tell page to skip itself and go to the loading page
+      return {['name'] = 'static'}
+end
+
+function configReqsParser()
+   local error = {}
+   error['servalKey'] = keyCheck()
+
+end
 function keyCheck()
-   --check if a key is required in the conf
+      local uci = luci.model.uci.cursor()
+   --check if a key is required in a config file and compare the current key to it.
    local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
-   log(string.len(confKeySum))
+   --log(string.len(confKeySum))
    if string.len(confKeySum) == 32 then
 	  if luci.fs.isfile(keyLoc .. "network.keyring") then
 		 local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
@@ -225,7 +309,6 @@ function keyCheck()
 	  end
    end
 end
-
 
 function setFileHandler()
    local uci = luci.model.uci.cursor()
@@ -253,18 +336,23 @@ function setFileHandler()
 	  end)
 end
 
-
 function configsRenderer()
 --talk to daemon for configs
    local networks = commotionDaemon('configs')
    return networks
 end
 
-function configsParser()
-   configFile = luci.http.formvalue("configFile")
-   local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
-   if returns ~= 0 then
-	  return "Error parsing config file. Please choose another config file or find and upload correct config"
+function configsParser(val)
+   if val.configFile then
+	  configFile = val.configFile
+	  log(configFile)
+	  local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
+	  if returns ~= 0 then
+		 return "Error parsing config file. Please choose another config file or find and upload correct config"
+	  end
+   else
+	  error = "Please choose a settings file"
+	  return error
    end
 end
 
@@ -302,61 +390,26 @@ function meshDefaultsParser(val)
    --log(val)
 end
 
-function uploadConfButton()
-   pages('next', 'uploadConf')
-end
-
-function preBuiltButton()
-   pages('next', 'preBuilt')
-end
-
-function oneClickButton()
-   pages('next', 'oneclick')
-end
-
-
 function tryNetworkButton()
    --sets chosen  network config from on router or through commotion daemon
    local uci = luci.model.uci.cursor()
    nearbyMesh = uci:get('quickstart', 'options', 'meshName')
-   if luci.fs.isfile("/usr/share/commotion/configs/" .. nearbyMesh) then
-	  log("WIN")
+   if nearbyMesh == uci:get('nodeConf', 'confInfo', 'name') then
+	  commotionDaemon('apply', nearbyMesh)
+	  --TODO find out what data Josh can pass me to build a nodeConf
+	  --log('the daemon now passes me config data like magic and I place it in a nodeConf')
+   elseif luci.fs.isfile("/usr/share/commotion/configs/" .. nearbyMesh) then
 	  configFile = nearbyMesh
 	  local returns = luci.sys.call("cp " .. "/usr/share/commotion/configs/" .. configFile .. " /etc/config/nodeConf")
 	  if returns ~= 0 then
 		 error = "Error parsing config file. Please choose another config file or find and upload correct config" 
 		 return error 
 	  end
-   else
-	  commotionDaemon('apply', nearbyMesh)
-	  --TODO find out what data Josh can pass me to build a nodeConf
-	  --log('the daemon now passes me config data like magic and I place it in a nodeConf')
+	  commotionDaemon('apply', 'nodeConf')
    end
    pages("next")
 end
 
-function pages(command, next, skip)
-   --manipulates the rendered pages for a user
-	  local uci = luci.model.uci.cursor()
-	  if not next then
-		 local next = uci:get('quickstart', page, 'nxtPg') 
-	  end
-	  local lastPg = uci:get('quickstart', 'options', 'lastPg')
-	  local page = uci:get('quickstart', 'options', 'pageNo')
-   if command == 'next' then
-	  if not skip then
-		 uci:set('quickstart', 'options', 'lastPg', page)
-	  end
-	  uci:set('quickstart', 'options', 'pageNo', next)
-	  uci:save('quickstart')
-	  uci:commit('quickstart')
-   elseif command == 'back' then
-	  uci:set('quickstart', 'options', 'pageNo', lastPg)
-	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
-	  uci:save('quickstart')
-	  uci:commit('quickstart')
-   end
-end
 
 
 function connectedNodesRenderer()
@@ -378,7 +431,6 @@ function settingPrefsRenderer()
    name = uci:get('nodeConf', 'confInfo', 'name')
    return {['time'] = time, ['name'] = name}
 end
-
 
 
 function completeRenderer()
@@ -443,9 +495,7 @@ function commotionDaemon(request, value)
 		 { name="Ninux", config="false"},
 		 { name="Byzantium", config="true"},
 		 { name="Funkfeuer", config="false"},
-		 { name="FreiFunk", config="false"},
-		 { name="Big Bobs Mesh Network", config="false"},
-		 { name="Viva la' Revolution", config="true"},
+		 { name="FreiFunk", config="false"}
 	  }
 	  return networks
    elseif request == "numNetworks" then
@@ -466,17 +516,15 @@ function commotionDaemon(request, value)
 	  return count
    elseif request == 'configs' then
 	  local networks = {
-		 { name="Commotion", config="This is the commotion network"},
-		 { name="RedHooks", config="Tidepool Pride WHAZZAP"},
-		 { name="Ninux", config="This is teh Ninux network"},
-		 { name="Byzantium", config="Byzantine network"},
-		 { name="Funkfeuer", config="DAS da commotion network"},
-		 { name="FreiFunk", config="This esta  the commotion network"},
-		 { name="Big Bobs Mesh Network", config="This is noda the commotion network"},
-		 { name="Viva la' Revolution", config="This is not the commotion network"},
+		 { name="Secure Commotion Backhul", config="In a hierarchical telecommunications network the backhaul portion of the network comprises the intermediate links between the core network, or backbone network and the small subnetworks at the edge of the entire hierarchical network.", file="secBH"},
+		 { name="Open Commotion Backhaul", config="In a hierarchical telecommunications network the backhaul portion of the network comprises the intermediate links between the core network, or backbone network and the small subnetworks at the edge of the entire hierarchical network.", file="openBH"},
+		 { name="Secure Commotion Access Point", config="In computer networking, a wireless access point (AP) is a device that allows wireless devices to connect to a wired network using Wi-Fi, or related standards. The AP usually connects to a router (via a wired network) if it's a standalone device, or is part of a router itself.", file="secAP"},
+		 { name="Open Commotion Access Point", config="In computer networking, a wireless access point (AP) is a device that allows wireless devices to connect to a wired network using Wi-Fi, or related standards. The AP usually connects to a router (via a wired network) if it's a standalone device, or is part of a router itself.", file="openAP"},
+		 { name="Secure Commotion Gateway", config="A wireless gateway is a computer networking device that routes packets from a wireless LAN to another network, typically a wired WAN. Wireless gateways combine the functions of a wireless access point, a router, and often provide firewall functions as well. This converged device saves desk space and simplifies wiring by replacing two electronic devices with one.", file="secGW"},
+		 { name="Open Commotion Access Gateway", config="A wireless gateway is a computer networking device that routes packets from a wireless LAN to another network, typically a wired WAN. Wireless gateways combine the functions of a wireless access point, a router, and often provide firewall functions as well. This converged device saves desk space and simplifies wiring by replacing two electronic devices with one.", file="openGW"},
 	  }
 	  return networks
-   elseif request = 'apply' then
+   elseif request == 'apply' then
 	  if not value then
 		 value = uci:get('quickstart', 'options', 'meshName')
 	  end
