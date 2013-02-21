@@ -128,7 +128,6 @@ function parseSubmit(returns)
 		 elseif submit ~= nil then
 			buttonFound = 0
 			--parse button, and if a function associated run the function, else just go to page.
-			for a,b in pairs(luci.controller.QS.QS) do log(a,b) end
 			for i,x in pairs(luci.controller.QS.buttons) do
 			   if i == (submit) then
 				  buttonFound = 1

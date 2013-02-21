@@ -1,7 +1,6 @@
 module("luci.controller.QS.buttons", package.seeall)
 
 function index()
-    pineapple = "pineapple"
 end
 
 function tryNetwork()

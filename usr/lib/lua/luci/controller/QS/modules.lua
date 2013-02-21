@@ -14,11 +14,6 @@ function welcomeRenderer()
    return {['count'] = num}
 end
 
-function welcomeParser()
-   return nil
-end
-
-
 function basicInfoRenderer()
    --check current node_name and return it as nodename
    local uci = luci.model.uci.cursor()
@@ -74,8 +69,6 @@ function nearbyMeshRenderer()
    end
    return networks
 end
-
-
 
 function nearbyMeshParser(val)
    local uci = luci.model.uci.cursor()
@@ -204,13 +197,6 @@ function meshDefaultsRenderer()
    return defaults
 end
 
-function meshDefaultsParser(val)
-end
-
-function connectedNodesRenderer()
-   return nil
-end
-
 function connectedNodesParser()
    if luci.http.formvalue("key") then
 	  file = luci.http.formvalue("key")
@@ -275,5 +261,3 @@ end
 return {['neighbors'] = neighbors, ['meaning'] = meaning}
 end
 
-function connectedNodesParser()
-end
