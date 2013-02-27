@@ -1,7 +1,7 @@
 <%- count = pv.modules.welcome.count -%>
 <input type="hidden" name="page" value="welcome" />
 <h2>We have detected <%=count%> nearby networks.</h2>
-	  <ul style="list-style-type:none;">
+	  <ul class="unstyled">
 		<%- if count >= 1 then -%>
 		<li>
 			<input type="submit" name="submit" src="<%=media%>/QS/images/bigArrow.png" value="joinMesh">
