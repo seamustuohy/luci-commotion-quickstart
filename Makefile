@@ -27,6 +27,9 @@ define Package/commotion-quick-start
   URL:=https://commotionwireless.net
 endef
 
+define Build/Compile
+endef
+
 define Package/commotion-quick-start/description
   Commotion Quick Start Wizard is an easy interface for users to set up and customize their Commotion devices
 endef
