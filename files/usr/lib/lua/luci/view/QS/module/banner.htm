@@ -1,29 +1,2 @@
-<link rel="stylesheet" type="text/css" href="<%=media%>/apps.css" />
-			<header>
-				<!-- top level navigational elements -->
-				<div class="navbar-inners">
-					<div class="color0"></div>
-					<div class="color1"></div>
-					<div class="color2"></div>
-					<div class="color3"></div>
-					<div class="color4"></div>
-				</div>
-<%if pv.modules.logo then%>
-				<div id="zone-menu-wrapper">
-					<div id="region-branding">
-						<img id="logo" alt="Commotion Wireless Project logo" src="<%=media%>/QS/images/commotion_kbabout_measure-03.png" />
-					</div>
-				</div>
-<%-
-   pv.modules.logo = nil
-   end
--%>
-				<div id="zone-preface-wrapper">
-					<div id="zone-preface">
-						<hr />
-						<h1><%=pv.pageTitle%></h1>
 						<h2><%=pv.topheader%></h2>
 						<p><%=pv.subheading%></p>
-					</div>
-				</div>
-			</header>
