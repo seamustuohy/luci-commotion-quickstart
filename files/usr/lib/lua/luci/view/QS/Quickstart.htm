@@ -1,4 +1,4 @@
-<% include("QS/module/header") %>
+<%+header%>
 <% include("QS/module/banner") %>
 
 <%-for mod,val in pairs(pv.modules) do
@@ -8,4 +8,4 @@
 <!--within modules: val.VALUENAME = VALUE-->
 <!-- each module SHOULD expect that they have the appropriate values ready for them as their corresponding function placed them there. Without the function correctly running the module does not show up-->
 <% include("QS/module/buttons") %>
-<% include("QS/module/footer") %>
+<%+footer%>
