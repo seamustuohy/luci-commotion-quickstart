@@ -3,19 +3,15 @@
        if pv.errorMsg.configs then Err = pv.errorMsg.configs end
    end
  -%>
-<div id="zone-content-wrapper">
-  <div id="zone-content">
 	<input type="hidden" name="moduleName" value="configs" />
 	<h2 class="center">Available Configurations</h2>
-	<h2 class="warning"><%=Err%></h2>
+	<h3 class="warning"><%=Err%></h3>
 	  <%-
 		 for _,x in ipairs(pv.modules.configs) do
 		 name = x.name
 		 description = x.config
 		 file = x.file
 		 -%>
-	  <input type="radio" name="configFile" value="<%=file%>"/><%=name%></br>
+	  <input type="radio" name="configFile" value="<%=file%>"/><strong><%=name%></strong><br />
 	  <%=description%></br>
 	  <%end%>
-  </div>
-</div>
