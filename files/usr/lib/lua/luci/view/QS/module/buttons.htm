@@ -38,7 +38,7 @@
 <div id="zone-button-wrapper">
   <div id="zone-buttons">
 	<div class="button-wrapper">
-	  <ul>
+	  <ul class="unstyled">
 		<%-
 		   for i,x in ipairs(buttons) do
 		   text = x.text
@@ -46,7 +46,8 @@
 		   name = x.name
 		 -%>
 		<li>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">
+			<!--<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">-->
+			<input type="submit" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=desc%>">
 			<%=text%>
 		</li>
 		<%end%>
