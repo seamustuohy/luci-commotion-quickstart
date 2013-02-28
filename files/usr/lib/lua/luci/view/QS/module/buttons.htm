@@ -25,14 +25,14 @@
 	}
     if pv.buttons then
 	    for i,x in pairs(pv.buttons) do
-            if i == "noNext" then
+            if i[1] == "noNext" then
                 -- remove the button at the end of the buttons array (the next button)
                 table.remove(buttons, #buttons)
-            elseif i == "noBack" then
+            elseif i[1] == "noBack" then
                 table.remove(buttons, 1)
             end
-            if i ~= 'noNext' and i ~= 'noBack' and i~='startOver'  then
-                local current = {text = uci:get('quickstart', i, 'buttonText'), icon = icons[math.random(#icons)], name = i}
+            if i[1] ~= 'noNext' and i[1] ~= 'noBack' and i[1] ~='startOver'  then
+                local current = {text = i[2], icon = i[3], name = i[1]}
    --lazy mans way to force button weighting :)
 	            table.insert(buttons,2,current)
             end
