@@ -1,17 +1,14 @@
 module("luci.controller.QS.modules", package.seeall)
-
+   --to have a html page render you must return a value or it wont.
 function index()
 end
 
-
-function logoRenderer()
+function welcomeRenderer()
    return 'true'
 end
 
-function welcomeRenderer()
-   QS = luci.controller.QS.QS
-   num = QS.commotionDaemon("numNetworks")
-   return {['count'] = num}
+function logoRenderer()
+   return 'true'
 end
 
 function basicInfoRenderer()

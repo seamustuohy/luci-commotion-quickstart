@@ -20,14 +20,9 @@
        nextPg = uci:get('quickstart', pv.page.pageNo, 'nxtPg')
    end
    buttons = {
-   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'},
-   {text = uci:get('quickstart', nextPg, 'buttonText'), icon = "plus", name = 'next'}
-	}
+   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'}}
     if pv.buttons then
 	    for i,x in pairs(pv.buttons) do
-            if i[1] == "noNext" then
-                -- remove the button at the end of the buttons array (the next button)
-                table.remove(buttons, #buttons)
             elseif i[1] == "noBack" then
                 table.remove(buttons, 1)
             end

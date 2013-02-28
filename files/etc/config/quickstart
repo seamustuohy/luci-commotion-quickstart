@@ -2,148 +2,126 @@ config quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
 	   option complete 'false'
-	   
+
 config page 'welcome'
 	   option pageTitle 'Welcome'
-	   option buttonText 'Start Over'
-	   option topheader 'Welcome'
-   	   option subheading 'You are only ten minutes away from setting up your node'
-	   option nxtPg 'none'
+	   option subheading 'Welcome to the Commotion Quick Start wizard'
+	   option nxtPg 'chooseNetworkPath'
 	   list modules 'welcome'
+	   list buttons 'chooseNetworkPath, Continue, plus'
 	   list buttons 'noBack'
-	   list buttons 'noNext'
 
+config page 'chooseNetworkPath'
+	   option pageTitle 'Joining Existing Networks'
+	   option topheader 'Joining Existing Networks'
+	   option subheading 'It looks like there is a mesh network to join! Select one or more networks below, or create a new mesh network.'
+	   option nxtPg 'none'
+	   list modules 'listNetworks'
+	   list buttons 'joinOtherNetwork, Join other network, plus'
+	   list buttons 'createNewNetwork, Create my own network, plus'
+	   list buttons 'networkSecuritySettings, Join a chosen network, plus'
+	   list buttons 'noBack'
 
-#-------NEW NETWORK PATH---------------
+config page 'networkSecuritySettings'
+	   option pageTitle 'Network Security Settings'
+	   option topheader 'Network Security Settings'
+	   option subheading 'This network requires a key file and password. These should be provided by your network administrator.'
+	   list modules 'networkSecurity'
+	   list buttons 'welcome, Start over, plus'
 
-config page 'newNetSettings'
-   option topheader 'you clicked on a network'
-   option subheading 'This page also has a subheading'
-   option PageTitle 'PAGE TITLES ARE IMPORTANT'
-   option buttonText 'Find Nearby Networks'
-   option nxtPg 'configReqs'
-   list buttons 'preBuilt, description, icon'
-   list buttons 'noNext'
-   list buttons 'haveSettingsNew, description, icon'
-
-config page 'preBuilt'
-	   option buttonText 'Use a Pre-Built Config'
-	   option pageTitle 'Choose a Config'
-	   option topheader 'Here are some of our pre-built configurations'
-   	   option subheading 'Choose one and we will continue from here'
-	   option nxtPg 'newNetwork'
-	   list modules 'configs'
-   
-config page 'haveSettingsNew'
-	   option buttonText 'I have a settings file'
-	   option pageTitle 'Upload A Settings File'
-	   option topheader 'Upload Your Settings File Here' 
-   	   option subheading 'Choose a file from your device to upload to the node.'
+config page 'settingsFile'
+	   option pageTitle 'Using a Settings File'
+	   option buttonText ''
+	   option topheader 'Using a Settings File'
+	   option subheading 'Do you have a settings file? Your network administrator may have provided a settings file. If you have a settings file, please upload it below. Or, you can enter the settings manually.'
+	   option nxtPg ''
+	   list modules 'upload'
 	   option fileType 'config'
-	   option nxtPg 'newNetwork'
-	   list modules 'upload'
+	   list buttons 'uploadAndContinue'
+	   list buttons 'continueWithoutUpload'
+	   list buttons 'welcome'
 
-config page 'newNetwork'
-	option buttonText 'Use the one click setup'
-    option pageTitle 'Quick Start'
-	option topheader 'Please fill out the information below'
-   	option subheading 'This will allow us to configure your node'
-	option nxtPg 'configReqs'
-	list modules 'basicInfo'
-	list modules 'oneClick'
-	list modules 'networkRandomizer'
-
-#----------Join Network Path
-config page 'joinMesh'
-       option topheader 'Here are the nearby networks.'
-       option subheading 'Click on a network to make a compatible node.'
-       option PageTitle 'Nearby Networks'
-       option buttonText 'Find Nearby Networks'
-	   option nxtPg 'joinSetup'
-       list modules 'nearbyMesh'
-
-config page 'joinSetup'
-	option buttonText 'This Button Leads to nameing and password stuff'
-    option pageTitle 'I AM TITLED THINGS'
-	option topheader 'Please fill out the information below'
-   	option subheading 'This will allow us to configure your node'
-	option nxtPg 'settings'
-	list modules 'basicInfo'
-	   
-config page 'settings'
-   option topheader 'you clicked on a network'
-   option subheading 'This page also has a subheading'
-   option PageTitle 'PAGE TITLES ARE IMPORTANT'
-   option buttonText 'Find Nearby Networks'
-   option nxtPg 'configReqs'
-   list buttons 'tryNetwork'
-   list buttons 'noNext'
-   list buttons 'haveSettings'
-
-#tryNetwork leads to nxtPg but needs button text
-config page 'tryNetwork'
-   option buttonText "I don't have a settings file"
-
-config page 'haveSettings'
-	   option buttonText 'I have a settings file'
-	   option pageTitle 'Upload A Settings File'
-	   option topheader 'Upload Your Settings File Here' 
-   	   option subheading 'Choose a file from your device to upload to the node.'
-	   option fileType 'config'
-	   option nxtPg 'configReqs'
-	   list modules 'upload'
+config page 'existingNetworkSetup'
+	   option pageTitle 'Using an existing Network Setup'
+	   option buttonText ''
+	   option topheader 'Using an existing Network Setup'
+	   option subheading 'You may use one of these default configurations, or create your own configuration. [To connect with the selected mesh network[s], your Network Setup must include X, Y, Z.]'
+	   option nxtPg ''
+	   list modules 'listConfigs'
+	   list buttons 'configureManually'
+	   list buttons 'welcome'
+ 
+config page 'networkNaming'
+	   option pageTitle 'Naming'
+	   option buttonText ''
+	   option topheader 'Naming'
+	   option subheading ''
+	   option nxtPg ''
+	   list modules 'naming'
+	   list buttons 'welcome'
 
 
-#----------------CHECK AND CLEAN UP---------------------
-#This section sets a network and shows the user the result
+config page ''
+	   option pageTitle 'Your Network'
+	   option buttonText ''
+	   option topheader 'Your Network'
+	   option subheading ''
+	   option nxtPg ''
+	   list modules 'nodeInfo'
+	   list buttons 'welcome'
 
-config page 'configReqs'
-	   option buttonText 'PINEAPPLE!'
-	   option pageTitle 'REQUIRE ALL THE THINGS!' 
-	   option topheader 'This network requires some things'
-   	   option subheading 'THEN DO ALL THE THINGS!'
-	   option nxtPg 'setConfig'
-	   option fileType 'key'		
-	   list modules 'configReqs'
-	   list modules 'upload'
+config page 'adminPassword'
+	   option pageTitle 'Please set an Administrator password'
+	   option buttonText ''
+	   option topheader 'Please set an Administrator password'
+	   option subheading "Enter an 'administrator' password for your node."
+	   option nxtPg ''
+	   list modules 'adminPassword'
+	   list buttons 'welcome'
+
 
 config page 'setConfig'
-	   option pageTitle "Please Wait"
-	   option buttonText "Accept and Set Config"
-	   option topheader "Please Wait"
-	   option subheading "Please reconnect to this "
-	   list modules 'settingPrefs'
-	   list buttons 'noNext'
+	   option pageTitle "Your node is configuring"
+	   option buttonText ""
+	   option topheader "Your node is configuring"
+	   option subheading "Please wait while your node updates its settings. The node will restart during this process. This should take approximately two minutes."
+	   list modules 'restartTimer'
 	   option nxtPg 'none'
 	   list buttons 'noBack'
+	   
+config page ''
+	   option pageTitle 'Setup is complete!'
+	   option buttonText ''
+	   option topheader 'Setup is complete!'
+	   option subheading 'You have completed the Commotion quickstart. Check below to see if your node is connected to any other nodes in the area.'
+	   option nxtPg ''
+	   list modules 'connectionStatus'
+	   list buttons 'problemStartOver'
+	   list buttons 'finish'
 
-config page 'seeNetwork'
-	   option pageTitle "Connected Nodes"
-	   option buttonText ""
-	   option subheading "You are connected to a network that is connected to ..."
-	   option nxtPg 'finish'
-	   option topheader "Congratulations!"
-	   list modules "connectedNodes"
-
-config page 'finish'
-	   option buttonText 'Click here to go to the admin interface'
-	   list modules "complete"
-	   list buttons 'noNext'
+config page 'adminLogin'
+	   option pageTitle 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
+	   option buttonText ''
+	   option topheader 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
+	   option subheading 'Please log in to administer this node, <%=NODE_NAME%>, using the node admin password you generated during quickstart.'
+	   option nxtPg 'none'
+	   list modules 'adminLogin'
 	   list buttons 'noBack'
-	   option nxtPg 'none'	
-
-
-#--------------GENERIC PAGES-------------------
-   
-config page 'uploadKey'
-	   option buttonText 'Upload a Key'
-	   option pageTitle 'Upload A Key'
-	   option topheader 'Your Config Requires a Specific Key' 
-   	   option subheading 'Choose this networks key from your computer to upload to the node.'
-	   option fileType 'key'
-	   option nxtPg '6'
-	   list modules 'upload'
 	   
-config page 'startOver'
-	   option buttonText 'Start Over'
-	   
+config page ''
+	   option pageTitle ''
+	   option buttonText ''
+	   option topheader ''
+	   option subheading ''
+	   option nxtPg ''
+	   list modules ''
+	   list buttons ''
+
+config page ''
+	   option pageTitle ''
+	   option buttonText ''
+	   option topheader ''
+	   option subheading ''
+	   option nxtPg ''
+	   list modules ''
+	   list buttons ''

@@ -15,7 +15,7 @@ function main()
 	-- if return values get them and pass them to return value parser
 	setFileHandler()
 	if luci.http.formvalue then
-	  errorMsg = checkPage() 
+	  errorMsg = checkPage()
 	end
       --1) call uci parser, returning dict of pages
 	local uci = luci.model.uci.cursor()
@@ -40,7 +40,7 @@ function main()
 		  end
 	   elseif i == 'buttons' then
 		  for _,z in ipairs(x) do
-			 button = string.split(z, ", ")
+			 button = string.split(z, ",")
 			 --Add buttons to page
 			 pageValues.buttons[button]=true
 		  end
