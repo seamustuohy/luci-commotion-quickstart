@@ -40,7 +40,7 @@ function main()
 		  end
 	   elseif i == 'buttons' then
 		  for _,z in ipairs(x) do
-			 button = string.split(z, ",")
+			 button = string.split(z, ",|")
 			 --Add buttons to page
 			 pageValues.buttons[button]=true
 		  end

@@ -23,11 +23,11 @@
    {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'}}
     if pv.buttons then
 	    for i,x in pairs(pv.buttons) do
-            elseif i[1] == "noBack" then
+            if i[1] == "noBack" then
                 table.remove(buttons, 1)
             end
             if i[1] ~= 'noNext' and i[1] ~= 'noBack' and i[1] ~='startOver'  then
-                local current = {text = i[2], icon = i[3], name = i[1]}
+                local current = {text = i[3], icon = i[4], name = i[1], desc = i[2]}
    --lazy mans way to force button weighting :)
 	            table.insert(buttons,2,current)
             end
@@ -41,9 +41,10 @@
 	  <ul class="unstyled">
 		<%-
 		   for i,x in ipairs(buttons) do
-		   text = x.text
-		   icon = x.icon
 		   name = x.name
+		   text = x.text
+		   desc = x.desc
+		   icon = x.icon
 		 -%>
 		<li>
 			<!--<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">-->
