@@ -1,15 +1,16 @@
 <%- count = pv.modules.welcome.count -%>
 <input type="hidden" name="page" value="welcome" />
 <h2>We have detected <%=count%> nearby networks.</h2>
-	  <ul style="list-style-type:none;">
+	  <ul class="unstyled">
 		<%- if count >= 1 then -%>
 		<li>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/bigArrow.png" value="joinMesh">
+			<!--<input type="submit" name="submit" src="<%=media%>/QS/images/bigArrow.png" value="joinMesh">-->
+			<input type="submit" name="joinMesh" value="Join Mesh">
 			Join an existing network
 		</li>
 		<%end%>
 		<li>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/bigStart.png" value="newNetSettings">
+			<input type="submit" name="newNetSettings" value="Create Network">
 			Create a new network
 		</li>
 	  </ul>
