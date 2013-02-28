@@ -40,8 +40,9 @@ function main()
 		  end
 	   elseif i == 'buttons' then
 		  for _,z in ipairs(x) do
+			 button = string.split(z, ", ")
 			 --Add buttons to page
-			 pageValues.buttons[z]=true
+			 pageValues.buttons[button]=true
 		  end
 	   else
 		  pageValues[i]=x
@@ -58,6 +59,12 @@ function main()
 	luci.template.render("QS/main/Quickstart", {pv=pageValues})
 end
 
+function string:split(sep)
+   local sep, fields = sep or ":", {}
+   local pattern = string.format("([^%s]+)", sep)
+   self:gsub(pattern, function(c) fields[#fields+1] = c end)
+   return fields
+end
 
 function pages(command, next, skip)
    --manipulates the rendered pages for a user
