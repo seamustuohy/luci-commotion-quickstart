@@ -51,7 +51,8 @@
 		   name = x.name
 		 -%>
 		<li>
-			<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">
+			<!--<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">-->
+			<input type="submit" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=desc%>">
 			<%=text%>
 		</li>
 		<%end%>
