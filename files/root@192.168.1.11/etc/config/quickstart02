@@ -3,88 +3,152 @@ config quickstart options
 	   option lastPg 'welcome'
 	   option complete 'false'
 
+
 config page 'welcome'
 	   option pageTitle 'Welcome'
-	   option subheading 'Welcome to the Commotion Quick Start wizard'
-	   list modules 'welcome'
-	   list buttons '4:settingsFile,|Continue &gt;,| ,| '
+	   option buttonText 'Start Over'
+	   option subheading 'Welcome to the Commotion Quick Start wizard!'
+	   option nxtPg 'chooseNetworkPath'
+	   list modules
+	   list buttons
+
+config page 'chooseNetworkPath'
+	   option pageTitle 'Joining Existing Networks'
+	   option buttonText 'Choose a new network path'
+	   option topheader 'Joining Existing Networks'
+	   option subheading 'It looks like there is a mesh network to join! Select one or more networks below, or create a new mesh network.'
+	   option nxtPg 'none'
+	   list modules 'listNetworks'
+	   list buttons 'joinOtherNetwork'
+	   list buttons 'createNewNetwork'
+	   list buttons 'joinThisNetwork'
+	   list buttons 'noNext'
 	   list buttons 'noBack'
 
-config page 'settingsFile'
-	   option pageTitle 'Using a Settings File'
-	   option topheader 'Using a Settings File'
-	   option subheading 'Do you have a settings file? Your network administrator may have provided a settings file. If you have a settings file, please upload it below. Or, you can enter the settings manually.'
-	   list modules 'upload'
-	   option fileType 'config'
-           list buttons '1:existingNetworkSetup,|Continue &gt;,|Continue without uploading a file,| ,|'                                                                    
-           list buttons '2:networkSecuritySettings,|Upload &amp; Continue &gt;&gt;,|Upload a settings file and continue,| ,|'                                                     
-           list buttons '3:welcome,|&lt;&lt; Start Over,| ,|plus'
+
+config page 'joinOtherNetwork'
+	   option pageTitle
+	   option buttonText
+	   option topheader
+	   option subheading
+	   option nxtPg
+	   list modules
+	   list buttons
+
+config page 'createNewNetwork'
+	   option pageTitle
+	   option buttonText
+	   option topheader
+	   option subheading
+	   option nxtPg
+	   list modules
+	   list buttons
+
+config page 'joinThisNetwork'
+	   option pageTitle
+	   option buttonText
+	   option topheader
+	   option subheading
+	   option nxtPg
+	   list modules
+	   list buttons
+
 
 config page 'networkSecuritySettings'
 	   option pageTitle 'Network Security Settings'
+	   option buttonText ''
 	   option topheader 'Network Security Settings'
 	   option subheading 'This network requires a key file and password. These should be provided by your network administrator.'
+	   option nxtPg ''
 	   list modules 'networkSecurity'
-	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons 'settingsFile OR SHARING?,|Continue &gt;,| ,| '
+	   list buttons 'welcome'
+
+
+config page 'settingsFile'
+	   option pageTitle 'Using a Settings File'
+	   option buttonText ''
+	   option topheader 'Using a Settings File'
+	   option subheading 'Do you have a settings file?
+	   Your network administrator may have provided a settings file.
+	   If you have a settings file, please upload it below. Or, you can enter the settings manually.'
+	   option nxtPg
+	   list modules 'upload'
+	   option fileType 'config'
+	   list buttons 'uploadAndContinue'
+	   list buttons 'continueWithoutUpload'
+	   list buttons 'welcome'
 
 config page 'existingNetworkSetup'
 	   option pageTitle 'Using an existing Network Setup'
+	   option buttonText ''
 	   option topheader 'Using an existing Network Setup'
-	   option subheading 'You may use one of these default configurations, or create your own configuration. [To connect with the selected mesh network[s], your Network Setup must include X, Y, Z.]'
+	   option subheading 'You may use one of these default configurations, or create your own configuration.
+	   [To connect with the selected mesh network[s], your Network Setup must include X, Y, Z.]'
+	   option nxtPg ''
 	   list modules 'listConfigs'
-	   list buttons 'configureManually,|Configure Manually &gt;,|Configure Manually,| '
-           list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons 'networkSecuritySettings,|Upload &amp; Continue &gt;&gt;,|Upload settings file and continue,| '
+	   list buttons 'configureManually'
+	   list buttons 'welcome'
  
 config page 'networkNaming'
 	   option pageTitle 'Naming'
+	   option buttonText ''
 	   option topheader 'Naming'
 	   option subheading ''
+	   option nxtPg ''
 	   list modules 'naming'
-	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons 'yourNetwork,|Continue &gt;,| ,|plus'
+	   list buttons 'welcome'
 
 
-config page 'yourNetwork'
+config page ''
 	   option pageTitle 'Your Network'
+	   option buttonText ''
 	   option topheader 'Your Network'
 	   option subheading ''
+	   option nxtPg ''
 	   list modules 'nodeInfo'
-	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons 'welcome'
 
 config page 'adminPassword'
 	   option pageTitle 'Please set an Administrator password'
+	   option buttonText ''
 	   option topheader 'Please set an Administrator password'
 	   option subheading "Enter an 'administrator' password for your node."
+	   option nxtPg ''
 	   list modules 'adminPassword'
-	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons 'setConfig,|Continue &gt;,| ,|plus'
+	   list buttons 'welcome'
 
 
 config page 'setConfig'
 	   option pageTitle "Your node is configuring"
+	   option buttonText ""
 	   option topheader "Your node is configuring"
 	   option subheading "Please wait while your node updates its settings. The node will restart during this process. This should take approximately two minutes."
 	   list modules 'restartTimer'
+	   list buttons 'noNext'
 	   option nxtPg 'none'
 	   list buttons 'noBack'
 	   
 config page ''
 	   option pageTitle 'Setup is complete!'
+	   option buttonText ''
 	   option topheader 'Setup is complete!'
 	   option subheading 'You have completed the Commotion quickstart. Check below to see if your node is connected to any other nodes in the area.'
+	   option nxtPg ''
 	   list modules 'connectionStatus'
 	   list buttons 'problemStartOver'
 	   list buttons 'finish'
 
 config page 'adminLogin'
 	   option pageTitle 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
+	   option buttonText ''
 	   option topheader 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
 	   option subheading 'Please log in to administer this node, <%=NODE_NAME%>, using the node admin password you generated during quickstart.'
+	   option nxtPg 'none'
 	   list modules 'adminLogin'
-	   list buttons 'noBack'
+	   list buttons 'noNext'
+	   listButtons 'noBack'
 	   
+
 config page ''
 	   option pageTitle ''
 	   option buttonText ''

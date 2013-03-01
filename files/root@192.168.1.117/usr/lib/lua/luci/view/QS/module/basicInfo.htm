@@ -1,0 +1,35 @@
+
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.basicInfo.node_name then nameErr = pv.errorMsg.basicInfo.node_name end
+       if pv.errorMsg.basicInfo.pw then pwErr = pv.errorMsg.basicInfo.pw end
+   end
+ -%>
+
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	  <input type="hidden" name="moduleName" value="basicInfo" />
+	  <%- if pv.modules.basicInfo.name ~= 'static' then -%>
+	  <h2>Node Name</h2>
+	  <h2 class="warning"><%=nameErr%></h2>
+	  <p class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</p>
+	  <span class="help">
+		<img src="<%=media%>/QS/images/help.png" class="tip" alt="The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information." />
+	  </span>
+	  <input type="text" value="<%=pv.modules.basicInfo.name%>" name="basicInfo_nodeName">
+	  <%end%>
+	  <h2>Password</h2>
+	  <h2 class="warning"><%=pwErr%></h2>
+	  <p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+	  <span class="help">
+		<img src="<%=media%>/QS/images/help.png" class="tip" alt="The password that your node will use. REMEMBER this password, as it will be needed to update, modify,  or fix your node in the future." />
+	  </span>
+
+	  <input type="password" name="basicInfo_pwd1">
+	  <p class="flavor">Retype your password here</p>
+	  <span class="help">
+		<img src="<%=media%>/QS/images/help.png" class="tip" alt="Retype the password exactly" />
+	  </span>
+	  <input type="password" name="basicInfo_pwd2">
+  </div>
+</div>

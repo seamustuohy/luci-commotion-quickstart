@@ -1,0 +1,146 @@
+<script type="text/javascript" src="/luci-static/resources/cbi.js"></script>
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.sharingPrefs then
+           shareErr = pv.errorMsg.sharingPrefs end
+   else
+   shareErr = {}
+   end
+-%>
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="sharingPrefs" />
+	<div class="share_services">
+
+	  <strong>Public Access Point:</strong><br />
+	  		<%if shareErr.pap then%>	  	<h2 class="warning"><%=shareErr.pap%></h2><%end%>
+		<input name="share.Public Access Point" value="pap" type="checkbox" onclick="ReverseDisplay('pap');">
+		I would like to share a public access point.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="pap" style="display:none">
+		  <div>
+			<p class="flavor">Choose a username that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The advertised AP of your node." />
+			</span>
+			
+			<input type="text" name="pap.name"><br />
+			
+		  </div>
+		</span></br>
+		<strong>Secure Access Point:</strong><br />
+		<%if shareErr.sap then%><h2 class="warning"><%=shareErr.sap%></h2><%end%>
+		<input name="share.Secure Access Point" value="sap" type="checkbox" onclick="ReverseDisplay('sap');">
+		I would like to share a secure access point.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="sap" style="display:none">
+		  <div>
+			<p class="flavor">Choose a username that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The advertised AP of your node." />
+			</span>
+			<input type="text" name="sap.name"><br />
+			<p class="flavor">Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The password that your private network will use. This password MUST be different than your node password if anyone else will use the private access point." />
+			</span>
+			<input type="password" name="sap.pwd1">
+			<p class="flavor">Retype your password here</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="Retype the password exactly." />
+			</span>
+			<input type="password" name="sap.pwd2">
+		  </div>
+		</span></br>
+		<strong>Gateway Sharing:</strong><br />
+				<%if shareErr.gate then%>	  	<h2 class="warning"><%=shareErr.gate%></h2><%end%>
+		<input name="share.Gateway Sharing" value="gate" type="checkbox">
+		
+		I would like to advertise my gateway to the rest of the network.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="%=svc_help%" /></br>
+<strong>Network Key:</strong><br />
+		<%if shareErr.key then%>	  	<h2 class="warning"><%=shareErr.key%></h2><%end%>
+		<input name="share.Network Key" value="key" type="checkbox" onclick="ReverseDisplay('key');">
+		I would like to secure my network with a key.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="key" style="display:none">
+		  <h2>Upload your network key here.</h2>
+		  <input type="file" name="key" id="media" />
+		  <div class="upload-description">
+			Upload and submit a key file from your own computer. This will allow your node to talk to any network with the same key file.
+		  </div>
+		</span></br>
+		<strong>Captive Portal:</strong><br />
+				<%if shareErr.cptv then%>	  	<h2 class="warning"><%=shareErr.cptv%></h2><%end%>
+		<input name="share.Captive Portal" value="cptv" type="checkbox" onclick="ReverseDisplay('cptv');">
+		I would like to use a captive portal on my node.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="cptv" style="display:none">
+		  <div>
+			<strong>Title</strong><br />
+			<input type="text" name="cptv.title"><br />
+			<strong>Main Text</strong><br />
+			<textarea name="cptv.main" cols="60" royws="5"></textarea><br />
+			<strong>Homepage</strong><br />
+			<input type="url" name="cptv.home"><br />
+			<strong>Lease Time</strong><br />
+			<input type="number" name="cptv.time" min="1" max="24"><br />
+			
+		  </div>
+		</span></br>
+		<strong>Create a New Network:</strong><br />
+			<%if shareErr.new then%>	  	<h2 class="warning"><%=shareErr.new%></h2><%end%>
+	<input name="share.Create A New Network" value="new" type="checkbox" onclick="ReverseDisplay('new');">
+		I would like to create a NEW and seperate network.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="new" style="display:none">
+		  <div>
+			<p class="flavor">Choose a mesh name that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The advertised AP of your node." />
+			</span>
+			
+			<input type="text" name="new.name"><br />
+			
+		  </div>
+		</span></br>
+
+		<strong>Provide and Application Portal:</strong><br />
+			<%if shareErr.apps then%>	  	<h2 class="warning"><%=shareErr.apps%></h2><%end%>
+	<input name="share.Proved App Portal" value="apps" type="checkbox" onclick="ReverseDisplay('apps');">
+		I would like to provide and application portal on this node.<img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="help" />
+		<span class="help" id="apps" style="display:none">
+		  <div>
+			<p class="flavor">Choose your categories and app expiration period here.</p>
+			<span class="help">
+			  <img src="/luci-static/openwrt.org/QS/images/help.png" class="tip" alt="The advertised AP of your node." /></br>
+			</span>
+			<p class="flavor">How many minutes should user-submitted temporary applications last?</p>
+			<input type="number" name="app.minutes" min="1" max="1440"  /><br>
+			<p class="flavor">Add Application Categories Here.</p>
+			<!--<input type="button" onclick="addInput()" name="add" value="Add another category" />-->
+			<div id="text">
+			<%-types = {"bob", "larry", "frank"}-%>
+			<% for _,app_type in ipairs(types) do %>
+			 <input type="text" name="app.type" value="<%=app_type%>"/><br>
+			 <script type="text/javascript">cbi_dynlist_init('app.type', '/luci-static/resources', '', true);</script>
+			<% end %>
+			</div>
+		</span></br>
+		</div>
+	</div>
+	<script type="text/javascript">
+	  function ReverseDisplay(d) {
+	  if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+	  else { document.getElementById(d).style.display = "none"; }
+	  }
+	</script>
+	
+	
+
+	<script language="javascript">
+	  fields = 0;
+	  function addInput() {
+	  if (fields != 10) {
+	  document.getElementById('text').innerHTML += "<input type='text' name='app_type' value='' /><br />";
+	  fields += 1;
+	  } else {
+	  document.getElementById('text').innerHTML += "<br />Only 10 upload fields allowed.";
+	  document.form.add.disabled=true;
+	  }
+	  }
+	</script>	

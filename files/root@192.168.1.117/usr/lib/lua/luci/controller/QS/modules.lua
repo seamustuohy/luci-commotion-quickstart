@@ -104,8 +104,7 @@ function uploadParser()
    if luci.http.formvalue("config") ~= '' then
 	  file = luci.http.formvalue("config")
    elseif luci.http.formvalue("config") == '' then
-	  --Add error checking for configs in for version 3 when we have an actual development cycle
-	  --error = "Please upload a setting file."
+	  error = "Please upload a setting file."
    elseif luci.http.formvalue("key") ~= '' then
 	  file = luci.http.formvalue("key")
    end

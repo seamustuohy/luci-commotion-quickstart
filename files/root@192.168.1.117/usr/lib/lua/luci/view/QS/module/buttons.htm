@@ -1,0 +1,60 @@
+<%-
+    local uci = luci.model.uci.cursor()
+   icons = {
+   "arrow",
+   "bigstart",
+   "black_tri",
+   "bookmark",
+   "check",
+   "diamond",
+   "dot",
+   "equal",
+   "header",
+   "help",
+   "plus",
+   "target",
+   "white_tri",
+   "x",
+   }
+   if uci:get('quickstart', pv.page.pageNo, 'nxtPg') then
+       nextPg = uci:get('quickstart', pv.page.pageNo, 'nxtPg')
+   end
+   buttons = {
+   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back', text = ' ', desc = '&lt; Back'}}
+    if pv.buttons then
+	    for i,x in pairs(pv.buttons) do
+            if i[1] == "noBack" then
+                table.remove(buttons, 1)
+            end
+            if i[1] ~= 'noBack' then
+                local current = {name = i[1], desc = i[2], text = i[3], icon = i[4]}
+   --lazy mans way to force button weighting :)
+	            table.insert(buttons,2,current)
+            end
+	    end
+    end
+-%>
+
+<div id="zone-button-wrapper">
+  <div id="zone-buttons">
+	<div class="button-wrapper">
+	  <ul class="unstyled">
+		<%-
+		   for i,x in ipairs(buttons) do
+		   name = x.name
+		   text = x.text
+		   desc = x.desc
+		   icon = x.icon
+		 -%>
+		<li>
+			<input type="submit" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=desc%>">
+			<%=text%>
+		</li>
+		<%end%>
+	  </ul>
+	</div>
+  </div>
+</div>
+
+
+

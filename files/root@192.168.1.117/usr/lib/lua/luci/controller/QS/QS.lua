@@ -55,6 +55,7 @@ function main()
 	if removeUpload == true and pageValues.modules.upload then
 	   pageValues.modules.upload = nil
 	end
+	log(pageValues.modules)
 	luci.template.render("QS/main/Quickstart", {pv=pageValues})
 end
 
@@ -72,8 +73,7 @@ function pages(command, next, skip)
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
    if next == nil then
 	  next = uci:get('quickstart', page, 'nxtPg')
-   end
-   if command == 'next' then
+      if command == 'next' then
 	  if skip == nil then
 		 uci:set('quickstart', 'options', 'lastPg', page)
 	  end
@@ -99,22 +99,14 @@ end
 function parseSubmit(returns)
 	 --check for submission value
    local uci = luci.model.uci.cursor()
-   local submit = nil
-   for i,x in pairs(returns) do
-	  button = i:match("^%d%:(.*)")
-	  if button then
-		 submit = button
-	  end
-   end
-   if submit then
-	  log(submit)
-   end
-   if returns.submit == 'back' then
+   local submit = returns.submit
+   returns.submit = nil
+   if submit == 'back' then
 	  pages('back')
    else
 	  local errors = {}
 	  local modules = {}
-	  --Run the return values through each module's parser and check for returns. Module Parser's only return errors.
+	  --Run the return values through each module's parser and check for returns. Module Parser's only return errors.   
 	  for kind,val in pairs(returns) do
 		 if kind == 'moduleName' then
 			if type(val) == 'table' then
@@ -153,7 +145,7 @@ function parseSubmit(returns)
 			end
 		 end
 	  else
-		 log(errors)
+
 		 return(errors)
 	  end
    end
