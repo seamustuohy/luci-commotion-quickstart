@@ -1,8 +1,0 @@
-config info security
-	   option olsr_mdp "OLSR-MDP provides 'hop-by-hop' authentication of messages between your, and other, nodes on the network. This ensures that your node can verify which node it is speaking to. The plugin integrates OLSRd with Serval to create a mechanism for signing OLSR packets with a shared private key stored in a Serval keyring."
-	   option wpa_none "WPA-NONE uses a commonly shared key across a network to encrypt communication. This level of encryption prevents casual evsedropping on network traffic"
-	   option auth_sae "AUTH-SAE provides cryptographically strong encryption between nodes on the network. This provides 'hop-by-hop'encryption of traffic which is a barrier to even active attacks."
-
-config info routing
-	   option OLSRd "The Optimized Link State Routing Protocol  is a proactive link-state routing protocol, which uses hello and topology control messages to discover and then disseminate link state information throughout the mobile ad-hoc network. Individual nodes use this topology information to compute next hop destinations for all nodes in the network using shortest hop forwarding paths."
-	   option batman "The Better Approach To Mobile Adhoc Networking (B.A.T.M.A.N.) works through the decentralization of the knowledge about the best route through the network — no single node has all the data. The individual node only saves information about the 'direction' it received data from and sends its data accordingly. Hereby the data gets passed on from node to node and packets get individual, dynamically created routes. A network of collective intelligence is created."
