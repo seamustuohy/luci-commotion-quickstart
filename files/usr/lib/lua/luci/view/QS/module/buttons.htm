@@ -26,8 +26,8 @@
             if i[1] == "noBack" then
                 table.remove(buttons, 1)
             end
-            if i[1] ~= 'noNext' and i[1] ~= 'noBack' and i[1] ~='startOver'  then
-                local current = {text = i[3], icon = i[4], name = i[1], desc = i[2]}
+            if i[1] ~= 'noBack' then
+                local current = {name = i[1], desc = i[2], text = i[3], icon = i[4]}
    --lazy mans way to force button weighting :)
 	            table.insert(buttons,2,current)
             end
@@ -47,7 +47,6 @@
 		   icon = x.icon
 		 -%>
 		<li>
-			<!--<input type="submit" name="submit" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=name%>">-->
 			<input type="submit" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=desc%>">
 			<%=text%>
 		</li>
