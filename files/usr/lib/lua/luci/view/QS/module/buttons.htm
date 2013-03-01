@@ -20,7 +20,7 @@
        nextPg = uci:get('quickstart', pv.page.pageNo, 'nxtPg')
    end
    buttons = {
-   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back'}}
+   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back', text = ' ', desc = '&lt; Back'}}
     if pv.buttons then
 	    for i,x in pairs(pv.buttons) do
             if i[1] == "noBack" then
