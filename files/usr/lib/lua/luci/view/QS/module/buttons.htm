@@ -42,7 +42,7 @@ end
 <div id="zone-button-wrapper">
   <div id="zone-buttons">
 	<div class="button-wrapper">
-	  <ul class="unstyled">
+	  <ul class="qs_buttons">
 		<%-
 		   for i,x in ipairs(buttons) do
 		   name = x.name
@@ -51,8 +51,10 @@ end
 		   icon = x.icon
 		 -%>
 		<li>
+			<figure>
 			<input type="submit" name="<%=name%>" src="<%=media%>/QS/images/<%=icon%>.png" value="<%=desc%>">
-			<%=text%>
+			<figcaption><%=text%></figcaption>
+			</figure>
 		</li>
 		<%end%>
 	  </ul>
