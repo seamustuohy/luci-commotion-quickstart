@@ -24,9 +24,78 @@ function adminPasswordParser()
 	  end
    end
 end
+
+function accessPointRenderer()
+   for line in io.lines("/usr/share/commotion/configs/Commotion") do
+	  b,c = string.find(line,"^ssid=.*")
+	  if b then
+		 SSID = string.sub(line,b+5,c)
+	  end
+   end
+   if SSID then
+	  return {['name'] = SSID}
+   else
+	  return{['name'] = "Something Awesome Here"}
+   end
+end
+
+function accessPointParser()
+   if val.basicInfo_nodeName then
+	  if val.basicInfo_nodeName == '' then
+		 errors['node_name'] = "Please enter a node name"
+	  else
+		 local SSID = val.basicInfo_nodeName
+		 local file = "/usr/share/commotion/config/Commotion"
+		 local find =  "^ssid=.-\n"
+		 local replacement = "ssid="..SSID.."\n"
+		 replaceLine(file, find, replacement)
+	  end
+   end
+end
+
+function replaceLine(fn, find, replacement)
+   --Function for replacing values in non-uci config files
+   --replaceLine(File Name, search string, replacement text)
+   
+   fp = io.open( fn, "r" )
+   str = fp:read( "*all" )
+   str = string.gsub( str, find, replacement)
+   fp:close()
+   
+   fp = io.open( fn, "w+" )
+   fp:write( str )
+   fp:close()
+end
+
+function secAccessPointRenderer()
+   for line in io.lines("/usr/share/commotion/configs/Commotion") do
+	  b,c = string.find(line,"^ssid=.*")
+	  if b then
+		 SSID = string.sub(line,b+5,c)
+	  end
+   end
+   if SSID then
+	  return {['name'] = SSID}
+   else
+	  return{['name'] = "Something Awesome Here"}
+   end
+end
+
+function secAccessPointParser()
+   if val.basicInfo_nodeName then
+	  if val.basicInfo_nodeName == '' then
+		 errors['node_name'] = "Please enter a node name"
+	  else
+		 local SSID = val.basicInfo_nodeName
+		 local file = "/usr/share/commotion/config/Commotion"
+		 local find =  "^ssid=.-\n"
+		 local replacement = "ssid="..SSID.."\n"
+		 replaceLine(file, find, replacement)
+	  end
+   end
+end
+
 -- ####modules TODO####
--- upload
---accessPoint
 --secAccessPoint
 --splashPage
 --networkSecurity

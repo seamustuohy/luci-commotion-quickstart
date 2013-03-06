@@ -1,11 +1,7 @@
-config info confInfo
-	   option name 'Commotion'
-	   option changableName 'false'
-	   option key '0'
-
-config info defaults
-	   option routing 'olsr'	
-   	   list sec 'olsr_mdp'
-	   list sec 'wpa_none'
-
-config info sharingPrefs
+ssid=pineapple
+bssid=02:CA:FF:EE:BA:BE
+channel=5
+ip=5.0.0.0
+ipgenerate=true
+netmask=255.0.0.0
+dns=8.8.8.8
