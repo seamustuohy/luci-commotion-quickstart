@@ -15,7 +15,6 @@ config page 'settingsFile'
 	   option topheader 'Using a Settings File'
 	   option subheading 'Do you have a settings file? Your network administrator may have provided a settings file. If you have a settings file, please upload it below. Or, you can enter the settings manually.'
 	   option fileType 'config'
-<<<<<<< HEAD
 	   list modules 'upload'
 	   list buttons '3:wifiSharing,|Continue &gt;,|Continue without uploading a file,| ,|'
 	   list buttons '4:uploadConfig,|Upload &amp; Continue &gt;&gt;,|Upload a settings file and continue,| ,|'
@@ -46,43 +45,6 @@ config page 'secAccessPoint'
 	   list buttons '2:internetSharing,|Yes &gt;,|Configure your internet gateway,| ,|'
 	   list buttons '3:splashPage,|No &gt;,|Skip this step,| ,|'
 	   list buttons '4:welcome,|&lt;&lt; Start Over,| ,|plus'
-=======
-           list buttons '1:existingNetworkSetup,|Choose Settings &gt;,|I do not have a settings file. Continue anyway.,| ,|'                                                                    
-           list buttons '2:networkSecuritySettings,|Upload &amp; Continue &gt;&gt;,|Upload a settings file and continue,| ,|'                                                     
-           list buttons '3:welcome,|&lt;&lt; Start Over,| ,|plus'
-
-config page 'networkSecuritySettings'
-	   option pageTitle 'Network Security Settings'
-	   option topheader 'Network Security Settings'
-	   option subheading 'This network requires a key file and password. These should be provided by your network administrator.'
-	   list modules 'networkSecurity'
-	   list buttons '2:welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons '1:networkNaming,|Continue &gt;,| ,| '
-
-config page 'existingNetworkSetup'
-	   option pageTitle 'Using an existing Network Setup'
-	   option topheader 'Using an existing Network Setup'
-	   option subheading 'You may use one of these default configurations, or create your own configuration. [To connect with the selected mesh network[s], your Network Setup must include X, Y, Z.]'
-	   list modules 'listConfigs'
-	   list buttons '1:networkSecuritySettings,|Continue &gt;&gt;,|Use these network settings and continue,| '
-	   list buttons '2:networkNaming,|Configure Manually &gt;,|Configure Manually,| '
-           list buttons '3:welcome,|&lt;&lt; Start Over,| ,|plus'
- 
-config page 'networkNaming'
-	   option pageTitle 'Naming'
-	   option topheader 'Naming'
-	   option subheading ''
-	   list modules 'naming'
-	   list buttons '2:welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons '1:yourNetwork,|Continue &gt;,| ,|plus'
-
-config page 'yourNetwork'
-	   option pageTitle 'Your Network'
-	   option topheader 'Your Network'
-	   option subheading ''
-	   list modules 'nodeInfo'
-	   list buttons '1:welcome,|&lt;&lt; Start Over,| ,|plus'
->>>>>>> 1bd62a9cbb6e3f86325aff745e491c4d09f6fdfb
 
 config page 'internetCheck'
 	   option pageTitle 'Internet Connectivity'
@@ -140,7 +102,6 @@ config page 'adminPassword'
 	   option topheader 'Please set an Administrator password'
 	   option subheading 'Enter an "administrator" password for your node. '
 	   list modules 'adminPassword'
-<<<<<<< HEAD
 	   list buttons '3:yourNetwork,|Continue &gt;,|Set this password for your node and continue,| ,|'
 	   list buttons '4:welcome,|&lt;&lt; Start Over,| ,|plus'
 	   
@@ -158,44 +119,3 @@ config page 'SetupComplete'
 	   list modules 'yourNetwork'
 	   list buttons '3:finish,|Finish &gt;,|Go to node admin login,| ,|'
 	   list buttons '4:welcome,|&lt;&lt; Start Over,| There is a problem, Start Over,|plus'
-=======
-	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons 'setConfig,|Continue &gt;,| ,|plus'
-
-
-config page 'setConfig'
-	   option pageTitle "Your node is configuring"
-	   option topheader "Your node is configuring"
-	   option subheading "Please wait while your node updates its settings. The node will restart during this process. This should take approximately two minutes."
-	   list modules 'restartTimer'
-	   list buttons 'noBack'
-	   
-config page 'finished'
-	   option pageTitle 'Setup is complete!'
-	   option topheader 'Setup is complete!'
-	   option subheading 'You have completed the Commotion quickstart. Check below to see if your node is connected to any other nodes in the area.'
-	   list modules 'connectionStatus'
-	   list buttons '2:welcome,|&lt;&lt; Start Over,| ,|plus'
-	   list buttons '1:adminLogin,|Log in,|Log in to view the node administration pages,| '
-
-config page 'adminLogin'
-	   option pageTitle 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
-	   option topheader 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
-	   option subheading 'Please log in to administer this node, <%=NODE_NAME%>, using the node admin password you generated during quickstart.'
-	   list modules 'adminLogin'
-	   list buttons 'noBack'
-
-config page 'wirelessSharing'
-	   option pageTitle 'Set up wireless connection sharing'
-	   option topheader 'Set up wireless connection sharing'
-	   option subheading ''
-	   option modules 'wifiSharing'
-	   option modules 'networkSecurity'
-	   option buttons '1: ,|Continue &gt;,| ,| '
-	   option buttons '2:settingsFile,|&lt; Back,|Choose a pre-built settings file,| '
-	   option buttons '3:welcome,|&lt;&lt; Start Over,| ,| '
-
-config page 'internetSharing'
-	   option pageTitle 'Sharing your internet connection'
-	   option topheader 'Sharing your internet connection'
->>>>>>> 1bd62a9cbb6e3f86325aff745e491c4d09f6fdfb

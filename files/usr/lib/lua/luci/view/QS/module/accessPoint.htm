@@ -1,0 +1,20 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.accessPoint.node_name then nameErr = pv.errorMsg.accessPoint.node_name end
+   end
+ -%>
+
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	  <input type="hidden" name="moduleName" value="accessPoint" />
+	  <%- if pv.modules.accessPoint.name ~= 'static' then -%>
+	  <h2>Node Name</h2>
+	  <h2 class="warning"><%=nameErr%></h2>
+	  <p class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</p>
+	  <span class="help">
+		<img src="<%=media%>/QS/images/help.png" class="tip" alt="The name that your node will use for setup. This name may or may not be public facing. Keep this in mind when entering personal or innapropriate information." />
+	  </span>
+	  <input type="text" value="<%=pv.modules.accessPoint.name%>" name="accessPoint_nodeName">
+	  <%end%>
+  </div>
+</div>

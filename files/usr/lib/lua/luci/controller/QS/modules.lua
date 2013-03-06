@@ -1,6 +1,10 @@
 module("luci.controller.QS.modules", package.seeall)
    --to have a html page render you must return a value or it wont.
 
+function index()
+   --This function is required for LuCI
+   --we don't need to define any pages in this file
+end
 function welcomeRenderer()
    return 'true'
 end
@@ -10,8 +14,9 @@ function adminPasswordRenderer()
 end
 
 function adminPasswordParser()
-   local p1 = val.basicInfo_pwd1
-   local p2 = val.basicInfo_pwd2 
+   errors = {}
+   local p1 = val.adminPassword_pwd1
+   local p2 = val.adminPassword_pwd2 
    if p1 or p2 then
 	  if p1 == p2 then
 		 if p1 == '' then
@@ -23,9 +28,13 @@ function adminPasswordParser()
 		 errors['pw'] = "Given password confirmation did not match, password not changed!"
 	  end
    end
+      if next(errors) ~= nil then
+	  return errors
+   end
 end
 
 function accessPointRenderer()
+   QS = luci.controller.QS.QS
    for line in io.lines("/usr/share/commotion/configs/Commotion") do
 	  b,c = string.find(line,"^ssid=.*")
 	  if b then
@@ -40,17 +49,23 @@ function accessPointRenderer()
 end
 
 function accessPointParser()
-   if val.basicInfo_nodeName then
-	  if val.basicInfo_nodeName == '' then
+   errors = {}
+   local val = luci.http.formvalue()
+   if val.accessPoint_nodeName then
+	  if val.accessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
 	  else
-		 local SSID = val.basicInfo_nodeName
-		 local file = "/usr/share/commotion/config/Commotion"
-		 local find =  "^ssid=.-\n"
+		 local SSID = val.accessPoint_nodeName
+		 local file = "/usr/share/commotion/configs/Commotion"
+		 local find =  "\nssid=.-\n"
 		 local replacement = "ssid="..SSID.."\n"
 		 replaceLine(file, find, replacement)
 	  end
    end
+   if next(errors) ~= nil then
+	  return errors
+   end
+   
 end
 
 function replaceLine(fn, find, replacement)
@@ -82,21 +97,42 @@ function secAccessPointRenderer()
 end
 
 function secAccessPointParser()
-   if val.basicInfo_nodeName then
-	  if val.basicInfo_nodeName == '' then
+   errors = {}
+   local val = luci.http.formvalue()
+   if val.secAccessPoint_nodeName then
+	  if val.secAccessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
 	  else
-		 local SSID = val.basicInfo_nodeName
-		 local file = "/usr/share/commotion/config/Commotion"
-		 local find =  "^ssid=.-\n"
-		 local replacement = "ssid="..SSID.."\n"
+		 local SSID = val.secAccessPoint_nodeName
+		 local file = "/usr/share/commotion/configs/Commotion"
+		 local find =  "\nssid=.-\n"
+		 local replacement = "\nssid="..SSID.."\n"
 		 replaceLine(file, find, replacement)
 	  end
    end
+   local p1 = val.secAccessPoint_pwd1
+   local p2 = val.secAccessPoint_pwd2 
+   if p1 or p2 then
+	  if p1 == p2 then
+		 if p1 == '' then
+			errors['pw'] = "Please enter a password"
+		 else   
+		 local file = "/usr/share/commotion/configs/Commotion"
+		 local find =  "\nwpakey=.-\n"
+		 local replacement = "\nwpakey="..p1.."\n"
+		 replaceLine(file, find, replacement)
+		 end
+	  else
+		 errors['pw'] = "Given password confirmation did not match, password not changed!"
+	  end
+   end
+   if next(errors) ~= nil then
+	  return errors
+   end
+   
 end
 
 -- ####modules TODO####
---secAccessPoint
 --splashPage
 --networkSecurity
 --nodeNaming
