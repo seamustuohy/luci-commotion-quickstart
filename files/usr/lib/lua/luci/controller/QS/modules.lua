@@ -1,15 +1,39 @@
 module("luci.controller.QS.modules", package.seeall)
    --to have a html page render you must return a value or it wont.
-function index()
-end
 
 function welcomeRenderer()
    return 'true'
 end
 
-function logoRenderer()
-   return 'true'
+function adminPasswordRenderer()
+   return true
 end
+
+function adminPasswordParser()
+   local p1 = val.basicInfo_pwd1
+   local p2 = val.basicInfo_pwd2 
+   if p1 or p2 then
+	  if p1 == p2 then
+		 if p1 == '' then
+			errors['pw'] = "Please enter a password"
+		 else   
+			luci.sys.user.setpasswd("root", p1)
+		 end
+	  else
+		 errors['pw'] = "Given password confirmation did not match, password not changed!"
+	  end
+   end
+end
+-- ####modules TODO####
+-- upload
+--accessPoint
+--secAccessPoint
+--splashPage
+--networkSecurity
+--nodeNaming
+--neighborhood
+--yourNetwork
+--finalCountdown
 
 function basicInfoRenderer()
    --check current node_name and return it as nodename
@@ -35,19 +59,6 @@ function basicInfoParser(val)
 		 uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
 		 uci:save('nodeConf')
 		 uci:commit('nodeConf')
-	  end
-   end
-   local p1 = val.basicInfo_pwd1
-   local p2 = val.basicInfo_pwd2 
-   if p1 or p2 then
-	  if p1 == p2 then
-		 if p1 == '' then
-			errors['pw'] = "Please enter a password"
-		 else   
-			luci.sys.user.setpasswd("root", p1)
-		 end
-	  else
-		 errors['pw'] = "Given password confirmation did not match, password not changed!"
 	  end
    end
    --This next(errors) checks to see if there are items in the errors function
@@ -144,7 +155,6 @@ function configReqsParser()
    error['servalKey'] = keyCheck()
 end
 
-
 function configsRenderer()
    QS = luci.controller.QS.QS
 --talk to daemon for configs
@@ -212,7 +222,6 @@ function settingPrefsRenderer()
    return {['time'] = time, ['name'] = name}
 end
 
-
 function completeRenderer()
    local uci = luci.model.uci.cursor()
    uci:set('quickstart', 'options', 'complete', 'true')
@@ -248,7 +257,6 @@ for i,x in ipairs(tables) do
 	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
 	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
 	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
-
    --TODO actually create meaning text for this section. 
    if neighbors <= 4 then
 	  meaning = neighborText[neighbors+1]

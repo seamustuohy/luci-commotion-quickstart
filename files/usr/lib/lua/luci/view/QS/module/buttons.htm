@@ -16,23 +16,27 @@
    "white_tri",
    "x",
    }
-   if uci:get('quickstart', pv.page.pageNo, 'nxtPg') then
-       nextPg = uci:get('quickstart', pv.page.pageNo, 'nxtPg')
+buttons = {{name = '1:back', desc = '&lt; Back', text = 'Go Back', icon = "dot"}}
+
+if pv.buttons then
+   back = 1
+   for x,n in pairs(pv.buttons) do
+	  if x[1] == "noBack" then
+		 back = 0
+	  else
+		 i = 1
+		 match = x[1]:match("(%d)%:.*")
+		 while buttons[i] ~= nil and match > buttons[i]['name']:match("(%d)%:.*") do
+			i = i + 1
+		 end
+             local current = {name = x[1], desc = x[2], text = x[3], icon = x[4]}
+		     table.insert(buttons,i,current)
+	  end
    end
-   buttons = {
-   {text = uci:get('quickstart', pv.page.lastPg, 'buttonText'), icon = "dot", name = 'back', text = ' ', desc = '&lt; Back'}}
-    if pv.buttons then
-	    for i,x in pairs(pv.buttons) do
-            if i[1] == "noBack" then
-                table.remove(buttons, 1)
-            end
-            if i[1] ~= 'noBack' then
-                local current = {name = i[1], desc = i[2], text = i[3], icon = i[4]}
-   --lazy mans way to force button weighting :)
-	            table.insert(buttons,2,current)
-            end
-	    end
-    end
+   if back == 0 then
+	  table.remove(buttons,1)
+   end   
+end
 -%>
 
 <div id="zone-button-wrapper">

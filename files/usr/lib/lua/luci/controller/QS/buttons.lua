@@ -1,9 +1,10 @@
 module("luci.controller.QS.buttons", package.seeall)
 
-function index()
+function index(modules)
+   return(modules)
 end
 
-function tryNetwork()
+function tryNetwork(modules)
    QS = luci.controller.QS.QS
    --sets chosen  network config from on router or through commotion daemon
    local uci = luci.model.uci.cursor()
@@ -22,4 +23,17 @@ function tryNetwork()
 	  QS.commotionDaemon('apply', 'nodeConf')
    end
    pages("next")
+   return(modules)
+end
+
+function networkSecuritySettings(modules)
+   local QS = luci.controller.QS.QS
+   local error = luci.controller.QS.QS.keyCheck()
+   QS:log(error)
+   return(modules)
+end
+
+
+function back(modules)
+   return({})
 end

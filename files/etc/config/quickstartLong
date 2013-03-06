@@ -1,0 +1,96 @@
+config quickstart options
+	   option pageNo 'welcome'
+	   option lastPg 'welcome'
+	   option complete 'false'
+
+config page 'welcome'
+	   option pageTitle 'Welcome'
+	   option subheading 'Welcome to the Commotion Quick Start wizard'
+	   list modules 'welcome'
+	   list buttons '4:settingsFile,|Continue &gt;,| ,| '
+	   list buttons 'noBack'
+
+config page 'settingsFile'
+	   option pageTitle 'Using a Settings File'
+	   option topheader 'Using a Settings File'
+	   option subheading 'Do you have a settings file? Your network administrator may have provided a settings file. If you have a settings file, please upload it below. Or, you can enter the settings manually.'
+	   list modules 'upload'
+	   option fileType 'config'
+           list buttons '2:existingNetworkSetup,|Continue &gt;,|Continue without uploading a file,| ,|'                                                                    
+           list buttons '3:networkSecuritySettings,|Upload &amp; Continue &gt;&gt;,|Upload a settings file and continue,| ,|'                                                     
+           list buttons '4:welcome,|&lt;&lt; Start Over,| ,|plus'
+
+config page 'networkSecuritySettings'
+	   option pageTitle 'Network Security Settings'
+	   option topheader 'Network Security Settings'
+	   option subheading 'This network requires a key file and password. These should be provided by your network administrator.'
+	   list modules '2:networkSecurity'
+	   list buttons '3:welcome,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons '5:settingsFile OR SHARING?,|Continue &gt;,| ,| '
+
+config page 'existingNetworkSetup'
+	   option pageTitle 'Using an existing Network Setup'
+	   option topheader 'Using an existing Network Setup'
+	   option subheading 'You may use one of these default configurations, or create your own configuration. [To connect with the selected mesh network[s], your Network Setup must include X, Y, Z.]'
+	   list modules 'listConfigs'
+	   list buttons '3:configureManually,|Configure Manually &gt;,|Configure Manually,| '
+           list buttons '6:welcome,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons '2:networkSecuritySettings,|Upload &amp; Continue &gt;&gt;,|Upload settings file and continue,| '
+ 
+config page 'networkNaming'
+	   option pageTitle 'Naming'
+	   option topheader 'Naming'
+	   option subheading ''
+	   list modules '2:naming'
+	   list buttons '3:welcome,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons '4:yourNetwork,|Continue &gt;,| ,|plus'
+
+
+config page 'yourNetwork'
+	   option pageTitle 'Your Network'
+	   option topheader 'Your Network'
+	   option subheading ''
+	   list modules 'nodeInfo'
+	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
+
+config page 'adminPassword'
+	   option pageTitle 'Please set an Administrator password'
+	   option topheader 'Please set an Administrator password'
+	   option subheading "Enter an 'administrator' password for your node."
+	   list modules 'adminPassword'
+	   list buttons 'welcome,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons 'setConfig,|Continue &gt;,| ,|plus'
+
+
+config page 'setConfig'
+	   option pageTitle "Your node is configuring"
+	   option topheader "Your node is configuring"
+	   option subheading "Please wait while your node updates its settings. The node will restart during this process. This should take approximately two minutes."
+	   list modules 'restartTimer'
+	   option nxtPg 'none'
+	   list buttons 'noBack'
+	   
+config page ''
+	   option pageTitle 'Setup is complete!'
+	   option topheader 'Setup is complete!'
+	   option subheading 'You have completed the Commotion quickstart. Check below to see if your node is connected to any other nodes in the area.'
+	   list modules 'connectionStatus'
+	   list buttons 'problemStartOver'
+	   list buttons 'finish'
+
+config page 'adminLogin'
+	   option pageTitle 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
+	   option topheader 'Welcome to <%=NETWORK_NAME%>, powered by Commotion!'
+	   option subheading 'Please log in to administer this node, <%=NODE_NAME%>, using the node admin password you generated during quickstart.'
+	   list modules 'adminLogin'
+	   list buttons 'noBack'
+	   
+
+config page ''
+	   option pageTitle ''
+	   option buttonText ''
+	   option topheader ''
+	   option subheading ''
+	   option nxtPg ''
+	   list modules ''
+	   list buttons ''

@@ -14,10 +14,11 @@ end
 function main()
 	-- if return values get them and pass them to return value parser
 	setFileHandler()
-	if luci.http.formvalue then
-	  errorMsg = checkPage()
+	check = luci.http.formvalue()
+	if next(check) ~= nil then
+	   errorMsg = checkPage()
 	end
-      --1) call uci parser, returning dict of pages
+     --1) call uci parser, returning dict of pages
 	local uci = luci.model.uci.cursor()
 	local pageNo,lastPg = pages('get')
 	--Create/clear a space for pageValues and populate with page
@@ -70,19 +71,19 @@ function pages(command, next, skip)
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   if next == nil then
-	  next = uci:get('quickstart', page, 'nxtPg')
-   end
-   if command == 'next' then
+   if next == 'back' then
+	  uci:set('quickstart', 'options', 'pageNo', lastPg)
+	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+   elseif command == 'next' then
+	  if next == nil then
+		 next = uci:get('quickstart', page, 'nxtPg')
+	  end
 	  if skip == nil then
 		 uci:set('quickstart', 'options', 'lastPg', page)
 	  end
 	  uci:set('quickstart', 'options', 'pageNo', next)
-	  uci:save('quickstart')
-	  uci:commit('quickstart')
-   elseif command == 'back' then
-	  uci:set('quickstart', 'options', 'pageNo', lastPg)
-	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
 	  uci:save('quickstart')
 	  uci:commit('quickstart')
    elseif command == 'get' then
@@ -97,70 +98,72 @@ function checkPage()
 end
 
 function parseSubmit(returns)
-	 --check for submission value
+   --check for submission value
    local uci = luci.model.uci.cursor()
    local submit = nil
    for i,x in pairs(returns) do
-	  button = i:match("^%d%:(.*)")
-	  if button then
-		 submit = button
+	  match = i:match("%d%:(.*)")
+	  if match ~= nil then
+		 button = match
 	  end
+   end
+   log('looking for button')
+   if button then
+	  log(button)
    end
    if submit then
+	  log("submission")
 	  log(submit)
    end
-   if returns.submit == 'back' then
-	  pages('back')
+   local errors = {}
+   local modules = {}
+   --Run the return values through each module's parser and check for returns. Module Parser's only return errors.
+   for kind,val in pairs(returns) do
+	  if kind == 'moduleName' then
+		 if type(val) == 'table' then
+			for _, value in ipairs(val) do
+			   modules.append(value)
+			end
+		 elseif type(val) == 'string' then
+			table.insert(modules, val)
+		 end
+	  end
+   end
+   buttonFound = 0
+   for i,x in pairs(luci.controller.QS.buttons) do
+	  if i == (button) then
+		 buttonFound = 1
+		 modules = luci.controller.QS.buttons[button]()
+		 errors = runParser(modules)
+	  end
+   end
+   if buttonFound == 0 then
+	  errors = runParser(modules)
+   end
+   if next(errors) == nil then
+	  pages('next', button)
    else
-	  local errors = {}
-	  local modules = {}
-	  --Run the return values through each module's parser and check for returns. Module Parser's only return errors.
-	  for kind,val in pairs(returns) do
-		 if kind == 'moduleName' then
-			if type(val) == 'table' then
-			   for _, value in ipairs(val) do
-				  -- Check for Parser function and run if it exists
-				  for i,x in pairs(luci.controller.QS.modules) do
-					 if i == (value .. "Parser") then
-						errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
-					 end
-				  end
-			   end
-			elseif type(val) == 'string' then
-			   -- Check for parser function and run if it exists
-			   for i,x in pairs(luci.controller.QS.modules) do
-				  if i == (val .. "Parser") then
-					 errors[val]= luci.controller.QS.modules[val .. "Parser"](returns)
-				  end
-			   end
-			end
-		 end
-	  end
-	  if next(errors) == nil then
-		 if submit == 'next' then
-			pages('next')
-		 elseif submit ~= nil then
-			buttonFound = 0
-			--parse button, and if a function associated run the function, else just go to page.
-			for i,x in pairs(luci.controller.QS.buttons) do
-			   if i == (submit) then
-				  buttonFound = 1
-				  luci.controller.QS.buttons[submit]()
-			   end
-			end
-			if buttonFound == 0 then
-			   pages('next', submit)
-			end
-		 end
-	  else
-		 log(errors)
-		 return(errors)
-	  end
+	  return(errors)
    end
 end
 
+	  
+function runParser(modules)
+   --Check for Parser function and run if it exists
+   errors = {}
+   for _,value in ipairs(modules) do
+	  for i,x in pairs(luci.controller.QS.modules) do
+		 if i == (value .. "Parser") then
+			errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
+		 end
+	  end
+   end
+   return(errors)
+end
+   
+   
 function keyCheck()
-      local uci = luci.model.uci.cursor()
+   local uci = luci.model.uci.cursor()
    --check if a key is required in a config file and compare the current key to it.
    local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
    --log(string.len(confKeySum))
@@ -168,11 +171,14 @@ function keyCheck()
 	  if luci.fs.isfile(keyLoc .. "network.keyring") then
 		 local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
 		 if keyring ~= confKey then
-			--TODO create value to pass if keyring key does not match network required key
+			return "error: key does not match"
 		 end
 	  else
 		 --TODO cretae value to send if no keyring exists
+		 return "keyring does not exist"
 	  end
+   else
+	  return "no keyring"
    end
 end
 

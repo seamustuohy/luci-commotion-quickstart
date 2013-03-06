@@ -6,9 +6,10 @@ config quickstart options
 config page 'welcome'
 	   option pageTitle 'Welcome'
 	   option subheading 'Welcome to the Commotion Quick Start wizard'
+	   list modules 'logo'
 	   list modules 'welcome'
 	   list buttons 'noBack'
-	   list buttons '2:settingsFile,|Continue &gt;,| ,| '
+	   list buttons '1:settingsFile,|Continue &gt;,| ,| '
 	   
 config page 'settingsFile'
 	   option pageTitle 'Using a Settings File'
@@ -57,9 +58,10 @@ config page 'internetCheck'
 config page 'internetSharing'
 	   option pageTitle 'Sharing your Internet Connection'
 	   option topheader 'Sharing your Internet Connection'
-	   option subheading 'Internet access will be available to those that connect to the mesh.\nYou may choose to advertise it to the mesh, or keep it hidden.'
+	   option subheading 'Internet access will be available to those that connect to the mesh.
+	   You may choose to advertise it to the mesh, or keep it hidden.'
 	   list buttons '2:gatewayShare,|Please advertise my Internet access. &gt;,|,| ,|'
-	   list buttons "3:splashPage,|Please DON'T advertise my Internet access. &gt;,|Note that access will still be available, just not advertised,| ,|"
+	   list buttons '3:splashPage,|Please DON'T advertise my Internet access. &gt;,|Note that access will still be available, just not advertised,| ,|'
 	   list buttons '4:welcome,|&lt;&lt; Start Over,| ,|plus'
 	   
 config page 'splashPage'
