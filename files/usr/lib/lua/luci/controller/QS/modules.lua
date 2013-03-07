@@ -57,8 +57,8 @@ function accessPointParser()
 	  else
 		 local SSID = val.accessPoint_nodeName
 		 local file = "/usr/share/commotion/configs/Commotion"
-		 local find =  "\nssid=.-\n"
-		 local replacement = "ssid="..SSID.."\n"
+		 local find =  "^ssid=.*"
+		 local replacement = 'ssid='..SSID
 		 replaceLine(file, find, replacement)
 	  end
    end
@@ -66,20 +66,6 @@ function accessPointParser()
 	  return errors
    end
    
-end
-
-function replaceLine(fn, find, replacement)
-   --Function for replacing values in non-uci config files
-   --replaceLine(File Name, search string, replacement text)
-   
-   fp = io.open( fn, "r" )
-   str = fp:read( "*all" )
-   str = string.gsub( str, find, replacement)
-   fp:close()
-   
-   fp = io.open( fn, "w+" )
-   fp:write( str )
-   fp:close()
 end
 
 function secAccessPointRenderer()
@@ -105,8 +91,8 @@ function secAccessPointParser()
 	  else
 		 local SSID = val.secAccessPoint_nodeName
 		 local file = "/usr/share/commotion/configs/Commotion"
-		 local find =  "\nssid=.-\n"
-		 local replacement = "\nssid="..SSID.."\n"
+		 local find =  "^ssid=.*"
+		 local replacement = "ssid="..SSID
 		 replaceLine(file, find, replacement)
 	  end
    end
@@ -118,8 +104,8 @@ function secAccessPointParser()
 			errors['pw'] = "Please enter a password"
 		 else   
 		 local file = "/usr/share/commotion/configs/Commotion"
-		 local find =  "\nwpakey=.-\n"
-		 local replacement = "\nwpakey="..p1.."\n"
+		 local find =  '^wpakey=.*'
+		 local replacement = "wpakey="..p1
 		 replaceLine(file, find, replacement)
 		 end
 	  else
@@ -129,50 +115,122 @@ function secAccessPointParser()
    if next(errors) ~= nil then
 	  return errors
    end
-   
 end
+
+function replaceLine(fn, find, replacement)
+   --Function for replacing values in non-uci config files
+   --replaceLine(File Name, search string, replacement text)
+
+
+   if luci.sys.call('grep -q '..find..' '..fn) == 1 then
+	  repl = [["]]..replacement..[["]]
+	  luci.sys.call([[awk '/]]..find..[[/{f=1}END{ if (!f) {print ]]..repl..[[}}1' ]]..fn..[[ > /tmp/config.test]])
+	  --TODO need a way of getting this awk to manipulate the file in place and not go to the /tmp/config.test file
+   else
+	  luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn) --This replaces a line in line but returns nothing if thing is not found
+   end 
+	  --luci.sys.call("mv /tmp/config.test " .. fn.."01") -- This works ...TODO get the below working
+	  --luci.sys.call("sleep 1")
+	  --luci.sys.call("mv /tmp/config.test " .. fn) -- This only prints the missing line WTF
+				  
+
+   --luci.sys.call('mv '..fn..'02'..fn)
+end
+
+
+function splashPageRenderer()
+   return 'true'
+end
+
+function splashPageParser()
+   if luci.http.formvaluetable("cptv") then
+	  captive = luci.http.formvaluetable("cptv")
+   end
+   local fs = require "nixio.fs"
+   local splashtextfile = "/usr/lib/luci-splash/splashtext.html"
+   for i,x in pairs(captive) do
+	  if i == "main" then
+		 if x == "" then
+			main = ""
+		 else
+			main = ("<p>" .. x .. "</p>")
+		 end
+	  elseif i == "title" then
+		 if x == "" then
+			title = ""
+		 else
+			title = ("<h1>" .. x .. "</h1>")
+		 end
+	  elseif i == "home" then
+		 uci_values = 1
+		 uci:set('luci_splash', 'general', 'homepage', x)
+	  elseif i == "time" then
+		 uci_values = 1
+		 uci:set('luci_splash', 'general', 'leasetime', x)
+	  end
+   end
+   data = (title .. main)
+   if data == "" then
+	  errors['cptv'] = "Please fill out text for your captive portal."
+	  fs.unlink(splashtextfile)
+   else
+	  fs.writefile(splashtextfile, data:gsub("\r\n", "\n"))
+   end
+   if uci_values then
+	  uci:save('luci_splash')
+	  uci:commit('luci_splash')
+   end
+end
+
+
+function finalCountdownRenderer()
+   QS = luci.controller.QS.QS
+   QS.pages('next', 'setupComplete', 'skip')
+   return 'true'
+end
+
+function neighborhoodRenderer()
+   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
+   -- TODO switch this rawdata call out with one below
+   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
+   --TODO remove the false raw data below and implement the one above... just like the other comment says.
+   local rawdata = [[Table: Neighbors
+IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
+10.10.0.152		YES		NO		NO		6		0
+5.10.0.152		YES		NO		NO		6		34
+10.2.0.152		YES		NO		NO		6		1
+10.10.0.142		YES		NO		NO		6		5 ]]
+local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
+neighbors = 0
+for i,x in ipairs(tables) do
+   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
+	  neighbors = neighbors + 1
+   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
+	  neighbors = neighbors + 1
+   end
+   neighborText = {
+	  "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
+	  "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+	  "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
+   if neighbors <= 4 then
+	  meaning = neighborText[neighbors+1]
+   else
+	  meaning = neighborText[6]
+   end
+end
+return {['meaning'] = meaning}
+end
+
+
 
 -- ####modules TODO####
---splashPage
 --networkSecurity
 --nodeNaming
---neighborhood
 --yourNetwork
---finalCountdown
 
-function basicInfoRenderer()
-   --check current node_name and return it as nodename
-   local uci = luci.model.uci.cursor()
-   local changable = uci:get('nodeConf', 'confInfo', 'changableName')
-   if changable == 'true' then
-	  local nodeName = uci:get('nodeConf', 'confInfo', 'name')
-	  if nodeName then
-		 return {['name'] = nodeName}
-	  end
-   else
-	  return {['name'] = 'static'}
-   end
-end
-
-function basicInfoParser(val)
-   local errors = {}
-   local uci = luci.model.uci.cursor()
-   if val.basicInfo_nodeName then
-	  if val.basicInfo_nodeName == '' then
-		 errors['node_name'] = "Please enter a node name"
-	  else
-		 uci:set('nodeConf', 'confInfo', 'name', val.basicInfo_nodeName)
-		 uci:save('nodeConf')
-		 uci:commit('nodeConf')
-	  end
-   end
-   --This next(errors) checks to see if there are items in the errors function
-   if next(errors) == nil then
-	  return nil
-   else
-	  return errors
-   end
-end
 
 function nearbyMeshRenderer()
    QS = luci.controller.QS.QS
@@ -336,39 +394,4 @@ function completeRenderer()
    do return end
 end
 
-function connectedNodesRenderer()
-   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
-   -- TODO switch this rawdata call out with one below
-   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
-   --TODO remove the false raw data below and implement the one above... just like the other comment says.
-   local rawdata = [[Table: Neighbors
-IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
-10.10.0.152		YES		NO		NO		6		0
-5.10.0.152		YES		NO		NO		6		34
-10.2.0.152		YES		NO		NO		6		1
-10.10.0.142		YES		NO		NO		6		5 ]]
-local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
-neighbors = 0
-for i,x in ipairs(tables) do
-   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
-	  neighbors = neighbors + 1
-   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
-	  neighbors = neighbors + 1
-   end
-   neighborText = {
-	  "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
-   --TODO actually create meaning text for this section. 
-   if neighbors <= 4 then
-	  meaning = neighborText[neighbors+1]
-   else
-	  meaning = neighborText[6]
-   end
-end
-return {['neighbors'] = neighbors, ['meaning'] = meaning}
-end
 
