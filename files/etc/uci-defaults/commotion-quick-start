@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -f "/usr/bin/patch" ] && { \
+  cd ...controller...
+  patch -p0 < /usr/share/commotion/patches/splash.qs.patch
+}
