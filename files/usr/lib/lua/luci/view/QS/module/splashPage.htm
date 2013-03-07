@@ -1,0 +1,28 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.splashPage.cptv then Err = pv.errorMsg.splashPage.cptv end
+   end
+   -%>
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="basicInfo" />
+	<strong>Captive Portal:</strong><br />
+	<h2 class="warning"><%=Err%></h2>
+	<span class="help" id="cptv" style="display:none">
+	  <div>
+		<strong> Please provide the following information:</strong>
+		<strong>Title</strong><br />
+		<input type="text" name="cptv.title"><br />
+		Please enter a title for your splash screen here.<br />
+		<strong>Main Text</strong><br />
+		<textarea name="cptv.main" cols="60" royws="5"></textarea><br />
+		Please enter the text for your splash screen here.<br />
+		<strong>Homepage</strong><br />
+		<input type="url" name="cptv.home"><br />
+		Please enter the url the splash screen will redirect users to upon agreeing to your splash pages's terms of service..<br />
+		<strong>Lease Time</strong><br />
+		<input type="number" name="cptv.time" min="1" max="24"><br />
+		Please enter the ammout of hours you wish to allow users to stay on the network before being sent back to the splash screen (1-24).<br />
+	  </div>
+  </div>
+</div>

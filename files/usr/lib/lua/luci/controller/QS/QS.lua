@@ -107,14 +107,6 @@ function parseSubmit(returns)
 		 button = match
 	  end
    end
-   log('looking for button')
-   if button then
-	  log(button)
-   end
-   if submit then
-	  log("submission")
-	  log(submit)
-   end
    local errors = {}
    local modules = {}
    --Run the return values through each module's parser and check for returns. Module Parser's only return errors.
