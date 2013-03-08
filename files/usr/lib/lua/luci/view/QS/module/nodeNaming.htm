@@ -1,0 +1,26 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.nodeNaming.net_name then netErr = pv.errorMsg.nodeNaming.net_name end
+       if pv.errorMsg.nodeNaming.node_name then nameErr = pv.errorMsg.nodeNaming.node_name end
+   end
+ -%>
+
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	  <input type="hidden" name="moduleName" value="nodeNaming" />
+	  <h2>Network Name</h2>
+	  <p>What would you like to name your mesh network?
+		(This will be the first part of the name people will see when they search for your wireless network.) </p>
+	  <h2 class="warning"><%=netErr%></h2>
+	  <p class="flavor">Choose a name that is 5-12 characters. This name can be numbers, letters, and special characters.</p>
+	  <input type="text" value="<%=pv.modules.nodeNaming.net%>" name="nodeNaming_netName">
+
+	  <h2>Node Name</h2>
+	  <p>What would you like to name your node?
+	  (This will be the second part of the name people will see when they search for your wireless network.)</p>
+	  <h2 class="warning"><%=nameErr%></h2>
+	  <p class="flavor">Choose a name that is 5-12 characters. You can use numbers, letters & special characters. The name must be unique in the network. You can change the node name later by logging into the node administration page.</p>
+y	  <input type="text" value="<%=pv.modules.nodeNaming.name%>" name="nodeNaming_nodeName">
+
+  </div>
+</div>
