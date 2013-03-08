@@ -77,18 +77,22 @@ function pages(command, next, skip)
 	  uci:save('quickstart')
 	  uci:commit('quickstart')
    elseif command == 'next' then
-	  if next == nil then
-		 next = uci:get('quickstart', page, 'nxtPg')
-	  end
 	  if skip == nil then
 		 uci:set('quickstart', 'options', 'lastPg', page)
 	  end
-	  uci:set('quickstart', 'options', 'pageNo', next)
-	  uci:save('quickstart')
-	  uci:commit('quickstart')
+	  nextExist =  uci:get('quickstart',  next)
+	  if nextExist then
+		 uci:set('quickstart', 'options', 'pageNo', next)
+		 uci:save('quickstart')
+		 uci:commit('quickstart')
+	  end
    elseif command == 'get' then
 	  return page,lastPg
    end
+end
+
+function interface(name)
+--TODO make this do stuff.
 end
 
 function checkPage()
@@ -114,7 +118,7 @@ function parseSubmit(returns)
 	  if kind == 'moduleName' then
 		 if type(val) == 'table' then
 			for _, value in ipairs(val) do
-			   modules.append(value)
+			   table.insert(modules, value)
 			end
 		 elseif type(val) == 'string' then
 			table.insert(modules, val)
@@ -125,15 +129,19 @@ function parseSubmit(returns)
    for i,x in pairs(luci.controller.QS.buttons) do
 	  if i == (button) then
 		 buttonFound = 1
-		 modules = luci.controller.QS.buttons[button]()
+		 modules = luci.controller.QS.buttons[button](modules)
 		 errors = runParser(modules)
 	  end
    end
    if buttonFound == 0 then
 	  errors = runParser(modules)
    end
-   if next(errors) == nil then
-	  pages('next', button)
+   if  next(errors) == nil then
+	  --check if button does it own paging, or if it refers to a page
+	  testButton = uci:get('quickstart',  button)
+	  if testButton ~= nil or 'back' then
+		 pages('next', button)
+	  end
    else
 	  return(errors)
    end
@@ -143,13 +151,18 @@ end
 function runParser(modules)
    --Check for Parser function and run if it exists
    errors = {}
-   for _,value in ipairs(modules) do
-	  for i,x in pairs(luci.controller.QS.modules) do
-		 if i == (value .. "Parser") then
-			errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
+   local returns = luci.http.formvalue()
+   log(returns)
+   if modules then
+	  for _,value in ipairs(modules) do
+		 for i,x in pairs(luci.controller.QS.modules) do
+			if i == (value .. "Parser") then
+			   errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
+			end
 		 end
 	  end
    end
+   log(errors)
    return(errors)
 end
    
@@ -174,19 +187,20 @@ function keyCheck()
    end
 end
 
+
 function setFileHandler()
    local uci = luci.model.uci.cursor()
    local sys = require "luci.sys"
    local fs = require "luci.fs"
    local keyLoc = "/usr/share/serval/"
-   local configLoc = '/etc/config/'
+   local configLoc = '/etc/commotion/profiles.d/'
    -- causes media files to be uploaded to their namesake in the /tmp/ dir.
    local fp
    luci.http.setfilehandler(
 	  function(meta, chunk, eof)
 		 if not fp then
 			if meta and meta.name == "config" then			   
-			   fp = io.open(configLoc .. "nodeConf", "w")
+			   fp = io.open(configLoc .. "quickstartMesh", "w")
 			elseif meta and meta.name == "key" then
 			   fp = io.open(keyLoc .. "network.keyring", "w")
 			end
