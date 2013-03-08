@@ -39,4 +39,12 @@ define Package/commotion-quick-start/install
 	$(CP) -a ./files/* $(1)/ 2>/dev/null || true
 endef
 
+define Package/commotion-quick-start/postinst
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] || {
+        ( . /etc/uci-defaults/commotion-quick-start ) && rm -f /etc/uci-defaults/commotion-quick-start
+}
+endef
+
+
 $(eval $(call BuildPackage,commotion-quick-start))

@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -f "/usr/bin/patch" ] && { \
+  cd /usr/lib/lua/luci/controller/splash/
+  patch -p0 < /usr/share/commotion/patches/splash.qs.patch
+}
