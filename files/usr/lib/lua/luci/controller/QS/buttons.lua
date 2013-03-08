@@ -143,6 +143,13 @@ function checkKeyFile(modules)
 end
 
 function finish()
+   QS = luci.controller.QS.QS
+   files = {"/etc/commotion/profiles.d/quickstartMesh", "/etc/commotion/profiles.d/quickstartSec", "/etc/commotion/profiles.d/quickstartAP"}
+   for i,x in ipairs(files) do
+	  if luci.fs.isfile(x) then
+		 luci.sys.call("commotion up " .. i-1 .. " " .. x)
+	  end
+   end
    local uci = luci.model.uci.cursor()
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
@@ -150,5 +157,4 @@ function finish()
    luci.http.redirect("/cgi-bin/luci/admin")
    do return end
 end
-
 

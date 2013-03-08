@@ -127,8 +127,6 @@ function secAccessPointParser()
    end
 end
 
-
-
 function splashPageRenderer()
    return 'true'
 end
@@ -387,7 +385,6 @@ function uploadParser()
    end
 end
 
-
 function replaceLine(fn, find, replacement)
    --Function for replacing values in non-uci config files
    --replaceLine(File Name, search string, replacement text)
@@ -400,33 +397,3 @@ function replaceLine(fn, find, replacement)
    luci.sys.call("mv /tmp/config.test " .. fn)
 end
 
-function finalCountdownRenderer()
-   QS = luci.controller.QS.QS
-   --TODO call commotion
-   luci.sys.call("")
-   QS.pages('next', 'setupComplete', 'skip')
-   return 'true'
-end
-
-
-
-
-up
-Arguments: interface (required), profile (required)
-Brings up interface with specified profile.
-Example:
-$> commotion up wlan0 default
-
-down
-Arguments: interface (required)
-Brings down specified interface.
-Example:
-$> commotion down wlan0
-
-status
-Arguments: interface (required)
-Prints name of active profile on interface if active, or 'down' if the
-interface is unconfigured.
-Example:
-$> commotion status wlan0
--- 
