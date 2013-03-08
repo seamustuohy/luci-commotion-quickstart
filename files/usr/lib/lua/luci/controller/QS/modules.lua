@@ -183,45 +183,31 @@ function splashPageParser()
    end
 end
 
-function finalCountdownRenderer()
-   QS = luci.controller.QS.QS
-   QS.pages('next', 'setupComplete', 'skip')
-   return 'true'
-end
 
 function neighborhoodRenderer()
-   --TODO this is mostly stolen from olsrd.lua. Just need to parse the file to get the number of neighbors
-   -- TODO switch this rawdata call out with one below
-   --local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
-   --TODO remove the false raw data below and implement the one above... just like the other comment says.
-   local rawdata = [[Table: Neighbors
-IP address		SYM		MPR		MPRS	Will.	2 Hop Neighbors
-10.10.0.152		YES		NO		NO		6		0
-5.10.0.152		YES		NO		NO		6		34
-10.2.0.152		YES		NO		NO		6		1
-10.10.0.142		YES		NO		NO		6		5 ]]
-local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
-neighbors = 0
-for i,x in ipairs(tables) do
-   if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
-	  neighbors = neighbors + 1
-   elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
-	  neighbors = neighbors + 1
+   local rawdata = luci.sys.httpget("http://127.0.0.1:2006/neighbors")
+   local tables = luci.util.split(luci.util.trim(rawdata), nil, nil, nil)
+   neighbors = 0
+   for i,x in ipairs(tables) do
+	  if string.find(x, "^%d+%.%d+%.%d+%.%d+") then
+		 neighbors = neighbors + 1
+	  elseif string.find(x, "^%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+%:%x+") then
+		 neighbors = neighbors + 1
+	  end
+	  neighborText = {
+		 "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
+		 "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+		 "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+		 "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+		 "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
+		 "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
+	  if neighbors <= 4 then
+		 meaning = neighborText[neighbors+1]
+	  else
+		 meaning = neighborText[6]
+	  end
    end
-   neighborText = {
-	  "You have no neighbors. Please give the router a minute or two to talk to its neighboring nodes. We will refresh this page automatically every few seconds. If after a minute or two you still have no neighbors it could be because you are using a custom configuration that does not allow your node to connect to its neighbors, or you just may not be near any other nodes. If you would like to keep this configuration anyway please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have one neighbor. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have two neighbors. This could mean that you are on the edges of a network, or that your node is in a location that is not being reached by neighboring nodes like a basement or behind a wall or dense foliage. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have three neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have four neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again.",
-	  "You have many neighbors. If you would like to keep this configuration please click 'Finish', else, click 'Start Over' to begin again."}
-   if neighbors <= 4 then
-	  meaning = neighborText[neighbors+1]
-   else
-	  meaning = neighborText[6]
-   end
-end
-return {['meaning'] = meaning}
+   return {['meaning'] = meaning}
 end
 
 function nodeNamingRenderer()
@@ -391,9 +377,8 @@ function uploadParser()
 			error = 'This file is not a configuration file. Please check the file and upload a working config file or go back and choose a pre-built config'
 		 end
 	  elseif luci.http.formvalue("key") then
-		 --TODO swap out commented correct line for line below
 		 if luci.sys.call("pwd") == '1' then
-			--elseif luci.sys.call("servald keyring list") == '1' then
+			elseif luci.sys.call("servald keyring list") == '1' then
 			error = 'The file uploaded is either not a proper keyring or has a pin that is required to access the key within. If you do not think that your keyring has a pin please upload a proper servald keyring for your network key. If your keyring is pin protected, please click continue below.'
 		 end
 	  end
@@ -407,16 +392,42 @@ end
 function replaceLine(fn, find, replacement)
    --Function for replacing values in non-uci config files
    --replaceLine(File Name, search string, replacement text)
-   
    if luci.sys.call('grep -q '..find..' '..fn) == 1 then
 	  repl = [["]]..replacement..[["]]
 	  luci.sys.call([[awk '/]]..find..[[/{f=1}END{ if (!f) {print ]]..repl..[[}}1' ]]..fn..[[ > /tmp/config.test]])
-	  --TODO need a way of getting this awk to manipulate the file in place and not go to the /tmp/config.test file
    else
-	  luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn) --This replaces a line in line but returns nothing if thing is not found
+	  luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
    end 
-   --luci.sys.call("mv /tmp/config.test " .. fn.."01") -- This works ...TODO get the below working
-   --luci.sys.call("sleep 1")
-   luci.sys.call("mv /tmp/config.test " .. fn) -- This only prints the missing line WTF
-   --luci.sys.call('mv '..fn..'02'..fn)
+   luci.sys.call("mv /tmp/config.test " .. fn)
 end
+
+function finalCountdownRenderer()
+   QS = luci.controller.QS.QS
+   --TODO call commotion
+   luci.sys.call("")
+   QS.pages('next', 'setupComplete', 'skip')
+   return 'true'
+end
+
+
+
+
+up
+Arguments: interface (required), profile (required)
+Brings up interface with specified profile.
+Example:
+$> commotion up wlan0 default
+
+down
+Arguments: interface (required)
+Brings down specified interface.
+Example:
+$> commotion down wlan0
+
+status
+Arguments: interface (required)
+Prints name of active profile on interface if active, or 'down' if the
+interface is unconfigured.
+Example:
+$> commotion status wlan0
+-- 
