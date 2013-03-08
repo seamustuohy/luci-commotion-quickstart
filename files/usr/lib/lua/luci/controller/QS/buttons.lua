@@ -47,6 +47,10 @@ end
 function noApplications(modules)
    local wpa = false
    local upload = true
+   local uci = luci.model.uci.cursor()
+   uci:set('quickstart', 'options', 'apps', 'true')
+   uci:save('quickstart')
+   uci:commit('quickstart')
    if luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
 	  for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
 		 b,c = string.find(line,"^wpakey=.*")

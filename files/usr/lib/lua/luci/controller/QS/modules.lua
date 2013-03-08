@@ -134,7 +134,6 @@ function splashPageRenderer()
 end
 
 function applicationsParser()
---TODO make this turn off the application portal
 end
 
 function splashPageParser()
