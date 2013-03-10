@@ -2,4 +2,7 @@
 [ -f "/usr/bin/patch" ] && { \
   cd /usr/lib/lua/luci/controller/splash/
   patch -p0 < /usr/share/commotion/patches/splash.qs.patch
+
+  cd /commotion-apps/lua/luci/controller/commotion/ 
+  patch -p0 < /usr/share/commotion/patches/apps_controller.qs.patch
 }
