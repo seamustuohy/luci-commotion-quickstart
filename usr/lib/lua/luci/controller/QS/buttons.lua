@@ -143,14 +143,13 @@ function checkKeyFile(modules)
 end
 
 function finish()
-   QS = luci.controller.QS.QS
-   files = {"/etc/commotion/profiles.d/quickstartMesh", "/etc/commotion/profiles.d/quickstartSec", "/etc/commotion/profiles.d/quickstartAP"}
-   for i,x in ipairs(files) do
-	  if luci.fs.isfile(x) then
-		 luci.sys.call("commotion up " .. i-1 .. " " .. x)
-	  end
-   end
+   local QS = luci.controller.QS.QS
    local uci = luci.model.uci.cursor()
+   files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
+   QS.wirelessController(files)
+   --this causes netifd to rexamine everything and tell changes to interfaces... which we need
+   luci.sys.call("/etc/init.d/network restart")
+   --set quickstart to done so that it no longer allows access to these tools without admin password
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')

@@ -64,7 +64,6 @@ function accessPointParser()
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
 		 replaceLine(file, find, replacement)
-		 QS.interface('quickstartAP')
 	  end
    end
    if next(errors) ~= nil then
@@ -103,7 +102,6 @@ function secAccessPointParser()
 		 local find =  "^ssid=.*"
 		 local replacement = "ssid="..SSID
 		 replaceLine(file, find, replacement)
-		 QS.interface('quickstartSec')
 	  end
    end
    local p1 = val.secAccessPoint_pwd1
@@ -245,7 +243,6 @@ function nodeNamingPointParser()
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
 		 replaceLine(file, find, replacement)
-		 QS.interface('quickstartMesh')
 	  end
    end
    if val.nodeNaming_netName == '' then
@@ -332,7 +329,6 @@ function networkSecurityParser()
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
 		 replaceLine(file, find, replacement)
-		 QS.interface('quickstartMesh')
 	  end
    end   
    if next(errors) ~= nil then
