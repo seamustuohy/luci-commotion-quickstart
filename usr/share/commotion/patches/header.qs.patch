@@ -1,0 +1,12 @@
+--- header.htm	2013-02-28 15:33:55.958125743 -0500
++++ header.qs.htm	2013-03-11 10:33:11.222038026 -0400
+@@ -208,7 +208,8 @@
+       <div class="alert warning">
+       <h4><%:No password set!%></h4>
+       <p>
+-        <%:There is no password set on this router. Please configure a root password to protect the web interface and enable SSH.%>
++        <%:There is no password set on this router. Please add a root password to protect the web interface and enable SSH.
++	You may use the %><a href="/cgi-bin/luci/QuickStart"><%:Commotion QuickStart%></a><%: tool for step-by-step configuration.%>
+       </p>
+       <p>
+         <a href="<%=pcdata(luci.dispatcher.build_url("admin/system/admin"))%>"><%:Go to password configuration...%></a>
