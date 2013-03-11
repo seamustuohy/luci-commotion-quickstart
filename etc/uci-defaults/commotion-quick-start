@@ -1,0 +1,8 @@
+#!/bin/sh
+[ -f "/usr/bin/patch" ] && { \
+  cd /usr/lib/lua/luci/controller/commotion/ 
+  patch -p0 < /usr/share/commotion/patches/apps_controller.qs.patch
+
+  cd /usr/lib/lua/luci/view/themes/commotion/
+  patch -p0 < /usr/share/commotion/patches/header.qs.patch
+}
