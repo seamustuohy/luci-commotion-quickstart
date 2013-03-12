@@ -100,6 +100,7 @@ function wirelessController(profiles)
 			   function(s)
 				  table.insert(dev, s['.name'])
 			   end)
+   log(dev)
    --Create interfaces
    for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
@@ -108,6 +109,8 @@ function wirelessController(profiles)
 		 uci:delete('wireless', device, 'disabled')
 	  end
    end
+   uci:save('wireless')
+   uci:commit('wireless')
    devNum = 1
    for profNum, prof in ipairs(profiles) do
 	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
