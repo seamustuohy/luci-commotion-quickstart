@@ -9,11 +9,11 @@
 				var interval2 = window.setInterval(function() {
 					window.clearInterval(interval);
 					window.clearInterval(interval2);
-					location.href = <%=redirect_location%>;
+					location.href = "<%=redirect_location%>";
 				}, 15000);
 				img.onload = function() {
 					window.clearInterval(interval);
-					location.href = <%=redirect_location%>;
+					location.href = "<%=redirect_location%>";
 				};
 				img.src = 'http://<%=addr or luci.http.getenv("SERVER_NAME")%><%=resource%>/icons/loading.gif?' + Math.random();
 			}, 5000);

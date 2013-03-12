@@ -106,7 +106,7 @@ function wirelessController(profiles)
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
 	  disabled = uci:get('wireless', device, 'disabled')
 	  if disabled then
-		 uci:delete('wireless', device, 'disabled')
+		 disabledTrue = uci:delete('wireless', device, 'disabled')
 	  end
    end
    uci:save('wireless')
@@ -131,8 +131,6 @@ function wirelessController(profiles)
    uci:save('network')
    uci:commit('network')
 end
-
-
 
 function checkPage()
    local returns = luci.http.formvalue()
@@ -185,7 +183,6 @@ function parseSubmit(returns)
 	  return(errors)
    end
 end
-
 	  
 function runParser(modules)
    --Check for Parser function and run if it exists
@@ -205,8 +202,7 @@ function runParser(modules)
    log(errors)
    return(errors)
 end
-   
-   
+      
 function keyCheck()
    local uci = luci.model.uci.cursor()
    --check if a key is required in a config file and compare the current key to it.
