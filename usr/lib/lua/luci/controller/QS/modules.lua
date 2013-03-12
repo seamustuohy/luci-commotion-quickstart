@@ -13,8 +13,20 @@ function adminPasswordRenderer()
    return 'true'
 end
 
-function finalCountdownRenderer()
+function completeRenderer()
    return 'true'
+end
+
+function completeParser()
+   local QS = luci.controller.QS.QS
+   local uci = luci.model.uci.cursor()
+   files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
+   QS.wirelessController(files)
+   --set quickstart to done so that it no longer allows access to these tools without admin password
+   luci.sys.call("/etc/init.d/network restart")
+   uci:set('quickstart', 'options', 'complete', 'true')
+   uci:save('quickstart')
+   uci:commit('quickstart')
 end
 
 function adminPasswordParser(val)

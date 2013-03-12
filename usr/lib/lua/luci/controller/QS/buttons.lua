@@ -149,19 +149,9 @@ function checkKeyFile(modules)
    return {}
 end
 
-function finish()
-   luci.http.redirect("/cgi-bin/luci/admin")
-   --luci.sys.call("sleep 1")
-   local QS = luci.controller.QS.QS
-   local uci = luci.model.uci.cursor()
-   files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
-   QS.wirelessController(files)
-   --this causes netifd to rexamine everything and tell changes to interfaces... which we need
-   luci.sys.call("/etc/init.d/network restart")
-   --set quickstart to done so that it no longer allows access to these tools without admin password
-   uci:set('quickstart', 'options', 'complete', 'true')
-   uci:save('quickstart')
-   uci:commit('quickstart')
-   do return end
+function finish(modules)
+   luci.http.redirect("/cgi-bin/luci/waitForRestart")
+   luci.http.close()
+   return({'complete'}) 
 end
 
