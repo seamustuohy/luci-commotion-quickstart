@@ -44,6 +44,13 @@ function netSec(modules)
    end
 end
 
+function makeItWork(modules)
+   local QS = luci.controller.QS.QS
+   luci.sys.call('cp /etc/commotion/profiles.d/default /etc/commotion/profiles.d/quickstartAP')
+   luci.sys.call('cp /etc/commotion/profiles.d/default /etc/commotion/profiles.d/quickstartMesh')
+   QS.pages('next', 'naming')
+end
+
 function noApplications(modules)
    local wpa = false
    local upload = true
@@ -145,6 +152,7 @@ end
 function finish()
    local QS = luci.controller.QS.QS
    local uci = luci.model.uci.cursor()
+   luci.http.redirect("/cgi-bin/luci/admin")
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
    QS.wirelessController(files)
    --this causes netifd to rexamine everything and tell changes to interfaces... which we need
@@ -153,7 +161,6 @@ function finish()
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
-   luci.http.redirect("/cgi-bin/luci/admin")
    do return end
 end
 
