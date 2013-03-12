@@ -9,6 +9,7 @@ function index()
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
    end
+   
 end
 
 function main()
@@ -102,9 +103,9 @@ function wirelessController(profiles)
    --Create interfaces
    for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
-	  disabled = uci:get('wireless', 'wifi-device', device, 'disabled')
+	  disabled = uci:get('wireless', device, 'disabled')
 	  if disabled then
-		 uci:delete('wireless', 'wifi-device', device, 'disabled')
+		 uci:delete('wireless', device, 'disabled')
 	  end
    end
    devNum = 1
@@ -192,6 +193,7 @@ function runParser(modules)
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
 			if i == (value .. "Parser") then
+			   log(value)
 			   errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
 			end
 		 end

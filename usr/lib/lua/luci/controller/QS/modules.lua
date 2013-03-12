@@ -23,7 +23,7 @@ function completeParser()
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
    QS.wirelessController(files)
    --set quickstart to done so that it no longer allows access to these tools without admin password
-   luci.sys.call("/etc/init.d/network restart")
+   fork_exec("sleep 3; /etc/init.d/network restart")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
