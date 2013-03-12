@@ -52,7 +52,7 @@ end
 
 function accessPointRenderer()
       if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
-	  luci.sys.call('cp /etc/commotion/profiles.d/default /etc/commotion/profiles.d/quickstartAP') 
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
    end
    for line in io.lines("/etc/commotion/profiles.d/quickstartAP") do
 	  b,c = string.find(line,"^ssid=.*")
@@ -90,7 +90,7 @@ end
 
 function secAccessPointRenderer()
    if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then  
-	  luci.sys.call("cp /etc/commotion/profiles.d/default /etc/commotion/profiles.d/quickstartSec") 
+	  luci.sys.call("cp /etc/commotion/profiles.d/defaultSec /etc/commotion/profiles.d/quickstartSec") 
    end
    for line in io.lines("/etc/commotion/profiles.d/quickstartSec") do
 	  b,c = string.find(line,"^ssid=.*")
@@ -231,7 +231,7 @@ function nodeNamingRenderer()
 				  end
 			   end)
    if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
-	  luci.sys.call('cp /etc/commotion/profiles.d/default /etc/commotion/profiles.d/quickstartMesh') 
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
    end
    for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
 	  b,c = string.find(line,"^ssid=.*")
