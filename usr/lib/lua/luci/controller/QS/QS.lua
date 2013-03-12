@@ -100,57 +100,33 @@ function wirelessController(profiles)
 				  table.insert(dev, s['.name'])
 			   end)
    --Create interfaces
-   if type(dev) == 'list' and #dev > 1 then
-	  for devNum,device in ipairs(dev) do
-		 --Make sure wireless devices are on... because it starts them disabled for some reason
-		 disabled = uci:get('wireless', 'wifi-device', device, 'disabled')
-		 if disabled then
-			uci:delete('wireless', 'wifi-device', device, 'disabled')
-		 end
-		 --set the mesh iface on its own radio if possible
-	  end
-	  devNum = 1
-	  for profNum, prof in ipairs(profiles) do
-		 if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
-			if prof[1] == 'mesh' then
-			   uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='adhoc'})
-			   uci:section('network', 'interface', profile[1], {proto="commotion", profile=prof[2]})
-			else
-			   uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='ap'})
-			   uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
-			end
-			if dev[devNum+1] then
-			   devNum = devNum +1
-			end
-		 end
-	  end
-	  uci:save('wireless')
-	  uci:commit('wireless')
-	  uci:save('network')
-	  uci:commit('network')
-   else
+   for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
-	  disabled = uci:get('wireless', 'wifi-device', dev, 'disabled')
+	  disabled = uci:get('wireless', 'wifi-device', device, 'disabled')
 	  if disabled then
-		 uci:delete('wireless', 'wifi-device', dev, 'disabled')
+		 uci:delete('wireless', 'wifi-device', device, 'disabled')
 	  end
-	  for profNum, prof in ipairs(profiles) do
-		 if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
-			if prof[1] == 'mesh' then
-			   uci:section('wireless', 'wifi-iface', nil, {device=dev, network=prof[1], ssid='commotion', mode='adhoc'})
-			   uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
-			else
-			   uci:section('wireless', 'wifi-iface', nil, {device=dev, network=profile[1], ssid='commotion', mode='ap'})
-			   uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
-			end
+	  --set the mesh iface on its own radio if possible
+   end
+   devNum = 1
+   for profNum, prof in ipairs(profiles) do
+	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
+		 if prof[1] == 'mesh' then
+			uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='adhoc'})
+			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
+		 else
+			uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='ap'})
+			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
+		 end
+		 if dev[devNum+1] then
+			devNum = devNum +1
 		 end
 	  end
-	  uci:save('wireless')
-	  uci:commit('wireless')
-	  uci:save('network')
-	  uci:commit('network')
-
    end
+   uci:save('wireless')
+   uci:commit('wireless')
+   uci:save('network')
+   uci:commit('network')
 end
 
 

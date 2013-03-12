@@ -13,6 +13,10 @@ function adminPasswordRenderer()
    return true
 end
 
+function finalCountdownRenderer()
+   return true
+end
+
 function adminPasswordParser(val)
    errors = {}
    local p1 = val.adminPassword_pwd1
