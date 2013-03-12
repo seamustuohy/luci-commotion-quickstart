@@ -8,6 +8,8 @@ the initial setup of a node trivial for a new user. The current version is missi
 
 Upon starting a new node a link to the quickstart will be created in the "password needed" text block. When a user clicks on this the QuickStart begins. 
 
+###Understanding the Quickstart
+
 The quickstart is controlled by the /etc/config/quickstart file. (see below for customization.) The quickstart file controls the QS.lua buttons.lua and modules.lua files in the QS controller folder in the luci directory. 
 
 The movement of data is as such.
