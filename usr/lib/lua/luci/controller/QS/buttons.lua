@@ -150,9 +150,10 @@ function checkKeyFile(modules)
 end
 
 function finish()
+   luci.http.redirect("/cgi-bin/luci/admin")
+   --luci.sys.call("sleep 1")
    local QS = luci.controller.QS.QS
    local uci = luci.model.uci.cursor()
-   --luci.http.redirect("/cgi-bin/luci/admin")
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
    QS.wirelessController(files)
    --this causes netifd to rexamine everything and tell changes to interfaces... which we need

@@ -106,19 +106,18 @@ function wirelessController(profiles)
 	  if disabled then
 		 uci:delete('wireless', 'wifi-device', device, 'disabled')
 	  end
-	  --set the mesh iface on its own radio if possible
    end
    devNum = 1
    for profNum, prof in ipairs(profiles) do
 	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
 		 if prof[1] == 'mesh' then
-			uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='adhoc'})
+			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid='commotion', mode='adhoc'})
 			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
 		 else
-			uci:section('wireless', 'wifi-iface', nil, {device=dev[devNum], network=prof[1], ssid='commotion', mode='ap'})
+			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid='commotion', mode='ap'})
 			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
 		 end
-		 if dev[devNum+1] then
+ 		 if dev[devNum+1] then
 			devNum = devNum +1
 		 end
 	  end

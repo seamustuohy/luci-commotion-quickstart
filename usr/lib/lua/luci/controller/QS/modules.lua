@@ -10,11 +10,11 @@ function welcomeRenderer()
 end
 
 function adminPasswordRenderer()
-   return true
+   return 'true'
 end
 
 function finalCountdownRenderer()
-   return true
+   return 'true'
 end
 
 function adminPasswordParser(val)
