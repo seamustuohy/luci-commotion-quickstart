@@ -24,6 +24,7 @@ function completeParser()
    QS.wirelessController(files)
    luci.controller.QS.QS.log("Quickstart restarting network")
    --set quickstart to done so that it no longer allows access to these tools without admin password
+   luci.sys.call("/etc/init.d/commotiond restart")
    luci.sys.call("sleep 3; /etc/init.d/network restart")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
