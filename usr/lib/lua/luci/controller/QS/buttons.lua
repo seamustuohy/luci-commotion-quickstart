@@ -150,7 +150,7 @@ function checkKeyFile(modules)
 end
 
 function finish(modules)
-   luci.template.render("QS/module/applyreboot", {redirect_location="http://192.168.1.1/cgi-bin/luci/admin"})
+   luci.template.render("QS/module/applyreboot", {redirect_location=("http://"..luci.http.getenv("SERVER_NAME").."/cgi-bin/luci/admin"})
    luci.http.close()
    return({'complete'}) 
 end
