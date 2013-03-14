@@ -1,7 +1,7 @@
 ## commotion-quick-start
 
 The quickstart is a "on first boot" interface that walks a user through customizing a node. This is intended to make
-the initial setup of a node trivial for a new user. The current version is missing the "one-button" setup. This should be added by the start of next week.
+the initial setup of a node trivial for a new user. 
 
 
 ###Using The Quickstart
