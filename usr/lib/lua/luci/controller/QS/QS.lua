@@ -219,6 +219,7 @@ function keyCheck()
 		 return "keyring does not exist"
 	  end
    else
+
 	  return "no keyring"
    end
 end
@@ -226,9 +227,15 @@ end
 function updateKey()
    local uci = luci.model.uci.cursor()
    servalKey = luci.sys.exec('SERVALINSTANCE_PATH=/etc/commotion/keys.d/mdp servald keyring list |grep -o "^[A-F0-9]*"')
-   uci:set("olsrd", SECTION, VALUE, servalKey)
+   uci:foreach("olsrd", "LoadPlugin",
+			   function(s)
+				  --this function only works if there is some sid already in the olsr_mdp config stanza
+				  if s.sid then
+					 uci:set("olsrd", s['.name'], "sid", servalKey)
+				  end
+			   end)
    uci:commit("olsrd")
-   uci:save("save")
+   uci:save("olsrd")
 end
 
 
