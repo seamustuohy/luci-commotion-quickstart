@@ -142,9 +142,8 @@ function checkKeyFile(modules)
    local val = luci.http.formvalue()
    if val.netSec_servald == 'true' then	  
 	  --TODO Get rid of this test code for downloading
-	  --luci.sys.call("servald keyring add")
-	  --downloader("/etc/serval/serval.keyring", 'meshSettings")
-	  downloader("/etc/commotion/profiles.d/quickstartMesh", "meshSettings")
+	  luci.sys.call("servald keyring add")
+	  downloader("/etc/serval/serval.keyring", "serval.keyring")
    end
    return {}
 end

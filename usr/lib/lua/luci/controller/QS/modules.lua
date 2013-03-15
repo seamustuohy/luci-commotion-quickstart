@@ -319,7 +319,8 @@ function networkSecurityRenderer()
 		 if b then
 			wpa = string.sub(line,b+7,c)
 		 end
-		 if d then --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
+		 if d then
+			--I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
 			servald = string.sub(line,d+8,e)
 			luci.controller.QS.QS.log('servald = '..servald)
 		 end
