@@ -100,7 +100,7 @@ function wirelessController(profiles)
 			   function(s)
 				  table.insert(dev, s['.name'])
 			   end)
-   log(dev)
+
    --Create interfaces
    for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
@@ -188,12 +188,12 @@ function runParser(modules)
    --Check for Parser function and run if it exists
    errors = {}
    local returns = luci.http.formvalue()
-   log(returns)
+   --log(returns)
    if modules then
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
 			if i == (value .. "Parser") then
-			   log(value)
+			   --log(value)
 			   errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
 			end
 		 end

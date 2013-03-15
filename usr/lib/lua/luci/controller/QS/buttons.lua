@@ -18,6 +18,11 @@ function back(modules)
    return({})
 end
 
+function startOver()
+   return({})
+end
+
+
 function netSec(modules)
    local QS = luci.controller.QS.QS
    local servald = false
@@ -50,6 +55,7 @@ function makeItWork(modules)
    luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
    QS.pages('next', 'naming')
 end
+
 
 function noApplications(modules)
    local wpa = false
