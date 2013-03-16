@@ -54,6 +54,7 @@ function makeItWork(modules)
    luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP')
    luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
    QS.pages('next', 'naming')
+   return(modules)
 end
 
 
