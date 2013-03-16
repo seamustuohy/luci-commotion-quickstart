@@ -25,7 +25,7 @@ function completeParser()
    luci.controller.QS.QS.log("Quickstart restarting network")
    --set quickstart to done so that it no longer allows access to these tools without admin password
    luci.sys.call("/etc/init.d/commotiond restart")
-   luci.sys.call("sleep 3; /etc/init.d/network restart")
+   luci.sys.call("sleep 2; /etc/init.d/network restart")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
@@ -36,7 +36,6 @@ function adminPasswordParser(val)
    local p1 = val.adminPassword_pwd1
    local p2 = val.adminPassword_pwd2 
    if p1 or p2 then
-	  luci.controller.QS.QS.log(p1 .. ":PzASSWORD")
 	  if p1 == p2 then
 		 if p1 == '' then
 			errors['pw'] = "Please enter a password"

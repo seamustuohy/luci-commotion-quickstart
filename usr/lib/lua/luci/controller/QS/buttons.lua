@@ -122,10 +122,8 @@ function gatewayShareOff(modules)
    local uci = luci.model.uci.cursor()
    uci:foreach("olsrd", "LoadPlugin",
 			   function(s)
-				  if s.library == "olsrd_dyn_gw.so.0.5" then
-					 dyn_gw = true
-				  end
-				  if dyn_gw == true then
+				  olsrd = string.match(s.library, "^olsrd_dyn_gw.*")
+				  if olsrd then
 					 uci:delete("olsrd", s['.name'])
 					 uci:save('olsrd')
 					 uci:commit('olsrd')

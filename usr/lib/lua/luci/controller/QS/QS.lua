@@ -229,11 +229,14 @@ function updateKey()
    servalKey = luci.sys.exec('SERVALINSTANCE_PATH=/etc/commotion/keys.d/mdp servald keyring list |grep -o "^[A-F0-9]*"')
    uci:foreach("olsrd", "LoadPlugin",
 			   function(s)
-				  --this function only works if there is some sid already in the olsr_mdp config stanza
-				  if s.sid then
+				  olsr_mdp = string.match(s.library, "^olsrd_mdp.*")
+				  if olsrMdp then
 					 uci:set("olsrd", s['.name'], "sid", servalKey)
+					 olsrExist = 1
 				  end
 			   end)
+   if olsrExist = 1 then
+	  uci section("olsrd", "LoadPlugin", nil, {library='olsrd_mdp.so.0.1', sid=servalKey, servalpath='/etc/commotion/keys.d/mdp'})
    uci:commit("olsrd")
    uci:save("olsrd")
 end
