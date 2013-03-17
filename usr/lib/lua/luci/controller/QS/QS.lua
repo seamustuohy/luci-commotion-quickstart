@@ -232,10 +232,10 @@ function updateKey()
 				  olsr_mdp = string.match(s.library, "^olsrd_mdp.*")
 				  if olsrMdp then
 					 uci:set("olsrd", s['.name'], "sid", servalKey)
-					 olsrExist = 1
+					 mdpExist = 1
 				  end
 			   end)
-   if olsrExist = 1 then
+   if mdpExist ~= 1 then
 	  uci section("olsrd", "LoadPlugin", nil, {library='olsrd_mdp.so.0.1', sid=servalKey, servalpath='/etc/commotion/keys.d/mdp'})
    uci:commit("olsrd")
    uci:save("olsrd")
