@@ -236,7 +236,8 @@ function updateKey()
 				  end
 			   end)
    if mdpExist ~= 1 then
-	  uci section("olsrd", "LoadPlugin", nil, {library='olsrd_mdp.so.0.1', sid=servalKey, servalpath='/etc/commotion/keys.d/mdp'})
+	  uci:section("olsrd", "LoadPlugin", nil, {library='olsrd_mdp.so.0.1', sid=servalKey, servalpath='/etc/commotion/keys.d/mdp'})
+   end
    uci:commit("olsrd")
    uci:save("olsrd")
 end
