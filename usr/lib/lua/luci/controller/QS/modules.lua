@@ -259,7 +259,10 @@ function nodeNamingPointParser()
 		 local file = "/etc/commotion/profiles.d/quickstartMesh"
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
-		 replaceLine(file, find, replacement)
+		 checkReplace = replaceLine(file, find, replacement)
+		 if checkReplace ~= 0 then
+			errors['node_name'] = "The node failed to take the supplied name. Please try again."
+		 end
 	  end
    end
    if val.nodeNaming_netName == '' then
@@ -273,6 +276,8 @@ function nodeNamingPointParser()
 					 if host == true then
 						host = false
 						uci:set("system", s['.name'], "hostname", val.accessPoint_netName)
+						uci:commit("system")
+						uci:save("system")
 					 end
 				  end)
    end
@@ -402,12 +407,14 @@ end
 function replaceLine(fn, find, replacement)
    --Function for replacing values in non-uci config files
    --replaceLine(File Name, search string, replacement text)
+   errorCode = 1
    if luci.sys.call('grep -q '..find..' '..fn) == 1 then
-	  repl = [["]]..replacement..[["]]
-	  luci.sys.call([[awk '/]]..find..[[/{f=1}END{ if (!f) {print ]]..repl..[[}}1' ]]..fn..[[ > /tmp/config.test]])
+	  repl = [["]] .. replacement .. [["]]
+	  errorCode = luci.sys.call([[awk '/]]..find..[[/{f=1}END{ if (!f) {print ]]..repl..[[}}1' ]]..fn..[[ > /tmp/config.test]])
+	  luci.sys.call("mv /tmp/config.test " .. fn)
    else
-	  luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
-   end 
-   luci.sys.call("mv /tmp/config.test " .. fn)
+	  errorCode = luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
+   end
+   return errorCode
 end
 
