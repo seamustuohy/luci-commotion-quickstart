@@ -247,21 +247,26 @@ function nodeNamingRenderer()
    end
 end
 
-function nodeNamingPointParser()
+function nodeNamingParser()
+   local uci = luci.model.uci.cursor()
    errors = {}
    QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
+   --log("=======================val==============================")
+   --log(val)
    if val.nodeNaming_nodeName then
 	  if val.nodeNaming_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
 	  else
-		 local SSID = val.accessPoint_nodeName
+		 local SSID = val.nodeNaming_nodeName
 		 local file = "/etc/commotion/profiles.d/quickstartMesh"
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
 		 checkReplace = replaceLine(file, find, replacement)
+		 --log(tostring(checkReplace).."=return on replace line")
+		 --log(SSID)
 		 if checkReplace ~= 0 then
-			errors['node_name'] = "The node failed to take the supplied name. Please try again."
+			errors['node_name'] = "The node failed to take the supplied name due to a regular expression errory. Please try again."
 		 end
 	  end
    end
@@ -271,11 +276,7 @@ function nodeNamingPointParser()
 	  uci:foreach("system", "system",
 				  function(s)
 					 if s.hostname then
-						host = true
-					 end
-					 if host == true then
-						host = false
-						uci:set("system", s['.name'], "hostname", val.accessPoint_netName)
+						uci:set("system", s['.name'], "hostname", val.nodeNaming_netName)
 						uci:commit("system")
 						uci:save("system")
 					 end
@@ -285,7 +286,7 @@ function nodeNamingPointParser()
 	  return errors
    end
 end
-
+ 
 function yourNetworkRenderer()
    if luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
 	  for line in io.lines("/etc/commotion/profiles.d/quickstartAP") do
