@@ -69,9 +69,12 @@ end
 
 function pages(command, next, skip)
    --manipulates the rendered pages for a user
+   log("pages command: " .. command)
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
+   log(page)
+   log("last="..lastPg)
    if next == 'back' then
 	  uci:set('quickstart', 'options', 'pageNo', lastPg)
 	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
@@ -173,13 +176,14 @@ function parseSubmit(returns)
    if buttonFound == 0 then
 	  errors = runParser(modules)
    end
-   if  next(errors) == nil then
-	  --check if button does it own paging, or if it refers to a page
-	  testButton = uci:get('quickstart',  button)
-	  if testButton ~= nil or 'back' then
-		 pages('next', button)
-	  end
-   else
+   --check if button does it own paging, or if it refers to a page
+   testButton = uci:get('quickstart',  button)
+   if testButton ~= nil or 'back' then
+	  pages('next', button)
+   end
+   if  next(errors) ~= nil then
+	  log("errors HERE")
+	  pages('next','back')
 	  return(errors)
    end
 end
@@ -199,7 +203,7 @@ function runParser(modules)
 		 end
 	  end
    end
-   log(errors)
+   --log(errors)
    return(errors)
 end
       

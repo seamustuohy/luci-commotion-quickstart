@@ -39,7 +39,7 @@ function adminPasswordParser(val)
 	  if p1 == p2 then
 		 if p1 == '' then
 			errors['pw'] = "Please enter a password"
-		 else   
+		 else
 			luci.sys.user.setpasswd("root", p1)
 		 end
 	  else

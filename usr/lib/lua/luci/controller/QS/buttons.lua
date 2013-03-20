@@ -14,12 +14,14 @@ function gatewayShare(modules)
    return modules
 end
 
-function back(modules)
-   return({})
+function back()
+   return {}
 end
 
 function startOver()
-   return({})
+   local QS = luci.controller.QS.QS
+   QS.pages('next', "welcome")
+   return {}
 end
 
 
