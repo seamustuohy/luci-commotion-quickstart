@@ -284,6 +284,7 @@ function nodeNamingParser()
 						uci:save("system")
 					 end
 				  end)
+	  hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
    end
    if next(errors) ~= nil then
 	  return errors
