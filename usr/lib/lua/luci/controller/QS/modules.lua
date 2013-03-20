@@ -273,7 +273,7 @@ function nodeNamingParser()
    if val.nodeNaming_netName == '' then
 	  errors['net_name'] = "Please enter a network name"
    else
-	  nodeID = luci.sys.exec(commotion nodeid)
+	  nodeID = luci.sys.exec("commotion nodeid")
 	  hostNamen = val.nodeNaming_netName .. nodeID
 	  uci:foreach("system", "system",
 				  function(s)
