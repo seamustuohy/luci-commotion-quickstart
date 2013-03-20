@@ -1,5 +1,5 @@
 module("luci.controller.QS.modules", package.seeall)
-   --to have a html page render you must return a value or it wont.
+  --to have a html page render you must return a value or it wont.
 
 function index()
    --This function is required for LuCI
@@ -229,9 +229,11 @@ function nodeNamingRenderer()
    uci:foreach("system", "system",
 			   function(s)
 				  if s.hostname then
-					 hostname = s.hostname
+					 hostNamen = s.hostname
 				  end
 			   end)
+   nodeID = luci.sys.exec("commotion nodeid")
+   hostname = hostNamen .. nodeID
    if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
 	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
    end
@@ -242,7 +244,7 @@ function nodeNamingRenderer()
 	  end
    end
    if netName and hostname then
-	  return {['name'] = netName, ['net'] = hostname}
+	  return {['name'] = hostname, ['net'] = netName}
    else
 	  return{['name'] = "Something Awesome Here", ['net'] = "Something even better here"}
    end
@@ -255,11 +257,11 @@ function nodeNamingParser()
    local val = luci.http.formvalue()
    --log("=======================val==============================")
    --log(val)
-   if val.nodeNaming_nodeName then
-	  if val.nodeNaming_nodeName == '' then
-		 errors['node_name'] = "Please enter a node name"
+   if val.nodeNaming_netName then
+	  if val.nodeNaming_netName == '' then
+		 errors['net_name'] = "Please enter a network name"
 	  else
-		 local SSID = val.nodeNaming_nodeName
+		 local SSID = val.nodeNaming_netName
 		 local file = "/etc/commotion/profiles.d/quickstartMesh"
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
@@ -267,15 +269,14 @@ function nodeNamingParser()
 		 --log(tostring(checkReplace).."=return on replace line")
 		 --log(SSID)
 		 if checkReplace ~= 0 then
-			errors['node_name'] = "The node failed to take the supplied name due to a regular expression errory. Please try again."
+			errors['net_name'] = "The node failed to take the supplied name due to a regular expression error. Please try again."
 		 end
 	  end
    end
-   if val.nodeNaming_netName == '' then
-	  errors['net_name'] = "Please enter a network name"
+   if val.nodeNaming_nodeName == '' then
+	  errors['node_name'] = "Please enter a node name"
    else
-	  nodeID = luci.sys.exec("commotion nodeid")
-	  hostNamen = val.nodeNaming_netName .. nodeID
+	  hostNamen = val.nodeNaming_nodeName
 	  uci:foreach("system", "system",
 				  function(s)
 					 if s.hostname then
@@ -290,7 +291,7 @@ function nodeNamingParser()
 	  return errors
    end
 end
- 
+
 function yourNetworkRenderer()
    if luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
 	  for line in io.lines("/etc/commotion/profiles.d/quickstartAP") do
