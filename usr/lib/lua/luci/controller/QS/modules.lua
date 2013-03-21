@@ -76,7 +76,7 @@ function accessPointParser()
    if val.accessPoint_nodeName then
 	  if val.accessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
-	  elseif val.accessPoint_nodeName.len > 32 then
+	  elseif string.len(val.accessPoint_nodeName) > 32 then
 		 errors['node_name'] = "Please enter a node name under 32 chars"
 	  else
 		 local SSID = val.accessPoint_nodeName
@@ -116,7 +116,7 @@ function secAccessPointParser()
    if val.secAccessPoint_nodeName then
 	  if val.secAccessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
-	  elseif val.secAccessPoint_nodeName.len > 32 then
+	  elseif string.len(val.secAccessPoint_nodeName) > 32 then
 		 errors['node_name'] = "Please enter a node name under 32 chars"
 	  else
 		 local SSID = val.secAccessPoint_nodeName
@@ -132,7 +132,7 @@ function secAccessPointParser()
 	  if p1 == p2 then
 		 if p1 == '' then
 			errors['pw'] = "Please enter a password"
-		 elseif p1.len < 8 then
+		 elseif string.len(p1) < 8 then
 			errors['pw'] = "Please enter a password that is more than 8 chars long"
 		 else   
 		 local file = "/etc/commotion/profiles.d/quickstartSec"
@@ -377,7 +377,7 @@ function networkSecurityParser()
 	  if p1 == p2 then
 		 if p1 == '' then
 			errors['pw'] = "Please enter a password"
-		 elseif p1.len < 8 then
+		 elseif string.len(p1) < 8 then
 			errors['pw'] = "Please enter a password that is more than 8 chars long"
 		 else   
 		 local file = "/etc/commotion/profiles.d/quickstartSec"
