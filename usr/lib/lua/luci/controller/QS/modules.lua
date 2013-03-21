@@ -76,6 +76,8 @@ function accessPointParser()
    if val.accessPoint_nodeName then
 	  if val.accessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
+	  elseif val.accessPoint_nodeName.len > 32 then
+		 errors['node_name'] = "Please enter a node name under 32 chars"
 	  else
 		 local SSID = val.accessPoint_nodeName
 		 local file = "/etc/commotion/profiles.d/quickstartAP"
@@ -114,6 +116,8 @@ function secAccessPointParser()
    if val.secAccessPoint_nodeName then
 	  if val.secAccessPoint_nodeName == '' then
 		 errors['node_name'] = "Please enter a node name"
+	  elseif val.secAccessPoint_nodeName.len > 32 then
+		 errors['node_name'] = "Please enter a node name under 32 chars"
 	  else
 		 local SSID = val.secAccessPoint_nodeName
 		 local file = "/etc/commotion/profiles.d/quickstartSec"
@@ -128,6 +132,8 @@ function secAccessPointParser()
 	  if p1 == p2 then
 		 if p1 == '' then
 			errors['pw'] = "Please enter a password"
+		 elseif p1.len < 8 then
+			errors['pw'] = "Please enter a password that is more than 8 chars long"
 		 else   
 		 local file = "/etc/commotion/profiles.d/quickstartSec"
 		 local find =  '^wpakey=.*'
@@ -307,13 +313,28 @@ function yourNetworkRenderer()
 			apName = string.sub(line,b+5,c)
 		 end
 	  end
-	  --TODO PUT AN ELSE STATEMTN FOR NOT FOUND HERE though there shoudl totally be a found... mabey an error
    end
-   local nodeStuff = nodeNamingRenderer()
-   local meshName = nodeStuff['name']
-   local nodeName = nodeStuff['net'] 
-   return {['meshName'] = meshName, ['nodeName'] = nodeName, ['apName'] = apName}
+   local uci = luci.model.uci.cursor()
+   --get hostname from system file
+   uci:foreach("system", "system",
+			   function(s)
+				  if s.hostname then
+					 hostname = s.hostname
+				  end
+			   end)
+   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
+   end
+   for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
+	  b,c = string.find(line,"^ssid=.*")
+	  if b then
+		 netName = string.sub(line,b+5,c)
+	  end
+   end
 
+   local meshName = netName
+   local nodeName = hostname 
+   return {['meshName'] = meshName, ['nodeName'] = nodeName, ['apName'] = apName}
 end
 
 function namingRenderer()
@@ -346,20 +367,28 @@ function networkSecurityRenderer()
 end
 
 function networkSecurityParser()
+   --TODO THIS IS ALL BROKEN
    errors = {}
    QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
-   if val.nodeNaming_nodeName then
-	  if val.nodeNaming_nodeName == '' then
-		 errors['node_name'] = "Please enter a node name"
-	  else
-		 local SSID = val.accessPoint_nodeName
-		 local file = "/etc/commotion/profiles.d/quickstartMesh"
-		 local find =  "^ssid=.*"
-		 local replacement = 'ssid='..SSID
+   local p1 = val.secAccessPoint_pwd1
+   local p2 = val.secAccessPoint_pwd2 
+   if p1 or p2 then
+	  if p1 == p2 then
+		 if p1 == '' then
+			errors['pw'] = "Please enter a password"
+		 elseif p1.len < 8 then
+			errors['pw'] = "Please enter a password that is more than 8 chars long"
+		 else   
+		 local file = "/etc/commotion/profiles.d/quickstartSec"
+		 local find =  '^wpakey=.*'
+		 local replacement = "wpakey="..p1
 		 replaceLine(file, find, replacement)
+		 end
+	  else
+		 errors['pw'] = "Given password confirmation did not match, password not changed!"
 	  end
-   end   
+   end
    if next(errors) ~= nil then
 	  return errors
    end
