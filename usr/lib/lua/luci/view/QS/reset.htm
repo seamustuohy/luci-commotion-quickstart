@@ -3,18 +3,24 @@
 <style>
 
   div.resetQS input {
-      background:url(/luci-static/commotion/commotion_tiny.png) no-repeat;
+      background:url(/luci-static/commotion/QS_reset_button.png) no-repeat;
       cursor:pointer;
       width:  56px;
       height: 56px;
       border: none;
+      outline: 0;
+      
+      }
+  #QSResetButton:hover {
+     background:url(/luci-static/commotion/QS_reset_button_hover.png) no-repeat;
   }
 
 </style>
-
-<div class="resetQS"><INPUT type="submit" name="reset" value="reset"></div>
+<center>
+<form method="post" action="<%=REQUEST_URI%>" enctype="multipart/form-data">  
+<div class="resetQS"><INPUT id="QSResetButton" type="submit" name="reset" value=" "></div>
 <strong>Restart QuickStart</strong>
-
+</form>
 <p>If you would like to start the QuickStart configuration process over please click the above. WARNING: The quickstart process allows modification of this device by non-administrative users when it is active. Please make sure that you only restart the quickstart when you have time to finish the entire process.</p>
-
+</center>
 <%+footer%> 

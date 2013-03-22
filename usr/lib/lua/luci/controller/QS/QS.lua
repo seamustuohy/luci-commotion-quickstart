@@ -9,24 +9,24 @@ function index()
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
    end
-   entry({"admin", "commotion", "quickstart"}, template("QS/reset"), "Restart Quickstart", 50)
+   entry({"admin", "commotion", "quickstart"}, call("resetQS"), "Restart Quickstart", 50)
    
 end
 
 function resetQS()
    local uci = luci.model.uci.cursor()
-   checkReturns = luci.heep.formvalue("reset")
+   checkReturns = luci.http.formvalue("reset")
    quickstart = false
-   if checkReturns = "reset" then
+   if checkReturns then
 	  uci:set('quickstart', 'options', 'complete', 'false')
-	  uci:set('quickstart', 'options', 'complete', 'pageNo')
-	  uci:set('quickstart', 'options', 'complete', 'lastPg')
+	  uci:set('quickstart', 'options', 'pageNo', 'welcome')
+	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
 	  uci:save('quickstart')
 	  uci:commit('quickstart')
 	  quickstart = true
    end
-   if quickstart = true then
-	  luci.http.redirect("http://"..luci.http.getenv("SERVER_NAME").."/QuickStart")
+   if quickstart == true then
+	  luci.http.redirect("http://"..luci.http.getenv("SERVER_NAME").."/cgi-bin/luci/QuickStart")
    else
 	  luci.template.render("QS/reset")
    end
