@@ -9,7 +9,27 @@ function index()
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
    end
+   entry({"admin", "commotion", "quickstart"}, template("QS/reset"), "Restart Quickstart", 50)
    
+end
+
+function resetQS()
+   local uci = luci.model.uci.cursor()
+   checkReturns = luci.heep.formvalue("reset")
+   quickstart = false
+   if checkReturns = "reset" then
+	  uci:set('quickstart', 'options', 'complete', 'false')
+	  uci:set('quickstart', 'options', 'complete', 'pageNo')
+	  uci:set('quickstart', 'options', 'complete', 'lastPg')
+	  uci:save('quickstart')
+	  uci:commit('quickstart')
+	  quickstart = true
+   end
+   if quickstart = true then
+	  luci.http.redirect("http://"..luci.http.getenv("SERVER_NAME").."/QuickStart")
+   else
+	  luci.template.render("QS/reset")
+   end
 end
 
 function main()
@@ -271,61 +291,6 @@ function setFileHandler()
 			end
 		 end
 	  end)
-end
-
-function commotionDaemon(request, value)
---TODO have this function make Ubus calls to the commotion daemon instead of pass back dummy variables
---This if statement FAKES grabbing nearby mesh networks from the commotion daemon
-   errors = {}
-   --TODO UBUS uncomment
-   --load ubus module
-   if request == 'nearbyNetworks' then
-	  local networks = {
-		 { name="Commotion", config="true"},
-		 { name="RedHooks", config="true"},
-		 { name="Ninux", config="false"},
-		 { name="Byzantium", config="true"},
-		 { name="Funkfeuer", config="false"},
-		 { name="FreiFunk", config="false"}
-	  }
-	  return networks
-   elseif request == "numNetworks" then
-	  local networks = {
-		 { name="Commotion", config="true"},
-		 { name="RedHooks", config="true"},
-		 { name="Ninux", config="false"},
-		 { name="Byzantium", config="true"},
-		 { name="Funkfeuer", config="false"},
-		 { name="FreiFunk", config="false"},
-		 { name="Big Bobs Mesh Network", config="false"},
-		 { name="Viva la' Revolution", config="true"},
-	  }
-	  count = 0
-	  for _ in pairs(networks) do
-		 count = count +1
-	  end
-	  return count
-   elseif request == 'configs' then
-	  local networks = {
-		 { name="Secure Commotion Backhul", config="In a hierarchical telecommunications network the backhaul portion of the network comprises the intermediate links between the core network, or backbone network and the small subnetworks at the edge of the entire hierarchical network.", file="secBH"},
-		 { name="Open Commotion Backhaul", config="In a hierarchical telecommunications network the backhaul portion of the network comprises the intermediate links between the core network, or backbone network and the small subnetworks at the edge of the entire hierarchical network.", file="openBH"},
-		 { name="Secure Commotion Access Point", config="In computer networking, a wireless access point (AP) is a device that allows wireless devices to connect to a wired network using Wi-Fi, or related standards. The AP usually connects to a router (via a wired network) if it's a standalone device, or is part of a router itself.", file="secAP"},
-		 { name="Open Commotion Access Point", config="In computer networking, a wireless access point (AP) is a device that allows wireless devices to connect to a wired network using Wi-Fi, or related standards. The AP usually connects to a router (via a wired network) if it's a standalone device, or is part of a router itself.", file="openAP"},
-		 { name="Secure Commotion Gateway", config="A wireless gateway is a computer networking device that routes packets from a wireless LAN to another network, typically a wired WAN. Wireless gateways combine the functions of a wireless access point, a router, and often provide firewall functions as well. This converged device saves desk space and simplifies wiring by replacing two electronic devices with one.", file="secGW"},
-		 { name="Open Commotion Access Gateway", config="A wireless gateway is a computer networking device that routes packets from a wireless LAN to another network, typically a wired WAN. Wireless gateways combine the functions of a wireless access point, a router, and often provide firewall functions as well. This converged device saves desk space and simplifies wiring by replacing two electronic devices with one.", file="openGW"},
-	  }
-	  return networks
-   elseif request == 'apply' then
-	  if not value then
-		 value = uci:get('quickstart', 'options', 'meshName')
-	  end
-	  --TODO ubus calls to commotion daemon telling it what seen network to apply
-   --TODO figure out what josh needs me to do to try to apply to an existing network, also we need to get info for configReqs page on what the network requires so we can get that from the user.
-   elseif request == 'I NEED A CONFIG JOSH' then
-	  return nil
-   elseif request == 'engage' then
-	  --TODO incorporate the final ubus add/select sections ehre
-   end
 end
 
 
