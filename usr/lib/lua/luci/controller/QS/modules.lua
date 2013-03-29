@@ -345,18 +345,19 @@ function networkSecurityRenderer()
    local servald = true
    local wpa = true
    local upload = true
-   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
-	  for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
-		 b,c = string.find(line,"^wpakey=.*")
-		 d,e = string.find(line,"^servald=.*")
-		 if b then
-			wpa = string.sub(line,b+7,c)
-		 end
-		 if d then
-			--I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
-			servald = string.sub(line,d+8,e)
-			luci.controller.QS.QS.log('servald = '..servald)
-		 end
+   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
+   end
+   for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
+	  b,c = string.find(line,"^wpakey=.*")
+	  d,e = string.find(line,"^servald=.*")
+	  if b then
+		 wpa = string.sub(line,b+7,c)
+	  end
+	  if d then
+		 --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
+		 servald = string.sub(line,d+8,e)
+		 luci.controller.QS.QS.log('servald = '..servald)
 	  end
    end
    if servald=='true' then
@@ -371,8 +372,8 @@ function networkSecurityParser()
    errors = {}
    QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
-   local p1 = val.secAccessPoint_pwd1
-   local p2 = val.secAccessPoint_pwd2 
+   local p1 = val.netSec_pwd1
+   local p2 = val.netSec_pwd2
    if p1 or p2 then
 	  if p1 == p2 then
 		 if p1 == '' then
@@ -380,10 +381,10 @@ function networkSecurityParser()
 		 elseif string.len(p1) < 8 then
 			errors['pw'] = "Please enter a password that is more than 8 chars long"
 		 else   
-		 local file = "/etc/commotion/profiles.d/quickstartSec"
+		 local file = "/etc/commotion/profiles.d/quickstartMesh"
 		 local find =  '^wpakey=.*'
 		 local replacement = "wpakey="..p1
-		 replaceLine(file, find, replacement)
+		 repErr = replaceLine(file, find, replacement)
 		 end
 	  else
 		 errors['pw'] = "Given password confirmation did not match, password not changed!"
@@ -443,10 +444,9 @@ function replaceLine(fn, find, replacement)
    --Function for replacing values in non-uci config files
    --replaceLine(File Name, search string, replacement text)
    errorCode = 1
-   if luci.sys.call('grep -q '..find..' '..fn) == 1 then
-	  repl = [["]] .. replacement .. [["]]
-	  errorCode = luci.sys.call([[awk '/]]..find..[[/{f=1}END{ if (!f) {print ]]..repl..[[}}1' ]]..fn..[[ > /tmp/config.test]])
-	  luci.sys.call("mv /tmp/config.test " .. fn)
+   grepable = luci.sys.call('grep -q '..find..' '..fn) 
+   if grepable == 1 then
+	  errorCode = luci.sys.call("echo " .. replacement .. " >> ".. fn)
    else
 	  errorCode = luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
    end
