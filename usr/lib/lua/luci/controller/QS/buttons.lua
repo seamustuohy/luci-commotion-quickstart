@@ -96,7 +96,6 @@ function continueInsecure(modules)
    local replacement = "wpakey=false"
    repErr = mod.replaceLine(file, find, replacement)
 
-   local file = "/etc/commotion/profiles.d/quickstartMesh"
    local find =  '^servald=.*'
    local replacement = "servald=false"
    repErr = mod.replaceLine(file, find, replacement)   
