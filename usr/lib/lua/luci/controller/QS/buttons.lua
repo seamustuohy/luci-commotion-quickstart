@@ -90,11 +90,22 @@ end
 
 
 function continueInsecure(modules)
-   luci.sys.call('sed -i s/^wpakey=.*//g /etc/commotion/profiles.d/quickstartMesh')
-   luci.sys.call('sed -i s/^servald=.*//g /etc/commotion/profiles.d/quickstartMesh')
+   mod = luci.controller.QS.modules
+   local file = "/etc/commotion/profiles.d/quickstartMesh"
+   local find =  '^wpakey=.*'
+   local replacement = "wpakey=false"
+   repErr = mod.replaceLine(file, find, replacement)
+
+   local find =  '^servald=.*'
+   local replacement = "servald=false"
+   repErr = mod.replaceLine(file, find, replacement)   
+
    luci.controller.QS.QS.pages('next', 'naming')
    return ({})
 end
+
+
+
 
 function noConfigUploaded(modules)
    luci.controller.QS.QS.log(modules)
