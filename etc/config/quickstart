@@ -79,7 +79,7 @@ config page 'meshApplications'
 	   option subheading 'Would you like to advertise mesh applications to people connected to your node?<br />You will be alerted when new applications are available and need approval.'
 	   list modules 'applications'
 	   list buttons '2:netSec,|Yes &gt;,|I would like to create an application portal,| ,|'
-	   list buttons "3:noApplications,|No &gt;,|I don't want to let me node advertise applications,| ,|"
+	   list buttons "3:noApplications,|No &gt;,|I don't want to let my node advertise applications,| ,|"
 	   list buttons '4:startOver,|&lt;&lt; Start Over,| ,|plus'
 	   
 config page 'keyfilesAndSecurity'
