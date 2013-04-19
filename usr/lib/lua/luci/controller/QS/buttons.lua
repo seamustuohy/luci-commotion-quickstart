@@ -104,9 +104,6 @@ function continueInsecure(modules)
    return ({})
 end
 
-
-
-
 function noConfigUploaded(modules)
    luci.controller.QS.QS.log(modules)
    for i,x in ipairs(modules) do
