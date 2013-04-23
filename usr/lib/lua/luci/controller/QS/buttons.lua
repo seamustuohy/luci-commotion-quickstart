@@ -55,7 +55,7 @@ function makeItWork(modules)
    local QS = luci.controller.QS.QS
    luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP')
    luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
-   QS.pages('next', 'naming')
+   QS.pages('next', 'makeItNaming')
    return(modules)
 end
 
@@ -103,9 +103,6 @@ function continueInsecure(modules)
    luci.controller.QS.QS.pages('next', 'naming')
    return ({})
 end
-
-
-
 
 function noConfigUploaded(modules)
    luci.controller.QS.QS.log(modules)
@@ -167,7 +164,11 @@ function checkKeyFile(modules)
 end
 
 function finish(modules)
-   luci.template.render("QS/module/applyreboot", {redirect_location=("http://"..luci.http.getenv("SERVER_NAME").."/cgi-bin/luci/admin")})
+   environment = luci.http.getenv("SERVER_NAME")
+   if not environment then
+	  environment = "thisnode"
+   end
+   luci.template.render("QS/module/applyreboot", {redirect_location=("http://" .. environment .. "/cgi-bin/luci/admin")})
    luci.http.close()
    return({'complete'}) 
 end
