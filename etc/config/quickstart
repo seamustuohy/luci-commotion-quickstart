@@ -100,7 +100,15 @@ config page 'naming'
 	   list modules 'nodeNaming'
 	   list buttons '3:yourNetwork,|Continue &gt;,|Set this name for your node and continue,| ,|'
 	   list buttons '4:startOver,|&lt;&lt; Start Over,| ,|plus'	   
-	   
+
+config page 'makeItNaming'		   
+	   option pageTitle 'Please Choose your Mesh Names'
+	   option topheader 'Please Choose your Mesh Names'
+	   list modules 'nodeNaming'
+	   list modules 'accessPoint'
+	   list buttons '3:yourNetwork,|Continue &gt;,|Set this name for your node and continue,| ,|'
+	   list buttons '4:startOver,|&lt;&lt; Start Over,| ,|plus'	   
+
 config page 'yourNetwork'
 	   option pageTitle 'Your Network'
 	   option topheader 'Your Network'

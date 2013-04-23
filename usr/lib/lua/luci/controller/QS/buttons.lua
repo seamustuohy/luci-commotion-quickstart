@@ -55,7 +55,7 @@ function makeItWork(modules)
    local QS = luci.controller.QS.QS
    luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP')
    luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
-   QS.pages('next', 'naming')
+   QS.pages('next', 'makeItNaming')
    return(modules)
 end
 
