@@ -164,7 +164,11 @@ function checkKeyFile(modules)
 end
 
 function finish(modules)
-   luci.template.render("QS/module/applyreboot", {redirect_location=("http://"..luci.http.getenv("SERVER_NAME").."/cgi-bin/luci/admin")})
+   environment = luci.http.getenv("SERVER_NAME")
+   if not environment then
+	  environment = "thisnode"
+   end
+   luci.template.render("QS/module/applyreboot", {redirect_location=("http://" .. environment .. "/cgi-bin/luci/admin")})
    luci.http.close()
    return({'complete'}) 
 end

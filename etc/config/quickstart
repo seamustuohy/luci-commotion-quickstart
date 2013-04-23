@@ -7,7 +7,6 @@ config quickstart options
 config page 'welcome'
 	   option pageTitle 'Welcome'
 	   option topheader 'Welcome to the Commotion Quick Start wizard'	   
-	   option subheading 'Please set an Administrator password'
 	   list modules 'welcome'
 	   list modules 'adminPassword'	   
 	   list buttons 'noBack'
