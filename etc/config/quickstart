@@ -2,7 +2,6 @@
 #create "name" module that creates a AP and a hostname from one name value (hostname adds a number)
 # make sure "complete" module is always processed after all other modules
 
-
 config quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
