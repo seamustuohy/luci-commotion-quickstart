@@ -14,6 +14,16 @@ function gatewayShare(modules)
    return modules
 end
 
+function keepGoing(modules)
+   for i,x in ipairs(modules) do
+	  if x == 'complete' then
+		 rem = i
+	  end
+   end
+   table.remove(modules, rem)
+
+end
+
 function back()
    return {}
 end

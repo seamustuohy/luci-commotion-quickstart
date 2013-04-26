@@ -1,3 +1,6 @@
+#TODO
+#create "name" module that creates a AP and a hostname from one name value (hostname adds a number)
+
 config quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
@@ -10,9 +13,10 @@ config page 'welcome'
 	   list modules 'welcome'
 	   list modules 'name'
 	   list modules 'adminPassword'	   
+	   list modules 'complete'
 	   list buttons 'noBack'
-	   list buttons '2:settingsFile,|Use a pre-built network file &gt;,| ,| '
-	   list buttons '3:makeItWork,|Just Make it Work &gt;,| ,| '	
+	   list buttons '2:keepGoing,|Use a pre-built network file &gt;,| ,| '
+	   list buttons '3:finish,|Just Make it Work &gt;,| ,| '	
 	   
 config page 'settingsFile'
 	   option pageTitle 'Using a Settings File'
@@ -64,13 +68,15 @@ config page 'naming'
 	   option pageTitle 'Please Choose your Mesh Names'
 	   option topheader 'Please Choose your Mesh Names'
 	   list modules 'nodeNaming'
+	   list modules 'complete'
 	   list buttons '3:finish,|Finish &gt;,|Set this name for your node and finish,| ,|'
 	   list buttons '4:startOver,|&lt;&lt; Start Over,| ,|plus'	   
 
-config page 'makeItNaming'		   
+config page 'makeItNaming'
 	   option pageTitle 'Please Choose your Mesh Names'
 	   option topheader 'Please Choose your Mesh Names'
 	   list modules 'nodeNaming'
 	   list modules 'accessPoint'
+	   list modules 'complete'
 	   list buttons '3:finish,|Finish &gt;,|Set this name for your node and finish,| ,|'
 	   list buttons '4:startOver,|&lt;&lt; Start Over,| ,|plus'	   
