@@ -1,8 +1,4 @@
-#TODO
-#create "name" module that creates a AP and a hostname from one name value (hostname adds a number)
-# make sure "complete" module is always processed after all other modules
-
-config quickstart options
+OBconfig quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
 	   option complete 'false'
@@ -10,13 +6,11 @@ config quickstart options
 
 config page 'welcome'
 	   option pageTitle 'Welcome'
-	   option topheader 'Welcome to the Commotion Quick Start wizard'	   
-	   list modules 'welcome'
+	   option topheader 'Welcome to the Commotion Quick Start Wizard'	   
 	   list modules 'name'
-	   list modules 'adminPassword'	   
-	   list modules 'complete'
+	   list modules 'adminPassword'
 	   list buttons 'noBack'
-	   list buttons '2:keepGoing,|Use a pre-built network file &gt;,| ,| '
+	   list buttons '2:settingsFile,|Use a pre-built network file &gt;,| ,| '
 	   list buttons '3:finish,|Just Make it Work &gt;,| ,| '	
 	   
 config page 'settingsFile'
@@ -25,6 +19,9 @@ config page 'settingsFile'
 	   option subheading 'Do you have a settings file? Your network administrator may have provided a settings file. If you have a settings file, please upload it below. Or, you can enter the settings manually.'
 	   option fileType 'config'
 	   list modules 'upload'
-	   list modules 'complete'
 	   list buttons '4:finish,|Upload and Finish,|,| ,|'
 	   list buttons '5:startOver,|&lt;&lt; Start Over,| ,|plus'
+
+#TODO
+#create "name" module that creates a AP and a hostname from one name value (hostname adds a number)
+# make sure "complete" module is always processed after all other modules

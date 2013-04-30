@@ -89,12 +89,12 @@ end
 
 function pages(command, next, skip)
    --manipulates the rendered pages for a user
-   log("pages command: " .. command)
+   --log("pages command: " .. command)
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   log(page)
-   log("last="..lastPg)
+   --log(page)
+   --log("last="..lastPg)
    if next == 'back' then
 	  uci:set('quickstart', 'options', 'pageNo', lastPg)
 	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
@@ -157,7 +157,9 @@ end
 
 function checkPage()
    local returns = luci.http.formvalue()
+   --log(returns)
    errors = parseSubmit(returns)
+   --log(errors)
    return errors
 end
 
@@ -203,6 +205,7 @@ function parseSubmit(returns)
    end
    if  next(errors) ~= nil then
 	  log("errors HERE")
+	  log(errors)
 	  pages('next','back')
 	  return(errors)
    end
@@ -226,7 +229,8 @@ function runParser(modules)
    --log(errors)
    return(errors)
 end
-      
+
+
 function keyCheck()
    local uci = luci.model.uci.cursor()
    --check if a key is required in a config file and compare the current key to it.

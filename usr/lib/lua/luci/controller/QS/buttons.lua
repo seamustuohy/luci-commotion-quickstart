@@ -174,12 +174,13 @@ function checkKeyFile(modules)
 end
 
 function finish(modules)
-   environment = luci.http.getenv("SERVER_NAME")
-   if not environment then
-	  environment = "thisnode"
+   --luci.controller.QS.QS.log(modules)
+   mod = {}
+   for i,x in pairs(modules) do
+	  table.insert(mod, x)
    end
-   luci.template.render("QS/module/applyreboot", {redirect_location=("http://" .. environment .. "/cgi-bin/luci/admin")})
-   luci.http.close()
-   return({'complete'}) 
+   table.insert(mod, 'complete')
+   --luci.controller.QS.QS.log(mod)
+   return mod
 end
 

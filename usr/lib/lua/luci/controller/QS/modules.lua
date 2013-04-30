@@ -17,22 +17,186 @@ function completeRenderer()
    return 'true'
 end
 
+function nameRenderer()
+   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
+   end
+   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSettings") then
+	  luci.sys.call("echo "" > /etc/commotion/profiles.d/quickstartSettings") 
+   end
+   return 'true'
+end
+
+function nameParser()
+   errors = nil
+   local val = luci.http.formvalue()
+   if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
+	  nodeID = luci.sys.exec("commotion nodeid")
+	  --luci.controller.QS.QS.log(val.nodeName)
+	  name = tostring(val.nodeName) .. nodeID
+	  file = io.open("/etc/commotion/profiles.d/quickstartSettings", a)
+	  file:write("hostname="..name.."\n")
+	  if val.secure then
+		 pass = checkPass(val.pwd1, val.pwd2)
+		 if pass == nil then
+			file:write("pwd="..pass.."\n")
+			file:write("SSIDSec="..name.."\n")
+		 else
+			return pass
+		 end
+	  else
+		 file:write("SSID="..name.."\n")		 
+	  end
+	  file:close()
+   else
+	  errors = "Please enter a name that is greater than 0 and less than 20 chars."
+   end
+   if val.
+   if errors ~= nil then
+	  return errors
+   end
+end
+
+function setValues(setting, value)
+   --[=[ This function activates the setting value setting functions for defined values.
+   --]=]
+   settings = {
+	  "ssid" = setAccessPoint,
+	  "host" = setHostName
+   }
+   settings[setting](value)
+end
+
+function setValues(setting, value)
+   --TODO how do we deal with functions that take multiple values??? pass a table?
+   local settings = {
+	  ssid=setAccessPoint,
+	  host=setHostName,
+   }
+   settings[setting](value)
+end
+
+function checkSettings(filename)
+   --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.
+	  --]=]
+   for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
+	  setting = line:split("=")
+	  setValue(setting[1], setting[2])
+   end
+end
+
+function string.split(str, pat)
+	local t = {} 
+	if pat == nil then pat=' ' end
+	local fpat = "(.-)" .. pat
+	local last_end = 1
+	local s, e, cap = str:find(fpat, 1)
+	while s do
+	   if s ~= 1 or cap ~= "" then
+	  table.insert(t,cap)
+	   end
+	   last_end = e+1
+	   s, e, cap = str:find(fpat, last_end)
+	end
+	if last_end <= #str then
+	   cap = str:sub(last_end)
+	   table.insert(t, cap)
+	end
+	return t
+end
+
+
+function setHostName(hostNamen)
+   local uci = luci.model.uci.cursor()
+   uci:foreach("system", "system",
+			   function(s)
+				  if s.hostname then
+					 uci:set("system", s['.name'], "hostname", hostNamen)
+					 uci:commit("system")
+					 uci:save("system")
+				  end
+			   end)
+   hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
+end
+
+function setAccessPoint(SSID)
+   QS = luci.controller.QS.QS
+   local file = "/etc/commotion/profiles.d/quickstartAP"
+   local find =  "^ssid=.*"
+   local replacement = 'ssid='..SSID
+   replaceLine(file, find, replacement)
+end
+
+function loadingPage()
+   environment = luci.http.getenv("SERVER_NAME")
+   if not environment then
+	  environment = "thisnode"
+   end
+   luci.template.render("QS/module/applyreboot", {redirect_location=("http://" .. environment .. "/cgi-bin/luci/admin")})
+   luci.http.close()
+end
+
 function completeParser()
+   --[=[ This function controls the final settings process--]=]
+   loadingPage()
+   --This may be where we split the finction into smaller components
    local QS = luci.controller.QS.QS
    local uci = luci.model.uci.cursor()
+   settings = checkSettings()
+   for i,x in settings do
+	  setValues(i,x)
+   end
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
    QS.wirelessController(files)
-   luci.controller.QS.QS.log("Quickstart restarting network")
+   --QS.log("Quickstart restarting network")
    --set quickstart to done so that it no longer allows access to these tools without admin password
    luci.sys.call("/etc/init.d/commotiond restart")
    luci.sys.call("sleep 2; /etc/init.d/network restart")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
-   luci.sys.call("sleep 20 && servald stop && servald start &")
+   luci.sys.call("sleep 5 && servald stop && servald start &")
 end
 
+
+
+
+function readProfile(name, obj)
+   --[=[ This function takes a profile name and the value desired and returns the result of that value.
+   --]=]
+   if type(name) == "string" then
+	  offset = string.len(tostring(obj))
+      for line in io.lines("/etc/commotion/profiles.d/"..name) do
+		 b,c = string.find(line,"^"..obj.."=.*")
+		 if b then
+			value = string.sub(line,b+offset,c)
+		 end
+	  end
+	  return value
+   else
+	  return nil
+   end
+end
+
+
+function replaceLine(fn, find, replacement)
+   --[=[ Function for replacing values in non-uci config files
+	     replaceLine(File Name, search string, replacement text)
+   --]=]
+   errorCode = 1
+   grepable = luci.sys.call('grep -q '..find..' '..fn) 
+   if grepable == 1 then
+	  errorCode = luci.sys.call("echo " .. replacement .. " >> ".. fn)
+   else
+	  errorCode = luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
+   end
+   return errorCode
+end
+
+
+
 function adminPasswordParser(val)
+   --[=[ --]=]
    errors = {}
    local p1 = val.adminPassword_pwd1
    local p2 = val.adminPassword_pwd2 
@@ -148,6 +312,23 @@ function secAccessPointParser()
 	  return errors
    end
 end
+
+function checkPass(p1, p2)
+   --[=[ This function takes two values and compares them. It returns error text for password pages. It needs some serious refactoring, but it works --]=]
+   QS = luci.controller.QS.QS
+   if p1 and p2 then
+	  if p1 == p2 then
+		 if p1 == '' then
+			return "Please enter a password"
+		 elseif string.len(p1) < 8 then
+			return "Please enter a password that is more than 8 chars long"
+		 end
+	  else
+		 return "Given password confirmation did not match, password not changed!"
+	  end
+   end
+end
+
 
 function splashPageRenderer()
    return 'true'
@@ -439,17 +620,3 @@ function uploadParser()
 	  return error
    end
 end
-
-function replaceLine(fn, find, replacement)
-   --Function for replacing values in non-uci config files
-   --replaceLine(File Name, search string, replacement text)
-   errorCode = 1
-   grepable = luci.sys.call('grep -q '..find..' '..fn) 
-   if grepable == 1 then
-	  errorCode = luci.sys.call("echo " .. replacement .. " >> ".. fn)
-   else
-	  errorCode = luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
-   end
-   return errorCode
-end
-

@@ -1,0 +1,39 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.name then
+          nameErr = pv.errorMsg.name
+       end
+   end
+   nodeID = luci.sys.exec("commotion nodeid")
+-%>
+
+<script type="text/javascript" language="javascript">
+   function toggleVisibility(cb)
+    {
+     var x = document.getElementById("secureAP");
+     if(cb.checked==false)
+      x.style.visibility = "hidden"; // or x.style.display = "none";
+     else
+      x.style.visibility = "visible"; //or x.style.display = "block";
+    }
+</script>
+
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="name" />
+	<label class="cbi-value-title tippable" data-tip="Choose a name that is 5-20 characters. You can use numbers, letters &amp; special characters. The name must be unique in the network. You can change the node name later by logging into the node administration page.">Node Name:</label>
+	<p>What would you like to name your node?</p>
+	<p>This value is used by other users and devices to find your network wirelessly and over the mesh..</p>
+	<h2 class="warning"><%=nameErr%></h2>
+	<input type="text" value="MyNode" name="nodeName"> + <%=nodeID%>
+	
+	<input type="checkbox" id="secureCheck" value="true" name="secure" onClick="toggleVisibility(this)">
+	<div id="secureAP">
+	<h2>Password</h2>
+	<p class="flavor">This password is for your access point. Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.</p>
+	<input type="password" name="pwd1">
+	<p class="flavor">Retype your password here</p>
+	<input type="password" name="pwd2">
+	</div>
+  </div>
+</div>
