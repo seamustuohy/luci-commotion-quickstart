@@ -5,6 +5,7 @@ function index()
    --This function is required for LuCI
    --we don't need to define any pages in this file
 end
+
 function welcomeRenderer()
    return 'true'
 end
@@ -18,72 +19,71 @@ function completeRenderer()
 end
 
 function nameRenderer()
-   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
-	  luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
-   end
-   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSettings") then
-	  luci.sys.call("echo "" > /etc/commotion/profiles.d/quickstartSettings") 
-   end
+   luci.sys.call("echo '' > /etc/commotion/profiles.d/quickstartSettings") 
    return 'true'
 end
 
 function nameParser()
+   local QS = luci.controller.QS.QS
+   QS.log("nameParser running")
    errors = nil
    local val = luci.http.formvalue()
+   --QS.log(val)
    if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
 	  nodeID = luci.sys.exec("commotion nodeid")
 	  --luci.controller.QS.QS.log(val.nodeName)
 	  name = tostring(val.nodeName) .. nodeID
-	  file = io.open("/etc/commotion/profiles.d/quickstartSettings", a)
+	  --QS.log(name)
+	  file = io.open("/etc/commotion/profiles.d/quickstartSettings", "a")
 	  file:write("hostname="..name.."\n")
-	  if val.secure then
+	  --QS.log("wrote hostname")
+	  if val.secure == 'true' then
+		 --QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
 		 pass = checkPass(val.pwd1, val.pwd2)
 		 if pass == nil then
-			file:write("pwd="..pass.."\n")
+			if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
+			   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartSec') 
+			end
+			file:write("pwd="..val.pwd1.."\n")
 			file:write("SSIDSec="..name.."\n")
 		 else
 			return pass
 		 end
 	  else
-		 file:write("SSID="..name.."\n")		 
+		 if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
+			luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
+		 end
+		 file:write("SSID="..name.."\n")
 	  end
 	  file:close()
    else
 	  errors = "Please enter a name that is greater than 0 and less than 20 chars."
    end
-   if val.
    if errors ~= nil then
 	  return errors
    end
 end
 
-function setValues(setting, value)
-   --[=[ This function activates the setting value setting functions for defined values.
-   --]=]
-   settings = {
-	  "ssid" = setAccessPoint,
-	  "host" = setHostName
-   }
-   settings[setting](value)
+function setAPPassword(pass)
+   local QS = luci.controller.QS.QS
+   QS.log("setAPPassword started")
+
+   local file = "/etc/commotion/profiles.d/quickstartSec"
+   local find =  '^wpakey=.*'
+   local replacement = "wpakey="..pass
+   replaceLine(file, find, replacement)
 end
 
-function setValues(setting, value)
-   --TODO how do we deal with functions that take multiple values??? pass a table?
-   local settings = {
-	  ssid=setAccessPoint,
-	  host=setHostName,
-   }
-   settings[setting](value)
+function setSecAccessPoint(SSID)
+   local QS = luci.controller.QS.QS
+   QS.log("setSecAccessPoint started")
+
+   local file = "/etc/commotion/profiles.d/quickstartSec"
+   local find =  "^ssid=.*"
+   local replacement = 'ssid='..SSID
+   replaceLine(file, find, replacement)
 end
 
-function checkSettings(filename)
-   --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.
-	  --]=]
-   for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
-	  setting = line:split("=")
-	  setValue(setting[1], setting[2])
-   end
-end
 
 function string.split(str, pat)
 	local t = {} 
@@ -96,8 +96,7 @@ function string.split(str, pat)
 	  table.insert(t,cap)
 	   end
 	   last_end = e+1
-	   s, e, cap = str:find(fpat, last_end)
-	end
+	   s, e, cap = str:find(fpat, last_end)	end
 	if last_end <= #str then
 	   cap = str:sub(last_end)
 	   table.insert(t, cap)
@@ -107,6 +106,8 @@ end
 
 
 function setHostName(hostNamen)
+   local QS = luci.controller.QS.QS
+   QS.log("setHostName started")
    local uci = luci.model.uci.cursor()
    uci:foreach("system", "system",
 			   function(s)
@@ -116,11 +117,13 @@ function setHostName(hostNamen)
 					 uci:save("system")
 				  end
 			   end)
+   QS.log("almost done")
    hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
 end
 
 function setAccessPoint(SSID)
-   QS = luci.controller.QS.QS
+   local QS = luci.controller.QS.QS
+   QS.log("setAccessPoint started")
    local file = "/etc/commotion/profiles.d/quickstartAP"
    local find =  "^ssid=.*"
    local replacement = 'ssid='..SSID
@@ -128,6 +131,9 @@ function setAccessPoint(SSID)
 end
 
 function loadingPage()
+   local QS = luci.controller.QS.QS
+   QS.log("loadingPage started")
+
    environment = luci.http.getenv("SERVER_NAME")
    if not environment then
 	  environment = "thisnode"
@@ -136,19 +142,46 @@ function loadingPage()
    luci.http.close()
 end
 
+function setValues(setting, value)
+   --[=[ This function activates the setting value setting functions for defined values.
+	  --]=]
+   --TODO how do we deal with functions that take multiple values? Lua allows passing of muiltiple values, may just need to make more ways to submit.
+   local QS = luci.controller.QS.QS
+   QS.log("setValue started")
+   settings = {
+	  SSID = setAccessPoint,
+	  hostname = setHostName,
+	  pwd = setAPPassword,
+	  SSIDSec = setSecAccessPoint,
+   }
+   settings[setting](value)
+   return
+end
+
+function checkSettings()
+   --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
+   local QS = luci.controller.QS.QS
+   QS.log("checkSetttings started")
+   for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
+	  setting = line:split("=")
+	  if setting[1] ~= "" and setting[1] ~= nil then
+		 setValues(setting[1], setting[2])
+	  end
+   end
+   return true
+end
+
 function completeParser()
    --[=[ This function controls the final settings process--]=]
+   local QS = luci.controller.QS.QS
+   QS.log("completeParser started")
+   local uci = luci.model.uci.cursor()
    loadingPage()
    --This may be where we split the finction into smaller components
-   local QS = luci.controller.QS.QS
-   local uci = luci.model.uci.cursor()
-   settings = checkSettings()
-   for i,x in settings do
-	  setValues(i,x)
-   end
+   checkSettings()
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
    QS.wirelessController(files)
-   --QS.log("Quickstart restarting network")
+   QS.log("Quickstart restarting network")
    --set quickstart to done so that it no longer allows access to these tools without admin password
    luci.sys.call("/etc/init.d/commotiond restart")
    luci.sys.call("sleep 2; /etc/init.d/network restart")
@@ -156,8 +189,8 @@ function completeParser()
    uci:save('quickstart')
    uci:commit('quickstart')
    luci.sys.call("sleep 5 && servald stop && servald start &")
+   QS.log("it is done")
 end
-
 
 
 
@@ -538,7 +571,7 @@ function networkSecurityRenderer()
 	  if d then
 		 --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
 		 servald = string.sub(line,d+8,e)
-		 luci.controller.QS.QS.log('servald = '..servald)
+		 --luci.controller.QS.QS.log('servald = '..servald)
 	  end
    end
    if servald=='true' then

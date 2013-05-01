@@ -123,7 +123,6 @@ function wirelessController(profiles)
 			   function(s)
 				  table.insert(dev, s['.name'])
 			   end)
-
    --Create interfaces
    for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
@@ -204,8 +203,8 @@ function parseSubmit(returns)
 	  pages('next', button)
    end
    if  next(errors) ~= nil then
-	  log("errors HERE")
-	  log(errors)
+	  --log("errors HERE")
+	  --log(errors)
 	  pages('next','back')
 	  return(errors)
    end

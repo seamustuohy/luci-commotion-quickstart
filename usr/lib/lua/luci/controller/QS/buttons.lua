@@ -6,7 +6,7 @@ end
 function networkSecuritySettings(modules)
    local QS = luci.controller.QS.QS
    local error = luci.controller.QS.QS.keyCheck()
-   QS:log(error)
+   --QS:log(error)
    return(modules)
 end
 
@@ -115,7 +115,7 @@ function continueInsecure(modules)
 end
 
 function noConfigUploaded(modules)
-   luci.controller.QS.QS.log(modules)
+   --luci.controller.QS.QS.log(modules)
    for i,x in ipairs(modules) do
 	  if x == 'upload' then
 		 rem = i
@@ -127,7 +127,7 @@ function noConfigUploaded(modules)
 end
 
 function noSplash(modules)
-   luci.controller.QS.QS.log(modules)
+   --luci.controller.QS.QS.log(modules)
    for i,x in ipairs(modules) do
 	  if x == 'splashPage' then
 		 rem = i

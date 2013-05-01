@@ -1,4 +1,4 @@
-OBconfig quickstart options
+config quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
 	   option complete 'false'
@@ -6,7 +6,7 @@ OBconfig quickstart options
 
 config page 'welcome'
 	   option pageTitle 'Welcome'
-	   option topheader 'Welcome to the Commotion Quick Start Wizard'	   
+	   option topheader 'Welcome to the Commotion Quick Start'	   
 	   list modules 'name'
 	   list modules 'adminPassword'
 	   list buttons 'noBack'

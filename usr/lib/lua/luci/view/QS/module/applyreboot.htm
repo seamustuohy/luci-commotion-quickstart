@@ -2,29 +2,21 @@
 	<head>
 		<title><%=luci.sys.hostname()%> - <% if title then %><%=title%><% else %><%:Redirecting...%><% end %></title>
 <%-
-   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
-	  for line in io.lines("/etc/commotion/profiles.d/quickstartAP") do
-		 b,c = string.find(line,"^ssid=.*")
+   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSettings") then
+	  for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
+		 b,c = string.find(line,"^SSID=.*")
+         d,e = string.find(line, "^SSIDSec=.*")
+         f,g = string.find(line, "^hostname=.*")
 		 if b then
 			apName = string.sub(line,b+5,c)
+         elseif d then
+            apName = string.sub(line,d+8,e)
 		 end
-	  end
-   elseif luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
-	  for line in io.lines("/etc/commotion/profiles.d/quickstartSec") do
-		 b,c = string.find(line,"^ssid=.*")
-		 if b then
-			apName = string.sub(line,b+5,c)
+         if f then
+			hostname = string.sub(line,f+9,g)
 		 end
 	  end
    end
-   local uci = luci.model.uci.cursor()
-   --get hostname from system file
-   uci:foreach("system", "system",
-			   function(s)
-				  if s.hostname then
-					 hostname = s.hostname
-				  end
-			   end)
    if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
 	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
    end
@@ -34,7 +26,6 @@
 		 netName = string.sub(line,b+5,c)
 	  end
    end
-
    local meshName = netName
    local nodeName = hostname 
 -%>
