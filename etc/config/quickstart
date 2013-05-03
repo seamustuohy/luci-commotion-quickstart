@@ -6,9 +6,9 @@ config quickstart options
 
 config page 'welcome'
 	   option pageTitle 'Welcome'
-	   option topheader 'Welcome to the Commotion Quick Start'	   
-	   list modules 'name'
+	   option topheader 'Welcome to the Commotion Quick Start'
 	   list modules 'adminPassword'
+	   list modules 'name'
 	   list buttons 'noBack'
 	   list buttons '2:settingsFile,|Use a pre-built network file &gt;,| ,| '
 	   list buttons '3:finish,|Just Make it Work &gt;,| ,| '	

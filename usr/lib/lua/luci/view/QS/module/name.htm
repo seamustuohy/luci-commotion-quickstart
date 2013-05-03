@@ -25,14 +25,14 @@
 	<input type="hidden" name="moduleName" value="name" />
 	<div class="cbi-value">
       <label class="cbi-value-title tippable" data-tip="Choose a name that is 5-20 characters. You can use letters and numbers ONLY. The name will be made unique in the network through the addition of the bolded number next to the input box. You can change the node name later by logging into the node administration page.">Node Name</label>
-	  <p>This value is used by other users and devices to find your network wirelessly and over the mesh..</p>
+	  <p>This value is used by other users and devices to find your network wirelessly and over the mesh.</p>
 	  <div style="white-space:nowrap"><input type="text" value="Your Node Name" name="nodeName"  style="display:inline-block;width:80%"><strong>+<%=nodeID%></strong> <div/>
 	  <input type="checkbox" id="secureCheck" value="true" name="secure" onClick="toggleVisibility(this)"> Require a password for others to connect to your node.
 	</div>
 	<div id="secureAP" style="display:none">
 	  <div class="cbi-value">
 		<label class="cbi-value-title tippable" data-tip="Choose a password that is between 9 and 30 characters. This name can be numbers, letters, and special characters.">Password</label>
-		<p class="flavor">This password is for your access point.</p>
+		<p class="flavor">This password is required for others to use your wifi.</p>
 		<input type="password" name="pwd1">
 		<p class="flavor">Retype your password here</p>
 		<input type="password" name="pwd2">

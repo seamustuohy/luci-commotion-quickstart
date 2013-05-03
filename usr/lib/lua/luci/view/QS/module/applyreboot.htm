@@ -38,13 +38,13 @@
 					window.clearInterval(interval);
 					window.clearInterval(interval2);
 					location.href = "<%=redirect_location%>";
-				}, 15000);
+				}, 30000);
 				img.onload = function() {
 					window.clearInterval(interval);
 					location.href = "<%=redirect_location%>";
 				};
 				img.src = 'http://<%=addr or luci.http.getenv("SERVER_NAME")%><%=resource%>/icons/loading.gif?' + Math.random();
-			}, 5000);
+			}, 30000);
 		//]]></script>
 	</head>
 	<body>
@@ -75,7 +75,7 @@
 						</div>	
 					</p>
 					<form action="<%=redirect_location%>" type="get">
-					  <input type="submit" value="Click here if your browser doesn't redirect you in 20 seconds" name="action" />
+					  <input type="submit" value="Click here if your browser doesn't redirect you within one minute" name="action" />
 					</form>
 				</fieldset>
 			</div>
