@@ -11,7 +11,7 @@ config page 'welcome'
 	   list modules 'name'
 	   list buttons 'noBack'
 	   list buttons '2:settingsFile,|Use a pre-built network file &gt;,| ,| '
-	   list buttons '3:finish,|Just Make it Work &gt;,| ,| '	
+	   list buttons '3:finish,|Finish &gt;,| ,| '	
 	   
 config page 'settingsFile'
 	   option pageTitle 'Using a Settings File'
