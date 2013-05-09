@@ -1,6 +1,6 @@
 module("luci.controller.QS.modules", package.seeall)
   --to have a html page render you must return a value or it wont.
-
+require "commotion_helpers"
 function index()
    --This function is required for LuCI
    --we don't need to define any pages in this file
@@ -30,32 +30,36 @@ function nameParser()
    local val = luci.http.formvalue()
    --QS.log(val)
    if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
-	  nodeID = luci.sys.exec("commotion nodeid")
-	  --luci.controller.QS.QS.log(val.nodeName)
-	  name = tostring(val.nodeName) .. nodeID
-	  --QS.log(name)
-	  file = io.open("/etc/commotion/profiles.d/quickstartSettings", "a")
-	  file:write("hostname="..name.."\n")
-	  --QS.log("wrote hostname")
-	  if val.secure == 'true' then
-		 --QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
-		 pass = checkPass(val.pwd1, val.pwd2)
-		 if pass == nil then
-			if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
-			   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartSec') 
+	  if is_ssid(val.nodeName) then
+		 nodeID = luci.sys.exec("commotion nodeid")
+		 --luci.controller.QS.QS.log(val.nodeName)
+		 name = tostring(val.nodeName) .. nodeID
+		 --QS.log(name)
+		 file = io.open("/etc/commotion/profiles.d/quickstartSettings", "a")
+		 file:write("hostname="..name.."\n")
+		 --QS.log("wrote hostname")
+		 if val.secure == 'true' then
+			--QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
+			pass = checkPass(val.pwd1, val.pwd2)
+			if pass == nil then
+			   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
+				  luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartSec') 
+			   end
+			   file:write("pwd="..val.pwd1.."\n")
+			   file:write("SSIDSec="..name.."\n")
+			else
+			   return pass
 			end
-			file:write("pwd="..val.pwd1.."\n")
-			file:write("SSIDSec="..name.."\n")
 		 else
-			return pass
+			if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
+			   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
+			end
+			file:write("SSID="..name.."\n")
 		 end
+		 file:close()
 	  else
-		 if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
-			luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
-		 end
-		 file:write("SSID="..name.."\n")
+		 errors = "Please enter a correctly formatted name."
 	  end
-	  file:close()
    else
 	  errors = "Please enter a name that is greater than 0 and less than 20 chars."
    end

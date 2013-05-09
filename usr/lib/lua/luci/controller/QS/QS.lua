@@ -215,12 +215,20 @@ function runParser(modules)
    errors = {}
    local returns = luci.http.formvalue()
    --log(returns)
+   log(modules)
    if modules then
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
 			if i == (value .. "Parser") then
 			   --log(value)
-			   errors[value]= luci.controller.QS.modules[value .. "Parser"](returns)
+			   errors[value] = luci.controller.QS.modules[value .. "Parser"](returns)
+			   if next(errors) then
+				  for i,x in ipairs(modules) do
+					 if x == 'complete' then
+						modules[i] = nil
+					 end
+				  end
+			   end
 			end
 		 end
 	  end
