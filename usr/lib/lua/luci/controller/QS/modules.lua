@@ -72,6 +72,10 @@ function setAPPassword(pass)
    local find =  '^wpakey=.*'
    local replacement = "wpakey="..pass
    replaceLine(file, find, replacement)
+   --local file = "/etc/commotion/profiles.d/quickstartSec"
+   --local find =  '^wpa=.*'
+   --local replacement = "wpa=true"
+   --replaceLine(file, find, replacement)
 end
 
 function setSecAccessPoint(SSID)
