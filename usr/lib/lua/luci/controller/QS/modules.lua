@@ -1,6 +1,8 @@
 module("luci.controller.QS.modules", package.seeall)
   --to have a html page render you must return a value or it wont.
+
 require "commotion_helpers"
+
 function index()
    --This function is required for LuCI
    --we don't need to define any pages in this file
@@ -30,7 +32,7 @@ function nameParser()
    local val = luci.http.formvalue()
    --QS.log(val)
    if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
-	  if is_ssid(val.nodeName) then
+	  if is_hostname(val.nodeName) then
 		 nodeID = luci.sys.exec("commotion nodeid")
 		 --luci.controller.QS.QS.log(val.nodeName)
 		 name = tostring(val.nodeName) .. nodeID
@@ -43,7 +45,7 @@ function nameParser()
 			pass = checkPass(val.pwd1, val.pwd2)
 			if pass == nil then
 			   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
-				  luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartSec') 
+				  luci.sys.call('cp /etc/commotion/profiles.d/defaultSec /etc/commotion/profiles.d/quickstartSec') 
 			   end
 			   file:write("pwd="..val.pwd1.."\n")
 			   file:write("SSIDSec="..name.."\n")
@@ -76,6 +78,7 @@ function setAPPassword(pass)
    local find =  '^wpakey=.*'
    local replacement = "wpakey="..pass
    replaceLine(file, find, replacement)
+   
    --local file = "/etc/commotion/profiles.d/quickstartSec"
    --local find =  '^wpa=.*'
    --local replacement = "wpa=true"
@@ -363,6 +366,9 @@ function checkPass(p1, p2)
 			return "Please enter a password"
 		 elseif string.len(p1) < 8 then
 			return "Please enter a password that is more than 8 chars long"
+		 elseif not tostring(p1):match("^[%p%w]+$") then
+			return "Your password has spaces in it. You can't have spaces."
+			
 		 end
 	  else
 		 return "Given password confirmation did not match, password not changed!"
@@ -615,6 +621,20 @@ function networkSecurityParser()
    if next(errors) ~= nil then
 	  return errors
    end
+end
+
+function replaceLine(fn, find, replacement)
+   --[=[ Function for replacing values in non-uci config files
+	     replaceLine(File Name, search string, replacement text)
+   --]=]
+   errorCode = 1
+   grepable = luci.sys.call('grep -q '..find..' '..fn) 
+   if grepable == 1 then
+	  errorCode = luci.sys.call("echo " .. replacement .. " >> ".. fn)
+   else
+	  errorCode = luci.sys.call('sed -i s/'..find..'/'..replacement..'/g '..fn)
+   end
+   return errorCode
 end
 
 
