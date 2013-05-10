@@ -6,12 +6,22 @@ end
 function networkSecuritySettings(modules)
    local QS = luci.controller.QS.QS
    local error = luci.controller.QS.QS.keyCheck()
-   QS:log(error)
+   --QS:log(error)
    return(modules)
 end
 
 function gatewayShare(modules)
    return modules
+end
+
+function keepGoing(modules)
+   for i,x in ipairs(modules) do
+	  if x == 'complete' then
+		 rem = i
+	  end
+   end
+   table.remove(modules, rem)
+
 end
 
 function back()
@@ -105,7 +115,7 @@ function continueInsecure(modules)
 end
 
 function noConfigUploaded(modules)
-   luci.controller.QS.QS.log(modules)
+   --luci.controller.QS.QS.log(modules)
    for i,x in ipairs(modules) do
 	  if x == 'upload' then
 		 rem = i
@@ -117,7 +127,7 @@ function noConfigUploaded(modules)
 end
 
 function noSplash(modules)
-   luci.controller.QS.QS.log(modules)
+   --luci.controller.QS.QS.log(modules)
    for i,x in ipairs(modules) do
 	  if x == 'splashPage' then
 		 rem = i
@@ -164,12 +174,13 @@ function checkKeyFile(modules)
 end
 
 function finish(modules)
-   environment = luci.http.getenv("SERVER_NAME")
-   if not environment then
-	  environment = "thisnode"
+   --luci.controller.QS.QS.log(modules)
+   mod = {}
+   for i,x in pairs(modules) do
+	  table.insert(mod, x)
    end
-   luci.template.render("QS/module/applyreboot", {redirect_location=("http://" .. environment .. "/cgi-bin/luci/admin")})
-   luci.http.close()
-   return({'complete'}) 
+   table.insert(mod, 'complete')
+   --luci.controller.QS.QS.log(mod)
+   return mod
 end
 
