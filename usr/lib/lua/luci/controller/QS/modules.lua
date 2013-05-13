@@ -129,6 +129,7 @@ function setHostName(hostNamen)
 				  end
 			   end)
    hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
+   QS.log("HostName was set correcty:"..tostring(hostnameWorks))
    QS.log("hostname set")
 end
 
