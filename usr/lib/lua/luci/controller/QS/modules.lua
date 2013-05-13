@@ -128,8 +128,8 @@ function setHostName(hostNamen)
 					 uci:save("system")
 				  end
 			   end)
-   QS.log("almost done")
    hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
+   QS.log("hostname set")
 end
 
 function setAccessPoint(SSID)
@@ -139,6 +139,7 @@ function setAccessPoint(SSID)
    local find =  "^ssid=.*"
    local replacement = 'ssid='..SSID
    replaceLine(file, find, replacement)
+   QS.log("Access Point Set")
 end
 
 function loadingPage()
@@ -179,6 +180,7 @@ function checkSettings()
 		 setValues(setting[1], setting[2])
 	  end
    end
+   QS.log("quickstartSettings Completed")
    return true
 end
 
@@ -191,17 +193,23 @@ function completeParser()
    --This may be where we split the finction into smaller components
    checkSettings()
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
+   QS.log("Wireless UCI Controller about to start")
    QS.wirelessController(files)
-   QS.log("Quickstart restarting network")
+   QS.log("Quickstart Final Countdown started")
    --set quickstart to done so that it no longer allows access to these tools without admin password
+   QS.log("1 of 5: restarting commotiond")
    luci.sys.call("/etc/init.d/commotiond restart")
+   QS.log("2 of 5: restarting network")
    luci.sys.call("sleep 2; /etc/init.d/network restart")
+   QS.log("3 of 5: Turning off Quickstart.")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
+   QS.log("4 of 5: restarting servald")
    luci.sys.call("sleep 5 && servald stop && servald start &")
+   QS.log("5 of 5: restarting nodogsplash")
    luci.sys.cal("/etc/init.d/nodogsplash start")
-   QS.log("it is done")
+   QS.log("Final Countdown Completed")
 end
 
 
