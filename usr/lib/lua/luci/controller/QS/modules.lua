@@ -200,6 +200,7 @@ function completeParser()
    uci:save('quickstart')
    uci:commit('quickstart')
    luci.sys.call("sleep 5 && servald stop && servald start &")
+   luci.sys.cal("/etc/init.d/nodogsplash start")
    QS.log("it is done")
 end
 
