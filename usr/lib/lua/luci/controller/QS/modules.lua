@@ -209,7 +209,7 @@ function completeParser()
    QS.log("4 of 5: restarting servald")
    luci.sys.call("sleep 5 && servald stop && servald start &")
    QS.log("5 of 5: restarting nodogsplash")
-   luci.sys.cal("/etc/init.d/nodogsplash start")
+   luci.sys.call("/etc/init.d/nodogsplash start")
    QS.log("Final Countdown Completed")
 end
 
