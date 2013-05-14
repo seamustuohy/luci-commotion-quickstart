@@ -215,7 +215,7 @@ function runParser(modules)
    errors = {}
    local returns = luci.http.formvalue()
    --log(returns)
-   log(modules)
+   --log(modules)
    if modules then
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
