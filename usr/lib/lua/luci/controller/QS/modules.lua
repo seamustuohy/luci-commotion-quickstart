@@ -35,10 +35,10 @@ function nameParser()
 	  if is_hostname(val.nodeName) then
 		 nodeID = luci.sys.exec("commotion nodeid")
 		 --luci.controller.QS.QS.log(val.nodeName)
-		 name = tostring(val.nodeName) .. nodeID
+		 hostName = tostring(val.nodeName) .. nodeID
 		 --QS.log(name)
 		 file = io.open("/etc/commotion/profiles.d/quickstartSettings", "a")
-		 file:write("hostname="..name.."\n")
+		 file:write("hostname="..hostName.."\n")
 		 --QS.log("wrote hostname")
 		 if val.secure == 'true' then
 			--QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
@@ -48,7 +48,7 @@ function nameParser()
 				  luci.sys.call('cp /etc/commotion/profiles.d/defaultSec /etc/commotion/profiles.d/quickstartSec') 
 			   end
 			   file:write("pwd="..val.pwd1.."\n")
-			   file:write("SSIDSec="..name.."\n")
+			   file:write("SSIDSec="..val.nodeName.."\n")
 			else
 			   return pass
 			end
@@ -56,7 +56,7 @@ function nameParser()
 			if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
 			   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
 			end
-			file:write("SSID="..name.."\n")
+			file:write("SSID="..val.nodeName.."\n")
 		 end
 		 file:close()
 	  else
