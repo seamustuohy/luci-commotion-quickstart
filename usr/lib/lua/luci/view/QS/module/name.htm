@@ -26,7 +26,7 @@
 	<div class="cbi-value">
       <label class="cbi-value-title tippable" data-tip="Choose a name that is 5-20 characters. You can use letters and numbers ONLY. The name will be made unique in the network through the addition of the bolded number next to the input box. You can change the node name later by logging into the node administration page.">Node Name</label>
 	  <p>This value is used by other users and devices to find your network wirelessly and over the mesh. This value can be composed of letter, number and hyphens. (Hyphens can not be used at the beggining or end of the name.)</p>
-	  <div style="white-space:nowrap"><input type="text" value="Your Node Name" name="nodeName"  style="display:inline-block;width:80%"><strong>+<%=nodeID%></strong> </div>
+	  <input type="text" value="Your Node Name" name="nodeName">
 	  <input type="checkbox" id="secureCheck" value="true" name="secure" onClick="toggleVisibility(this)"> Require a password for others to connect to your node.
 	</div>
 	<div id="secureAP" style="display:none">
