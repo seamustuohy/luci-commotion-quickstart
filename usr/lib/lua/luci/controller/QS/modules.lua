@@ -35,10 +35,10 @@ function nameParser()
 	  if is_hostname(val.nodeName) then
 		 nodeID = luci.sys.exec("commotion nodeid")
 		 --luci.controller.QS.QS.log(val.nodeName)
-		 name = tostring(val.nodeName) .. nodeID
+		 hostName = tostring(val.nodeName) .. nodeID
 		 --QS.log(name)
 		 file = io.open("/etc/commotion/profiles.d/quickstartSettings", "a")
-		 file:write("hostname="..name.."\n")
+		 file:write("hostname="..hostName.."\n")
 		 --QS.log("wrote hostname")
 		 if val.secure == 'true' then
 			--QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
@@ -48,7 +48,7 @@ function nameParser()
 				  luci.sys.call('cp /etc/commotion/profiles.d/defaultSec /etc/commotion/profiles.d/quickstartSec') 
 			   end
 			   file:write("pwd="..val.pwd1.."\n")
-			   file:write("SSIDSec="..name.."\n")
+			   file:write("SSIDSec="..val.nodeName.."\n")
 			else
 			   return pass
 			end
@@ -56,7 +56,7 @@ function nameParser()
 			if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartAP") then
 			   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP') 
 			end
-			file:write("SSID="..name.."\n")
+			file:write("SSID="..val.nodeName.."\n")
 		 end
 		 file:close()
 	  else
@@ -197,20 +197,10 @@ function completeParser()
    QS.log("Wireless UCI Controller about to start")
    QS.wirelessController(files)
    QS.log("Quickstart Final Countdown started")
-   --set quickstart to done so that it no longer allows access to these tools without admin password
-   QS.log("1 of 5: restarting commotiond")
-   luci.sys.call("/etc/init.d/commotiond restart")
-   QS.log("2 of 5: restarting network")
-   luci.sys.call("sleep 2; /etc/init.d/network restart")
-   QS.log("3 of 5: Turning off Quickstart.")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
-   QS.log("4 of 5: restarting servald")
-   luci.sys.call("sleep 5 && servald stop && servald start &")
-   QS.log("5 of 5: restarting nodogsplash")
-   luci.sys.cal("/etc/init.d/nodogsplash start")
-   QS.log("Final Countdown Completed")
+   p = luci.sys.reboot()
 end
 
 
