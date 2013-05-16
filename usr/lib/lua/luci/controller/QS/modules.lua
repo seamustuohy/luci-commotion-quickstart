@@ -197,20 +197,10 @@ function completeParser()
    QS.log("Wireless UCI Controller about to start")
    QS.wirelessController(files)
    QS.log("Quickstart Final Countdown started")
-   --set quickstart to done so that it no longer allows access to these tools without admin password
-   QS.log("1 of 5: restarting commotiond")
-   p=luci.sys.call("/etc/init.d/commotiond restart")
-   QS.log("2 of 5: restarting network")
-   p=luci.sys.call("sleep 2; /etc/init.d/network restart")
-   QS.log("3 of 5: Turning off Quickstart.")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
-   QS.log("4 of 5: restarting servald")
-   p=luci.sys.call("sleep 5 && servald stop && servald start &")
-   QS.log("5 of 5: restarting nodogsplash")
-   p=luci.sys.call("/etc/init.d/nodogsplash start")
-   QS.log("Final Countdown Completed")
+   p = luci.sys.reboot()
 end
 
 
