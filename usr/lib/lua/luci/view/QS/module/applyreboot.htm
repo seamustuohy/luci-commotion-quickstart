@@ -1,6 +1,34 @@
 <html>
 	<head>
 		<title><%=luci.sys.hostname()%> - <% if title then %><%=title%><% else %><%:Redirecting...%><% end %></title>
+<%-
+   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSettings") then
+	  for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
+		 b,c = string.find(line,"^SSID=.*")
+         d,e = string.find(line, "^SSIDSec=.*")
+         f,g = string.find(line, "^hostname=.*")
+		 if b then
+			apName = string.sub(line,b+5,c)
+         elseif d then
+            apName = string.sub(line,d+8,e)
+		 end
+         if f then
+			hostname = string.sub(line,f+9,g)
+		 end
+	  end
+   end
+   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
+   end
+   for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
+	  b,c = string.find(line,"^ssid=.*")
+	  if b then
+		 netName = string.sub(line,b+5,c)
+	  end
+   end
+   local meshName = netName
+   local nodeName = hostname 
+-%>
 		<link rel="stylesheet" type="text/css" media="screen" href="<%=media%>/cascade.css" />
 		<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
 		<script type="text/javascript">//<![CDATA[
@@ -10,13 +38,13 @@
 					window.clearInterval(interval);
 					window.clearInterval(interval2);
 					location.href = "<%=redirect_location%>";
-				}, 15000);
+				}, 30000);
 				img.onload = function() {
 					window.clearInterval(interval);
 					location.href = "<%=redirect_location%>";
 				};
 				img.src = 'http://<%=addr or luci.http.getenv("SERVER_NAME")%><%=resource%>/icons/loading.gif?' + Math.random();
-			}, 5000);
+			}, 30000);
 		//]]></script>
 	</head>
 	<body>
@@ -29,10 +57,25 @@
 					</p>
 					<p>
 						<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+
 						<%:Waiting for changes to be applied...%>
+						<div id="zone-content-wrapper">
+						  <div id="zone-content">
+						    <h3>The name of your mesh network is:</h3>
+						    <p><strong><%=meshName%></strong></p>
+						    
+						    <h3>Your node name is:</h3>
+						    <p><strong><%=nodeName%></strong></p>
+						    
+						    <h3>When people connect to your node wirelessly, they will connect using this name:</h3>
+						    <p><strong><%=apName%></strong></p>
+						    
+						    <p>After configuring your node, you can change the node name on the node administration page.</p>
+						  </div>
+						</div>	
 					</p>
 					<form action="<%=redirect_location%>" type="get">
-						<input type="submit" value="Click here if your browser doesn't redirect you in 20 seconds" name="action" />
+					  <input type="submit" value="Click here if your browser doesn't redirect you within one minute" name="action" />
 					</form>
 				</fieldset>
 			</div>
