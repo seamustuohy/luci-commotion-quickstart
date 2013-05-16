@@ -1,0 +1,58 @@
+<%-
+   if pv.errorMsg then
+       if pv.errorMsg.name then
+          nameErr = pv.errorMsg.name
+       end
+   end
+   nodeID = luci.sys.exec("commotion nodeid")
+-%>
+
+<script type="text/javascript" language="javascript">
+   function toggleVisibility(cb)
+    {
+     var x = document.getElementById("secureAP");
+     if(cb.checked==true)
+         x.style.display = "block";
+     else
+         x.style.display = "none";
+    }
+
+</script>
+
+<script type="text/javascript" language="javascript">
+  $(document).ready(function() {
+      $("input").each(function(){
+        if($(this).val()=="" &amp;&amp; $(this).attr("placeholder")!=""){
+          $(this).val($(this).attr("placeholder"));
+          $(this).focus(function(){
+            if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+          });
+          $(this).blur(function(){
+            if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+          });
+        }
+      });
+  });
+</script>
+
+<h2 class="warning"><%=nameErr%></h2>
+<div id="zone-content-wrapper">
+  <div id="zone-content">
+	<input type="hidden" name="moduleName" value="name" />
+	<div class="cbi-value">
+      <label class="cbi-value-title tippable" data-tip="Choose a name that is 5-20 characters. You can use letters and numbers ONLY. The name will be made unique in the network through the addition of the bolded number next to the input box. You can change the node name later by logging into the node administration page.">Node Name</label>
+	  <p>This value is used by other users and devices to find your network wirelessly and over the mesh. This value can be composed of letter, number and hyphens. (Hyphens can not be used at the beggining or end of the name.)</p>
+	  <input type="text" placeholder="Your Node Name" name="nodeName">
+	  <input type="checkbox" id="secureCheck" value="true" name="secure" onClick="toggleVisibility(this)"> Require a password for others to connect to your node.
+	</div>
+	<div id="secureAP" style="display:none">
+	  <div class="cbi-value">
+		<label class="cbi-value-title tippable" data-tip="Choose a password that is between 9 and 30 characters. This password can be numbers, letters, and special characters.">WiFi Password</label>
+		<p class="flavor">This password is required for others to use your wifi.</p>
+		<input type="password" name="pwd1">
+		<p class="flavor">Retype your password here</p>
+		<input type="password" name="pwd2">
+	  </div>
+	</div>
+  </div>
+</div>
