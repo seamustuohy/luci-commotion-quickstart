@@ -139,10 +139,17 @@ function wirelessController(profiles)
    for profNum, prof in ipairs(profiles) do
 	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
 		 if prof[1] == 'mesh' then
-			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid='commotion', mode='adhoc'})
+			meshssid = getCommotionSetting("ssid", "quickstartMesh")
+			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid=meshssid, mode='adhoc'})
 			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
 		 else
-			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid='commotion', mode='ap'})
+			if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
+			   apType = "Sec"
+			else
+			   apType = "AP"
+			end
+			meshssid = getCommotionSetting("ssid", "quickstart"..apType)
+			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid=meshssid, mode='ap'})
 			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
 		 end
  		 if dev[devNum+1] then
