@@ -133,8 +133,6 @@ function wirelessController(profiles)
 		 channelSet = uci:set('wireless', device, 'channel', channel)
 	  end
    end
-   uci:save('wireless')
-   uci:commit('wireless')
    devNum = 1
    for profNum, prof in ipairs(profiles) do
 	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
@@ -166,7 +164,7 @@ end
 function getCommotionSetting(settingName, file)
    --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
    local QS = luci.controller.QS.QS
-   QS.log("commotion settting getter started")
+   QS.log("commotion settting getter started: "..settingName)
    for line in io.lines("/etc/commotion/profiles.d/"..file) do
 	  setting = line:split("=")
 	  if setting[1] == settingName then
