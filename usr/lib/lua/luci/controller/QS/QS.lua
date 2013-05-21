@@ -124,11 +124,13 @@ function wirelessController(profiles)
 				  table.insert(dev, s['.name'])
 			   end)
    --Create interfaces
+   channel = getCommotionSetting("channel", "quickstartMesh")
    for devNum,device in ipairs(dev) do
 	  --Make sure wireless devices are on... because it starts them disabled for some reason
 	  disabled = uci:get('wireless', device, 'disabled')
 	  if disabled then
 		 disabledTrue = uci:delete('wireless', device, 'disabled')
+		 channelSet = uci:set('wireless', device, 'channel', channel)
 	  end
    end
    uci:save('wireless')
@@ -153,6 +155,20 @@ function wirelessController(profiles)
    uci:save('network')
    uci:commit('network')
 end
+
+function getCommotionSetting(settingName, file)
+   --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
+   local QS = luci.controller.QS.QS
+   QS.log("commotion settting getter started")
+   for line in io.lines("/etc/commotion/profiles.d/"..file) do
+	  setting = line:split("=")
+	  if setting[1] == settingName then
+		 current = setting[2]
+	  end
+   end
+   return current
+end
+
 
 function checkPage()
    local returns = luci.http.formvalue()

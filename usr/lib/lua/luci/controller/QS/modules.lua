@@ -199,6 +199,20 @@ function checkSettings()
    return true
 end
 
+function getCommotionSetting(settingName)
+   --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
+   local QS = luci.controller.QS.QS
+   QS.log("commotion settting getter started")
+   for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
+	  setting = line:split("=")
+	  if setting[1] == settingName then
+		 current = setting[2]
+	  end
+   end
+   return current
+end
+
+
 function completeParser()
    --[=[ This function controls the final settings process--]=]
    local QS = luci.controller.QS.QS
