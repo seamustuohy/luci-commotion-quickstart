@@ -73,7 +73,6 @@ function nameParser()
 			local replacement = "SSID="..val.nodeName
 			replaceLine(file, find, replacement)
 		 end
-		 file:close()
 	  else
 		 errors = "Please enter a correctly formatted name."
 	  end
