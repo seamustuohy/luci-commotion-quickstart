@@ -275,7 +275,6 @@ function keyCheck()
 		 return "keyring does not exist"
 	  end
    else
-
 	  return "no keyring"
    end
 end
