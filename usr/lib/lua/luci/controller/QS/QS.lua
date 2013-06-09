@@ -131,6 +131,7 @@ function wirelessController(profiles)
 		 disabledTrue = uci:delete('wireless', device, 'disabled')
 	  end
    end
+   uci:delete_all("wireless", "wifi-iface")
    uci:save('wireless')
    uci:commit('wireless')
    devNum = 1
