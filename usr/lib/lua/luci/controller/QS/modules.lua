@@ -169,6 +169,27 @@ function loadingPage()
    luci.http.close()
 end
 
+function adminPasswordParser(val)
+   --[=[ --]=]
+   errors = {}
+   local p1 = val.adminPassword_pwd1
+   local p2 = val.adminPassword_pwd2
+   if p1 or p2 then
+	  if p1 == p2 then
+		 if p1 == '' then
+			errors['pw'] = "Please enter a password"
+		 else
+			luci.sys.user.setpasswd("root", p1)
+		 end
+	  else
+		 errors['pw'] = "Given password confirmation did not match, password not changed!"
+	  end
+   end
+   if next(errors) ~= nil then
+	  return errors
+   end
+end
+
 function setValues(setting, value)
    --[=[ This function activates the setting value setting functions for defined values.
 	  --]=]
