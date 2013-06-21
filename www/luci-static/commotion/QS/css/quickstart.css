@@ -1,0 +1,21 @@
+#zone-buttons figure {                         
+margin-left: auto;                                  
+margin-right: auto;                                                             
+display: block;                                                     
+        width: auto;                                                   
+        margin: 5px;                                                          
+        white-space: normal;                   
+        vertical-align: top;      
+        text-align: center;                                     
+}                                                               
+                                                                
+.button-wrapper ul {                                            
+  display: table-row;                                           
+  list-style: none;                                                             
+}                                                                  
+                                                                      
+.button-wrapper ul li {                                                     
+display: table-cell;                                                      
+width: auto;                                                             
+}                                                                         
+
