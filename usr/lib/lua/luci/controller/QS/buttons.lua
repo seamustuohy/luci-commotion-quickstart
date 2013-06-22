@@ -23,6 +23,15 @@ function startOver()
    return {}
 end
 
+function quitter()   
+   QS.log("Really, my quick start is not good enough for you eh? Well, you gotta do what you gotta do.")
+   uci:set('quickstart', 'options', 'complete', 'true')
+   uci:save('quickstart')
+   uci:commit('quickstart')
+   luci.http.redirect("http://"..luci.http.getenv("SERVER_NAME").."/cgi-bin/luci/")
+   return {}
+end
+
 function finish(modules)
    --luci.controller.QS.QS.log(modules)
    mod = {}

@@ -12,6 +12,7 @@ config page 'welcome'
 	   list buttons 'noBack'
 	   list buttons '2:finish,|Finish &gt;,| ,| '			
 	   list buttons '3:settingsFile,|Use a pre-built network file &gt;,| ,| '
+	   list buttons '4:quitter,|Quit QuickStart &gt;,| ,| '
 
 	   
 config page 'settingsFile'
@@ -20,8 +21,10 @@ config page 'settingsFile'
 	   option subheading 'If you have a settings file, please upload it below.'
 	   option fileType 'config'
 	   list modules 'upload'
-	   list buttons '4:finish,|Upload and Finish,|,| ,|'
+	   list buttons '3:finish,|Upload and Finish,|,| ,|'
 	   list buttons '5:startOver,|&lt;&lt; Start Over,| ,|plus'
+	   list buttons '4:quitter,|Quit QuickStart &gt;,| ,| '
+
 
 #TODO
 #create "name" module that creates a AP and a hostname from one name value (hostname adds a number)
