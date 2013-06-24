@@ -23,7 +23,9 @@ function startOver()
    return {}
 end
 
-function quitter()   
+function quitter()
+   local QS = luci.controller.QS.QS
+   local uci = luci.model.uci.cursor()
    QS.log("Really, my quick start is not good enough for you eh? Well, you gotta do what you gotta do.")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
