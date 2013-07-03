@@ -138,10 +138,10 @@ function setHostName(hostNamen)
 			   function(s)
 				  if s.hostname then
 					 uci:set("system", s['.name'], "hostname", hostNamen)
-					 uci:commit("system")
-					 uci:save("system")
 				  end
 			   end)
+   uci:commit("system")
+   uci:save("system")
    hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
    QS.log("HostName was set correcty:"..tostring(hostnameWorks))
    QS.log("hostname set")
