@@ -268,6 +268,7 @@ function completeParser()
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
+   luci.sys.call('rm /etc/commotion/profiles.d/quickstartSettings')
    p = luci.sys.reboot()
 end
 
