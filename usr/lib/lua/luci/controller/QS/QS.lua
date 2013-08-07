@@ -123,6 +123,9 @@ function wirelessController(profiles)
 			   function(s)
 				  table.insert(dev, s['.name'])
 			   end)
+   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
+   end
    --Create interfaces
    channel = getCommotionSetting("channel", "quickstartMesh")
    for devNum,device in ipairs(dev) do
@@ -184,6 +187,7 @@ function checkPage()
 end
 
 function parseSubmit(returns)
+   log("Running module parser functions")
    --check for submission value
    local uci = luci.model.uci.cursor()
    local submit = nil
@@ -241,8 +245,13 @@ function runParser(modules)
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
 			if i == (value .. "Parser") then
-			   --log(value)
+			   log(value)
 			   errors[value] = luci.controller.QS.modules[value .. "Parser"](returns)
+			   --logging errors again
+			   if errors then
+				  log(errors)
+			   end
+			   --if there is a set of errors then remove the "complete" module from the parsed modules so it does not run.
 			   if next(errors) then
 				  for i,x in ipairs(modules) do
 					 if x == 'complete' then
