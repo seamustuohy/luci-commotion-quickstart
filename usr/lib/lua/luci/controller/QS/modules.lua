@@ -42,8 +42,9 @@ function nameParser()
 		 local find =  '^hostname=.*'
 		 local replacement = "hostname="..hostName
 		 replaceLine(file, find, replacement)
-		 
+
 		 --QS.log("wrote hostname")
+		 --Add Secure AP files and password
 		 if val.secure == 'true' then
 			--QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
 			pass = checkPass(val.pwd1, val.pwd2)
@@ -60,7 +61,7 @@ function nameParser()
 			   local find =  '^SSIDSec=.*'
 			   local replacement = "SSIDSec="..val.nodeName
 			   replaceLine(file, find, replacement)
-			   
+
 			else
 			   return pass
 			end
@@ -83,6 +84,45 @@ function nameParser()
 	  return errors
    end
 end
+
+function meshPasswordRenderer()
+   local QS = luci.controller.QS.QS
+   QS.log("meshPassword rendered")
+   return true
+end
+
+function meshPasswordParser()
+   local QS = luci.controller.QS.QS
+   QS.log("meshPasswordParser running")
+   errors = nil
+   local val = luci.http.formvalue()
+   --QS.log(val)
+   --QS.log("wrote hostname")
+   --Add Secure AP files and password
+   errors = checkPass(val.meshPassword_pwd1, val.meshPassword_pwd2)
+   if errors == nil then
+	  if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+		 luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh') 
+	  end
+	  local file = "/etc/commotion/profiles.d/quickstartSettings"
+	  local find =  '^MeshPwd=.*'
+	  local replacement = "MeshPwd="..val.meshPassword_pwd1
+	  replaceLine(file, find, replacement)
+   else
+	  return errors
+   end
+end
+
+function setMeshPassword(pass)
+   local QS = luci.controller.QS.QS
+   QS.log("setMeshPassword started")
+
+   local file = "/etc/commotion/profiles.d/quickstartMesh"
+   local find =  '^wpakey=.*'
+   local replacement = "wpakey="..pass
+   replaceLine(file, find, replacement)
+end
+
 
 function setAPPassword(pass)
    local QS = luci.controller.QS.QS
@@ -108,7 +148,6 @@ function setSecAccessPoint(SSID)
    local replacement = 'ssid='..SSID
    replaceLine(file, find, replacement)
 end
-
 
 function string.split(str, pat)
 	local t = {} 
@@ -180,6 +219,7 @@ function setValues(setting, value)
 	  hostname = setHostName,
 	  pwd = setAPPassword,
 	  SSIDSec = setSecAccessPoint,
+	  MeshPwd = setMeshPassword,
    }
    settings[setting](value)
    return
@@ -228,6 +268,7 @@ function completeParser()
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
+   luci.sys.call('rm /etc/commotion/profiles.d/quickstartSettings')
    p = luci.sys.reboot()
 end
 
@@ -264,8 +305,6 @@ function replaceLine(fn, find, replacement)
    end
    return errorCode
 end
-
-
 
 function adminPasswordParser(val)
    --[=[ --]=]
@@ -391,12 +430,14 @@ function checkPass(p1, p2)
    if p1 and p2 then
 	  if p1 == p2 then
 		 if p1 == '' then
+			QS.log("Please enter a password")
 			return "Please enter a password"
 		 elseif string.len(p1) < 8 then
+			QS.log("Please enter a password that is more than 8 chars long")
 			return "Please enter a password that is more than 8 chars long"
 		 elseif not tostring(p1):match("^[%p%w]+$") then
+			QS.log("Your password has spaces in it. You can't have spaces.")
 			return "Your password has spaces in it. You can't have spaces."
-			
 		 end
 	  else
 		 return "Given password confirmation did not match, password not changed!"
