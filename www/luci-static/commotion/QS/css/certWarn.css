@@ -1,0 +1,34 @@
+.certWrapper {height:600px;}
+.hidden {display:none;}
+.visible {display:true;}
+.sprite {background:url(<%=media%>/QS/images/certSpriteWindow.png);}
+.ff_icon {background: url(<%=media%>/QS/images/ff_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+.ie_icon {background: url(<%=media%>/QS/images/ie_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+.chrome_icon {background: url(<%=media%>/QS/images/chrome_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+
+/* Firefox */
+.ffcert0 {height:510px; width:900px; background-position:-64px -133px;}
+.ffcert1 {height:460px; width:855px; background-position:-15px 0px;}
+.ffcert2 {height:567px; width:853px; background-position:-15px -480px;}
+.ffcert3 {height:520px; width:540px; background-position:-15px -1065px;}
+.ffcert4 {height:550px; width:489px; background-position:-15px -1605px;}
+
+
+/* Chrome */
+.chcert1 {height:320px; width:890px; background-position:-900px -14px;}
+.chcert2 {height:600px; width:440px; background-position:-870px -340px;}
+.chcert3 {height:600px; width:575px; background-position:-1320px -375px;}
+
+
+/* IE */
+.iecert1 {height:350px; width:800px; background-position:-600px -1080px;}
+.iecert2 {height:360px; width:380px; background-position:-1470px -1075px;}
+.iecert3 {height:535px; width:440px; background-position:-640px -1525px;}
+.iecert4 {height:550px; width:480px; background-position:-1150px -1530px;}
+
+noscript p {
+  margin: 1em;
+  padding: .5em;
+  background: #eee;
+  border: 1px #999 solid;
+}

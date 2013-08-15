@@ -10,7 +10,6 @@ function index()
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
    end
    entry({"admin", "commotion", "quickstart"}, call("resetQS"), "Restart Quickstart", 50)
-   
 end
 
 function resetQS()

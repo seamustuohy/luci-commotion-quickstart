@@ -1,6 +1,9 @@
+<%+header%>
+
 <html>
 	<head>
-		<title><%=luci.sys.hostname()%> - <% if title then %><%=title%><% else %><%:Redirecting...%><% end %></title>
+		<title><%=luci.sys.hostname()%> - <% if title then %><%=title%><% else %><%:Redirecting...%><% end %>
+		</title>
 <%-
    if luci.fs.isfile("/etc/commotion/profiles.d/quickstartSettings") then
 	  for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
@@ -29,23 +32,10 @@
    local meshName = netName
    local nodeName = hostname 
 -%>
+        <link rel="stylesheet" type="text/css" href="<%=media%>/QS/css/certWarn.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="<%=media%>/cascade.css" />
 		<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
-		<script type="text/javascript">//<![CDATA[
-			var interval = window.setInterval(function() {
-				var img = new Image();
-				var interval2 = window.setInterval(function() {
-					window.clearInterval(interval);
-					window.clearInterval(interval2);
-					location.href = "<%=redirect_location%>";
-				}, 30000);
-				img.onload = function() {
-					window.clearInterval(interval);
-					location.href = "<%=redirect_location%>";
-				};
-				img.src = 'http://<%=addr or luci.http.getenv("SERVER_NAME")%><%=resource%>/icons/loading.gif?' + Math.random();
-			}, 30000);
-		//]]></script>
+		<script type="text/javascript" src="<%=media%>/QS/css/applyreboot.js"></script>
 	</head>
 	<body>
 		<div id="maincontainer">
@@ -61,24 +51,79 @@
 						<%:Waiting for changes to be applied...%>
 						<div id="zone-content-wrapper">
 						  <div id="zone-content">
-						    <h3>The name of your mesh network is:</h3>
+						    <h3><%:The name of your mesh network is:%></h3>
 						    <p><strong><%=meshName%></strong></p>
 						    
-						    <h3>Your node name is:</h3>
+						    <h3><%:Your node name is:%></h3>
 						    <p><strong><%=nodeName%></strong></p>
 						    
-						    <h3>When people connect to your node wirelessly, they will connect using this name:</h3>
+						    <h3><%:When people connect to your node wirelessly, they will connect using this name:%></h3>
 						    <p><strong><%=apName%></strong></p>
 						    
-						    <p>After configuring your node, you can change the node name on the node administration page.</p>
+						    <p><%:After configuring your node, you can change the node name on the node administration page.%></p>
 						  </div>
 						</div>	
 					</p>
-					<form action="<%=redirect_location%>" type="get">
-					  <input type="submit" value="Click here if your browser doesn't redirect you within one minute" name="action" />
-					</form>
 				</fieldset>
 			</div>
 		</div>
+
+
+
+
+
+		<noscript>
+		  <p><strong><%:You appear to have Javascript disabled%></strong><br /><br /><%:The interactive portions on this page use locally hosted Javascript to walk users through manually verifying certificates on various browsers. If you are actively blocking JS, it is likely that you are already passingly familiar with this process, and the fingerprints above are all you need. If you are not, please enable Javascript in your browser or NoScript preferences to view the tutorial.%></p>
+		</noscript>
+		
+		<p><%:We are about to open a secure connection to your device.%></p>
+		
+		<p><%:This device's fingerprints are:%></p>
+		<ul style="list-style-type:none">
+		  
+		  <%-
+			 --TODO GET SHA1 AND MD5 FINGERPRINTS
+			 -%>
+		  
+		  <li><strong><%:SHA1 Fingerprint:%></strong><%=sha1_fingerprint%><br /></li>
+		  <li><strong><%:MD5 Fingerprint:%></strong><%=sha1_fingerprint%><br /></li>
+		</ul>
+		
+		<p><%:If this is the first time you are connecting to this device, your web browser may not trust this connection.%><a href="#" onclick="toggleVisibility('whyUntrusted')"><%:Find out why%></a></p>
+		
+		<div id="whyUntrusted" class="hidden">
+		  <p><%:When you visit a website secured with what is known as SSL/TLS, signified in the URL with "https" and often signaled by the browsers with locks and changed colors in the address bar... TODO: FLESH OUT BRIEF OVERVIEW OF CERTIFICATES THE CA CARTEL AND BROWSER CA TRUST%></p>
+		</div>
+		
+		<p><a href="#" onclick="toggleVisibility('useThis')"><%:Find out about using these fingerprints to verify your secure connection%></a></p>
+		
+		<div id="useThis" class="hidden">  
+		  
+		  <p><%:When your browser presents this%><a href="#" onclick="toggleVisibility('warnings')"><%:warning%></a><%:, you will be given the option to view the devices certificate. The certificate is a way of identifying the device you are making a secure connection to.%></p>
+		  <div id="warnings" class="hidden"><img src="alerts.png"/></div> 
+		  <p><%:Your device uses two "fingerprints" to uniquely identify itself.%></p>
+		  <p><%:Please click below for browser specific instructions on how to check this device's fingerprints.%></p>
+		  <h3><a href="#" onclick="toggleVisibility('tutorial')"><%:Show Me How%></a></h3>
+		  <div id="tutorial" class="hidden">
+			<form name="form1">
+			  <span id="buttons">
+				<input type="button" class="ff_icon" id="firefoxButton" name="firefox"/>
+				<input type="button" class="ie_icon" id="chromeButton" name="chrome"/>
+				<input type="button" class="chrome_icon" id="internetexplorerButton" name="internetexplorer"/>
+			  </span>
+			</form>
+			<div id="certWrapper" class="hidden">
+			  <div id="certTut" class="sprite iecert3" alt="CertificateHelp" onclick="next()"/>
+			</div>
+		  </div>
+		</div>
+		
+		
+		<form action="<%=redirect_location%>" type="get">
+		  <input type="submit" value="<%:Click here if your browser doesn't redirect you within one-two minutes.%>" name="action" />
+		</form>
+				
 	</body>
 </html>
+
+<%+footer%>
