@@ -76,7 +76,7 @@
 		  <p><strong><%:You appear to have Javascript disabled%></strong><br /><br /><%:The interactive portions on this page use locally hosted Javascript to walk users through manually verifying certificates on various browsers. If you are actively blocking JS, it is likely that you are already passingly familiar with this process, and the fingerprints above are all you need. If you are not, please enable Javascript in your browser or NoScript preferences to view the tutorial.%></p>
 		</noscript>
 		
-		<p><%:We are about to open a secure connection to your device.%></p>
+		<h3><%:We are about to open a secure connection to your device.%></h3>
 		
 		<p><%:This device's fingerprints are:%></p>
 		<ul style="list-style-type:none">
@@ -107,9 +107,9 @@
 		  <div id="tutorial" class="hidden">
 			<form name="form1">
 			  <span id="buttons">
-				<input type="button" class="ff_icon" id="firefoxButton" name="firefox"/>
-				<input type="button" class="ie_icon" id="chromeButton" name="chrome"/>
-				<input type="button" class="chrome_icon" id="internetexplorerButton" name="internetexplorer"/>
+				<input type="button" class="ff_icon" id="firefoxButton" onclick="firefox()" name="firefox"/>
+				<input type="button" class="ie_icon" id="chromeButton" onclick="internetExplorer()" name="chrome"/>
+				<input type="button" class="chrome_icon" onclick="chrome()" id="internetexplorerButton" name="internetexplorer"/>
 			  </span>
 			</form>
 			<div id="certWrapper" class="hidden">
@@ -117,12 +117,11 @@
 			</div>
 		  </div>
 		</div>
-		
-		
-		<form action="<%=redirect_location%>" type="get">
-		  <input type="submit" value="<%:Click here if your browser doesn't redirect you within one-two minutes.%>" name="action" />
-		</form>
-				
+		<div>
+		  <form action="<%=redirect_location%>" type="get">
+			<input type="submit" value="<%:Click here if your browser doesn't redirect you within one-two minutes.%>" name="action" />
+		  </form>
+		</div>
 	</body>
 </html>
 

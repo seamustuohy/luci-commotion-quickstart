@@ -1,14 +1,15 @@
 var classType = "iecert";
 var pageNum = 1;
-document.getElementById('internetexplorerButton').onclick = function() {
-    if (document.getElementById('certWrapper').className === "hidden") {
+function internetExplorer() {
+    if (document.getElementById('certWrapper').className == "hidden") {
         document.getElementById("certWrapper").className = "certWrapper";
     }
     classType = "iecert";
     pageNum = 1;
     document.getElementById("certTut").className="sprite " + classType + pageNum;
 };
-document.getElementById('chromeButton').onclick = function() {
+
+function firefox() {
     if (document.getElementById('certWrapper').className == "hidden") {
         document.getElementById("certWrapper").className="certWrapper";
     }
@@ -16,7 +17,8 @@ document.getElementById('chromeButton').onclick = function() {
     pageNum = 1;
     document.getElementById("certTut").className="sprite " + classType + pageNum;
 };
-document.getElementById('firefoxButton').onclick = function() {
+
+function chrome() {
     if (document.getElementById('certWrapper').className == "hidden") {
         document.getElementById("certWrapper").className="certWrapper";
     }
@@ -24,6 +26,7 @@ document.getElementById('firefoxButton').onclick = function() {
     pageNum = 1;
     document.getElementById("certTut").className="sprite " + classType + pageNum;
 };
+
 function next() {
     if (classType == 'ffcert' || classType == 'iecert') {
         if (pageNum <= 3) {
