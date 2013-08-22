@@ -1,10 +1,10 @@
 .certWrapper {height:600px;}
 .hidden {display:none;}
 .visible {display:true;}
-.sprite {background:url(/luci-static/commotion/QS/images/certSpriteWindow.png);}
-.ff_icon {background: url(/luci-static/commotion/QS/images/ff_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
-.ie_icon {background: url(/luci-static/commotion/QS/images/ie_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
-.chrome_icon {background: url(/luci-static/commotion/QS/images/chrome_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+.sprite {background:url(/luci-static/commotion/QS/images/certSpriteWindow.jpg);}
+#firefoxButton {background: url(/luci-static/commotion/QS/images/ff_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+#internetexplorerButton {background: url(/luci-static/commotion/QS/images/ie_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
+#chromeButton {background: url(/luci-static/commotion/QS/images/chrome_icon001.png) no-repeat; border:none; height:85px; width:85px; margin:20px;}
 
 /* Firefox */
 .ffcert0 {height:510px; width:900px; background-position:-64px -133px;}
