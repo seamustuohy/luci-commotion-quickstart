@@ -8,9 +8,9 @@ function index()
    local uci = luci.model.uci.cursor()
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
 	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
+	  entry({"QuickStart", "CertificateHelp"}, template("QS/module/cert"))
    end
    entry({"admin", "commotion", "quickstart"}, call("resetQS"), "Restart Quickstart", 50)
-   
 end
 
 function resetQS()
