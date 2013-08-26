@@ -1,0 +1,50 @@
+<%+header%>
+<head>
+  <link rel="stylesheet" type="text/css" href="<%=media%>/QS/css/certWarn.css" />
+  <script type="text/javascript" src="<%=media%>/QS/css/applyreboot.js"></script>
+  
+</head>
+
+<body>
+  <h1><%:Device "fingerprints" and HTTPS%></h1>
+  <noscript>
+	<p><strong><%:You appear to have Javascript disabled%></strong><br /><br /><%:The interactive portions on this page use locally hosted Javascript to walk users through manually verifying certificates on various browsers. If you are actively blocking JS, it is likely that you are already passingly familiar with this process, and the fingerprints above are all you need. If you are not, please enable Javascript in your browser or NoScript preferences to view the tutorial.%></p>
+  </noscript>
+
+  <p><%:We are about to open a secure connection to your device. Because this wireless device is not registered with a online certificate provider your web browser cannot verify that it is who it says it is. You can use the fingerprints below to verify this device yourself.%></p>
+  <div>
+  <p><%:This device's fingerprints are:%></p>
+  <ul style="list-style-type:none">
+	<%-
+	   require "commotion_helpers"
+	   md5, sha1 = ssl_cert_fingerprints()
+	   -%>
+	<li><strong><%:SHA1 Fingerprint:%></strong><%=sha1%><br /></li>
+	<li><strong><%:MD5 Fingerprint:%></strong><%=md5%><br /></li>
+  </ul>
+  </div>
+<div>
+  <a href="#" onclick="toggleVisibility('useThis')"><strong><%:How do I use these fingerprints?%></strong></a>
+  </div>
+
+  <div id="useThis" class="hidden">  
+	<p><%:When your browser gives you a%> <a href="#" onclick="toggleVisibility('warnings')"><%:warning%></a><%:, you will be given the option to view the devices certificate.%></p>
+	<div id="warnings" class="hidden"><img src="<%=media%>/QS/images/alerts.png"/></div> 
+	<p><%:Each browser uses different types of fingerprints to idenitfy a device. You can use  one or both of the above fingerprints to verify that your browser is connecting to this device depending upon your browser. %></p>
+	<p><%:Please click on your browsers icon below for instructions on how to check this device's fingerprints.%></p>
+	<h3><a href="#" onclick="toggleVisibility('tutorial')"><%:Show Me How%></a></h3>
+	<div id="tutorial" class="hidden">
+	  <form name="form1">
+		<span id="buttons">
+		  <input type="button" class="ff_icon" id="firefoxButton" onclick="firefoxFunc()" name="firefox"/>
+		  <input type="button" class="ie_icon" id="internetexplorerButton" onclick="internetExplorer()" name="internetexplorer"/>
+		  <input type="button" class="chrome_icon" onclick="chromeFunc()" id="chromeButton" name="chrome"/>
+		</span>
+	  </form>
+	  <div id="certWrapper" class="hidden">
+		<div id="certTut" class="sprite iecert3" alt="CertificateHelp" onclick="next()"/>
+	  </div>
+	</div>
+  </div>
+</body>
+<%+footer%>
