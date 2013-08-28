@@ -6,11 +6,15 @@ require "luci.controller.QS.modules"
 
 function index()
    local uci = luci.model.uci.cursor()
+   luci.i18n.loadc("admin-core")
+   local i18n = luci.i18n.translate
+
    if uci:get('quickstart', 'options', 'complete') ~= 'true' then
-	  entry({"QuickStart"}, call("main"), "Quick Start").dependent=false
+	  entry({"QuickStart"}, call("main"), "Quick Start", i18n("commotionquickstart")).dependent=false
 	  entry({"QuickStart", "CertificateHelp"}, template("QS/module/cert"))
    end
-   entry({"admin", "commotion", "quickstart"}, call("resetQS"), "Restart Quickstart", 50)
+   entry({"admin", "commotion", "quickstart"}, call("resetQS"), "Restart Quickstart", i18n("commotionquickstart"), 50)
+   
 end
 
 function resetQS()
