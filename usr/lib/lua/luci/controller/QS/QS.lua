@@ -153,6 +153,7 @@ function wirelessController(profiles)
 			uci:section('wireless', 'wifi-iface', prof[2], {device=dev[devNum], network=prof[1], ssid=meshssid, mode='ap'})
 			uci:section('network', 'interface', prof[1], {proto="commotion", profile=prof[2]})
 		 end
+		 --Check for an additional radio, and switch to it
  		 if dev[devNum+1] then
 			devNum = devNum +1
 		 end
