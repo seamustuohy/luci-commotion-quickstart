@@ -14,7 +14,7 @@ function firefoxFunc() {
     if (document.getElementById('certWrapper').className == "hidden") {
         document.getElementById("certWrapper").className = "certWrapper";
     }
-    classType = "chcert";
+    classType = "ffcert";
     pageNum = 1;
     document.getElementById("certTut").className="sprite " + classType + pageNum;
 };
@@ -23,7 +23,7 @@ function chromeFunc() {
     if (document.getElementById('certWrapper').className == "hidden") {
         document.getElementById("certWrapper").className = "certWrapper";
     }
-    classType = "ffcert";
+    classType = "chcert";
     pageNum = 1;
     document.getElementById("certTut").className="sprite " + classType + pageNum;
 };
