@@ -37,6 +37,7 @@ end
 function main()
 	-- if return values get them and pass them to return value parser
 	setFileHandler()
+	local debug = require "luci.commotion.debugger"
 	check = luci.http.formvalue()
 	if next(check) ~= nil then
 	   errorMsg = checkPage()
@@ -74,7 +75,7 @@ function main()
 	end
 	if errorMsg then
 	   pageValues['errorMsg'] = errorMsg
-	   -- log(pageValues.errorMsg)
+	   -- debug.log(pageValues.errorMsg)
 	end
 	if removeUpload == true and pageValues.modules.upload then
 	   pageValues.modules.upload = nil
@@ -91,12 +92,13 @@ end
 
 function pages(command, next, skip)
    --manipulates the rendered pages for a user
-   --log("pages command: " .. command)
+   local debug = require "luci.commotion.debugger"
+   --debug.log("pages command: " .. command)
    local uci = luci.model.uci.cursor()
    local page = uci:get('quickstart', 'options', 'pageNo')
    local lastPg = uci:get('quickstart', 'options', 'lastPg')
-   --log(page)
-   --log("last="..lastPg)
+   --debug.log(page)
+   --debug.log("last="..lastPg)
    if next == 'back' then
 	  uci:set('quickstart', 'options', 'pageNo', lastPg)
 	  uci:set('quickstart', 'options', 'lastPg', 'welcome')
@@ -168,8 +170,8 @@ end
 
 function getCommotionSetting(settingName, file)
    --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
-   local QS = luci.controller.QS.QS
-   QS.log("commotion settting getter started: "..settingName)
+   local debug = require "luci.commotion.debugger"
+   debug.log("commotion settting getter started: "..settingName)
    for line in io.lines("/etc/commotion/profiles.d/"..file) do
 	  setting = line:split("=")
 	  if setting[1] == settingName then
@@ -181,15 +183,17 @@ end
 
 
 function checkPage()
+   local debug = require "luci.commotion.debugger"
    local returns = luci.http.formvalue()
-   --log(returns)
+   --debug.log(returns)
    errors = parseSubmit(returns)
-   --log(errors)
+   --debug.log(errors)
    return errors
 end
 
 function parseSubmit(returns)
-   log("Running module parser functions")
+   local debug = require "luci.commotion.debugger"
+   debug.log("Running module parser functions")
    --check for submission value
    local uci = luci.model.uci.cursor()
    local submit = nil
@@ -230,8 +234,8 @@ function parseSubmit(returns)
 	  pages('next', button)
    end
    if  next(errors) ~= nil then
-	  --log("errors HERE")
-	  --log(errors)
+	  --debug.log("errors HERE")
+	  --debug.log(errors)
 	  pages('next','back')
 	  return(errors)
    end
@@ -240,18 +244,19 @@ end
 function runParser(modules)
    --Check for Parser function and run if it exists
    errors = {}
+   local debug = require "luci.commotion.debugger"
    local returns = luci.http.formvalue()
-   --log(returns)
-   --log(modules)
+   --debug.log(returns)
+   --debug.log(modules)
    if modules then
 	  for _,value in ipairs(modules) do
 		 for i,x in pairs(luci.controller.QS.modules) do
 			if i == (value .. "Parser") then
-			   log(value)
+			   debug.log(value)
 			   errors[value] = luci.controller.QS.modules[value .. "Parser"](returns)
 			   --logging errors again
 			   if errors then
-				  log(errors)
+				  debug.log(errors)
 			   end
 			   --if there is a set of errors then remove the "complete" module from the parsed modules so it does not run.
 			   if next(errors) then
@@ -265,16 +270,17 @@ function runParser(modules)
 		 end
 	  end
    end
-   --log(errors)
+   --debug.log(errors)
    return(errors)
 end
 
 
 function keyCheck()
+   local debug = require "luci.commotion.debugger"
    local uci = luci.model.uci.cursor()
    --check if a key is required in a config file and compare the current key to it.
    local confKeySum = uci:get('nodeConf', 'confInfo', 'key')
-   --log(string.len(confKeySum))
+   --debug.log(string.len(confKeySum))
    if string.len(confKeySum) == 32 then
 	  if luci.fs.isfile(keyLoc .. "network.keyring") then
 		 local keyringSum = luci.sys.exec("md5sum " .. keyLoc .. "network.keyring" .. "| awk '{ print $1 }'")
@@ -334,33 +340,4 @@ function setFileHandler()
 			end
 		 end
 	  end)
-end
-
-
-function log(msg)
-   if (type(msg) == "table") then
-	  for key, val in pairs(msg) do
-		 if type(key) == 'boolean' then
-			log('{')
-			log(tostring(key))
-			log(':')
-			log(val)
-			log('}')
-		 elseif type(val) == 'boolean' then
-			log('{')
-			log(key)
-			log(':')
-			log(tostring(val))
-			log('}')
-		 else
-			log('{')
-			log(key)
-			log(':')
-			log(val)
-			log('}')
-		 end
-	  end
-   else
-	  luci.sys.exec("logger -t luci " .. msg)
-   end
 end
