@@ -25,12 +25,13 @@ end
 
 function nameParser()
    local debug = require "luci.commotion.debugger"
+   local id = require "luci.commotion.identify"
    debug.log("nameParser running")
    errors = nil
    local val = luci.http.formvalue()
    --debug.log(val)
    if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
-	  if is_hostname(val.nodeName) then
+	  if id.is_hostname(val.nodeName) then
 		 nodeID = luci.sys.exec("commotion nodeid")
 		 --debug.log(val.nodeName)
 		 hostName = tostring(val.nodeName) .. nodeID
