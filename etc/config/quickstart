@@ -2,7 +2,6 @@ config quickstart options
 	   option pageNo 'welcome'
 	   option lastPg 'welcome'
 	   option complete 'false'
-	   option apps 'true'
 
 config page 'welcome'
 	   option pageTitle 'Welcome'
