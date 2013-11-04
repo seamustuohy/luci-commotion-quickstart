@@ -4,8 +4,114 @@ function index()
 end
 
 function networkSecuritySettings(modules)
-   --local debug = require "luci.commotion.debugger"
-   --debug.log(modules)
+   local error = luci.controller.QS.QS.keyCheck()
+   return(modules)
+end
+
+function gatewayShare(modules)
+   return modules
+end
+
+function keepGoing(modules)
+   for i,x in ipairs(modules) do
+	  if x == 'complete' then
+		 rem = i
+	  end
+   end
+   table.remove(modules, rem)
+end
+
+function back()
+   return {}
+end
+
+function startOver()
+   local QS = luci.controller.QS.QS
+   QS.pages('next', "welcome")
+   return {}
+end
+
+
+function netSec(modules)
+   local QS = luci.controller.QS.QS
+   local servald = false
+   local wpa = false
+   local upload = true
+   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
+		 b,c = string.find(line,"^wpakey=.*")
+		 d,e = string.find(line,"^servald=.*")
+		 if b then
+			wpa = string.sub(line,b+7,c)
+		 end
+		 if d then --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
+			serval = string.sub(line,d+8,e)
+		 end
+	  end
+   end
+   if serval==false and wpa==false then
+	  QS.pages('next', 'naming')
+	  return modules
+   else
+	  QS.pages('next', 'keyfilesAndSecurity')
+	  return modules
+   end
+end
+
+function makeItWork(modules)
+   local QS = luci.controller.QS.QS
+   luci.sys.call('cp /etc/commotion/profiles.d/defaultAP /etc/commotion/profiles.d/quickstartAP')
+   luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
+   QS.pages('next', 'makeItNaming')
+   return(modules)
+end
+
+
+function noApplications(modules)
+   local wpa = false
+   local upload = true
+   local uci = luci.model.uci.cursor()
+   uci:set('quickstart', 'options', 'apps', 'true')
+   uci:save('quickstart')
+   uci:commit('quickstart')
+   if luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
+	  for line in io.lines("/etc/commotion/profiles.d/quickstartMesh") do
+		 b,c = string.find(line,"^wpakey=.*")
+		 d,e = string.find(line,"^servald=.*")
+		 if b then
+			wpa = string.sub(line,b+7,c)
+		 end
+		 if d then --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
+			serval = string.sub(line,d+8,e)
+		 end
+	  end
+   end
+   if serval==false and wpa==false then
+	  luci.controller.QS.QS.pages('next', 'naming')
+	  return ({})
+   else
+	  luci.controller.QS.QS.pages('next', 'keyfilesAndSecurity')
+	  return ({})
+   end
+end
+
+
+function continueInsecure(modules)
+   mod = luci.controller.QS.modules
+   local file = "/etc/commotion/profiles.d/quickstartMesh"
+   local find =  '^wpakey=.*'
+   local replacement = "wpakey=false"
+   repErr = mod.replaceLine(file, find, replacement)
+
+   local find =  '^servald=.*'
+   local replacement = "servald=false"
+   repErr = mod.replaceLine(file, find, replacement)   
+
+   luci.controller.QS.QS.pages('next', 'naming')
+   return ({})
+end
+
+function noConfigUploaded(modules)
    for i,x in ipairs(modules) do
 	  if x == 'upload' then
 		 rem = i
