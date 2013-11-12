@@ -1,8 +1,6 @@
 module("luci.controller.QS.modules", package.seeall)
   --to have a html page render you must return a value or it wont.
 
-require "commotion_helpers"
-
 function index()
    --This function is required for LuCI
    --we don't need to define any pages in this file
@@ -26,27 +24,28 @@ function nameRenderer()
 end
 
 function nameParser()
-   local QS = luci.controller.QS.QS
-   QS.log("nameParser running")
+   local debug = require "luci.commotion.debugger"
+   local id = require "luci.commotion.identify"
+   debug.log("nameParser running")
    errors = nil
    local val = luci.http.formvalue()
-   --QS.log(val)
+   --debug.log(val)
    if val.nodeName and val.nodeName ~= "" and string.len(val.nodeName) < 20 then
-	  if is_hostname(val.nodeName) then
+	  if id.is_hostname(val.nodeName) then
 		 nodeID = luci.sys.exec("commotion nodeid")
-		 --luci.controller.QS.QS.log(val.nodeName)
+		 --debug.log(val.nodeName)
 		 hostName = tostring(val.nodeName) .. nodeID
-		 --QS.log(name)
+		 --debug.log(name)
 
 		 local file = "/etc/commotion/profiles.d/quickstartSettings"
 		 local find =  '^hostname=.*'
 		 local replacement = "hostname="..hostName
 		 replaceLine(file, find, replacement)
 
-		 --QS.log("wrote hostname")
+		 --debug.log("wrote hostname")
 		 --Add Secure AP files and password
 		 if val.secure == 'true' then
-			--QS.log("passwords:"..val.pwd1.." & "..val.pwd2)
+			--debug.log("passwords:"..val.pwd1.." & "..val.pwd2)
 			pass = checkPass(val.pwd1, val.pwd2)
 			if pass == nil then
 			   if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartSec") then
@@ -86,18 +85,18 @@ function nameParser()
 end
 
 function meshPasswordRenderer()
-   local QS = luci.controller.QS.QS
-   QS.log("meshPassword rendered")
+   local debug = require "luci.commotion.debugger"
+   debug.log("meshPassword rendered")
    return true
 end
 
 function meshPasswordParser()
-   local QS = luci.controller.QS.QS
-   QS.log("meshPasswordParser running")
+   local debug = require "luci.commotion.debugger"
+   debug.log("meshPasswordParser running")
    errors = nil
    local val = luci.http.formvalue()
-   --QS.log(val)
-   --QS.log("wrote hostname")
+   --debug.log(val)
+   --debug.log("wrote hostname")
    --Add Secure AP files and password
    errors = checkPass(val.meshPassword_pwd1, val.meshPassword_pwd2)
    if errors == nil then
@@ -114,8 +113,8 @@ function meshPasswordParser()
 end
 
 function setMeshPassword(pass)
-   local QS = luci.controller.QS.QS
-   QS.log("setMeshPassword started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setMeshPassword started")
 
    local file = "/etc/commotion/profiles.d/quickstartMesh"
    local find =  '^wpakey=.*'
@@ -125,8 +124,8 @@ end
 
 
 function setAPPassword(pass)
-   local QS = luci.controller.QS.QS
-   QS.log("setAPPassword started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setAPPassword started")
 
    local file = "/etc/commotion/profiles.d/quickstartSec"
    local find =  '^wpakey=.*'
@@ -140,8 +139,8 @@ function setAPPassword(pass)
 end
 
 function setSecAccessPoint(SSID)
-   local QS = luci.controller.QS.QS
-   QS.log("setSecAccessPoint started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setSecAccessPoint started")
 
    local file = "/etc/commotion/profiles.d/quickstartSec"
    local find =  "^ssid=.*"
@@ -170,8 +169,8 @@ end
 
 
 function setHostName(hostNamen)
-   local QS = luci.controller.QS.QS
-   QS.log("setHostName started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setHostName started")
    local uci = luci.model.uci.cursor()
    uci:foreach("system", "system",
 			   function(s)
@@ -182,23 +181,23 @@ function setHostName(hostNamen)
 				  end
 			   end)
    hostnameWorks = luci.sys.call("echo " .. hostNamen .. " > /proc/sys/kernel/hostname")
-   QS.log("HostName was set correcty:"..tostring(hostnameWorks))
-   QS.log("hostname set")
+   debug.log("HostName was set correcty:"..tostring(hostnameWorks))
+   debug.log("hostname set")
 end
 
 function setAccessPoint(SSID)
-   local QS = luci.controller.QS.QS
-   QS.log("setAccessPoint started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setAccessPoint started")
    local file = "/etc/commotion/profiles.d/quickstartAP"
    local find =  "^ssid=.*"
    local replacement = 'ssid='..SSID
    replaceLine(file, find, replacement)
-   QS.log("Access Point Set")
+   debug.log("Access Point Set")
 end
 
 function loadingPage()
-   local QS = luci.controller.QS.QS
-   QS.log("loadingPage started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("loadingPage started")
 
    environment = luci.http.getenv("SERVER_NAME")
    if not environment then
@@ -212,8 +211,8 @@ function setValues(setting, value)
    --[=[ This function activates the setting value setting functions for defined values.
 	  --]=]
    --TODO how do we deal with functions that take multiple values? Lua allows passing of muiltiple values, may just need to make more ways to submit.
-   local QS = luci.controller.QS.QS
-   QS.log("setValue started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("setValue started")
    settings = {
 	  SSID = setAccessPoint,
 	  hostname = setHostName,
@@ -227,22 +226,22 @@ end
 
 function checkSettings()
    --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
-   local QS = luci.controller.QS.QS
-   QS.log("checkSetttings started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("checkSetttings started")
    for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
 	  setting = line:split("=")
 	  if setting[1] ~= "" and setting[1] ~= nil then
 		 setValues(setting[1], setting[2])
 	  end
    end
-   QS.log("quickstartSettings Completed")
+   debug.log("quickstartSettings Completed")
    return true
 end
 
 function getCommotionSetting(settingName)
    --[=[ Checks the quickstart settings file and returns a table with setting, value pairs.--]=]
-   local QS = luci.controller.QS.QS
-   QS.log("commotion settting getter started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("commotion settting getter started")
    for line in io.lines("/etc/commotion/profiles.d/quickstartSettings") do
 	  setting = line:split("=")
 	  if setting[1] == settingName then
@@ -256,15 +255,16 @@ end
 function completeParser()
    --[=[ This function controls the final settings process--]=]
    local QS = luci.controller.QS.QS
-   QS.log("completeParser started")
+   local debug = require "luci.commotion.debugger"
+   debug.log("completeParser started")
    local uci = luci.model.uci.cursor()
    loadingPage()
    --This may be where we split the finction into smaller components
    checkSettings()
    files = {{"mesh","quickstartMesh"}, {"secAp","quickstartSec"}, {"ap","quickstartAP"}}
-   QS.log("Wireless UCI Controller about to start")
+   debug.log("Wireless UCI Controller about to start")
    QS.wirelessController(files)
-   QS.log("Quickstart Final Countdown started")
+   debug.log("Quickstart Final Countdown started")
    uci:set('quickstart', 'options', 'complete', 'true')
    uci:save('quickstart')
    uci:commit('quickstart')
@@ -346,7 +346,6 @@ end
 
 function accessPointParser()
    errors = {}
-   QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
    if val.accessPoint_nodeName then
 	  if val.accessPoint_nodeName == '' then
@@ -386,7 +385,6 @@ end
 
 function secAccessPointParser()
    errors = {}
-   QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
    if val.secAccessPoint_nodeName then
 	  if val.secAccessPoint_nodeName == '' then
@@ -426,17 +424,17 @@ end
 
 function checkPass(p1, p2)
    --[=[ This function takes two values and compares them. It returns error text for password pages. It needs some serious refactoring, but it works --]=]
-   QS = luci.controller.QS.QS
+   local debug = require "luci.commotion.debugger"
    if p1 and p2 then
 	  if p1 == p2 then
 		 if p1 == '' then
-			QS.log("Please enter a password")
+			debug.log("Please enter a password")
 			return "Please enter a password"
 		 elseif string.len(p1) < 8 then
-			QS.log("Please enter a password that is more than 8 chars long")
+			debug.log("Please enter a password that is more than 8 chars long")
 			return "Please enter a password that is more than 8 chars long"
 		 elseif not tostring(p1):match("^[%p%w]+$") then
-			QS.log("Your password has spaces in it. You can't have spaces.")
+			debug.log("Your password has spaces in it. You can't have spaces.")
 			return "Your password has spaces in it. You can't have spaces."
 		 end
 	  else
@@ -555,11 +553,11 @@ end
 
 function nodeNamingParser()
    local uci = luci.model.uci.cursor()
+   local debug = require "luci.commotion.debugger"
    errors = {}
-   QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
-   --log("=======================val==============================")
-   --log(val)
+   --debug.log("=======================val==============================")
+   --debug.log(val)
    if val.nodeNaming_netName then
 	  if val.nodeNaming_netName == '' then
 		 errors['net_name'] = "Please enter a network name"
@@ -569,8 +567,8 @@ function nodeNamingParser()
 		 local find =  "^ssid=.*"
 		 local replacement = 'ssid='..SSID
 		 checkReplace = replaceLine(file, find, replacement)
-		 --log(tostring(checkReplace).."=return on replace line")
-		 --log(SSID)
+		 --debug.log(tostring(checkReplace).."=return on replace line")
+		 --debug.log(SSID)
 		 if checkReplace ~= 0 then
 			errors['net_name'] = "The node failed to take the supplied name due to a regular expression error. Please try again."
 		 end
@@ -642,6 +640,7 @@ function networkSecurityRenderer()
    local servald = true
    local wpa = true
    local upload = true
+   local debug = require "luci.commotion.debugger"
    if not luci.fs.isfile("/etc/commotion/profiles.d/quickstartMesh") then
 	  luci.sys.call('cp /etc/commotion/profiles.d/defaultMesh /etc/commotion/profiles.d/quickstartMesh')
    end
@@ -654,7 +653,7 @@ function networkSecurityRenderer()
 	  if d then
 		 --I bet I could find an even more difficult set of variables to differentiate than b and d, but ill leave it at this :)
 		 servald = string.sub(line,d+8,e)
-		 --luci.controller.QS.QS.log('servald = '..servald)
+		 --debug.log('servald = '..servald)
 	  end
    end
    if servald=='true' then
@@ -667,7 +666,6 @@ end
 function networkSecurityParser()
    --TODO THIS IS ALL BROKEN
    errors = {}
-   QS = luci.controller.QS.QS
    local val = luci.http.formvalue()
    local p1 = val.netSec_pwd1
    local p2 = val.netSec_pwd2

@@ -16,8 +16,8 @@
   <p><%:This device's fingerprints are:%></p>
   <ul style="list-style-type:none">
 	<%-
-	   require "commotion_helpers"
-	   md5, sha1 = ssl_cert_fingerprints()
+	   local crypto = require "luci.commotion.crypto"
+	   md5, sha1 = crypto.ssl_cert_fingerprints()
 	   -%>
 	<li><strong><%:SHA1 Fingerprint:%></strong><%=sha1%><br /></li>
 	<li><strong><%:MD5 Fingerprint:%></strong><%=md5%><br /></li>
