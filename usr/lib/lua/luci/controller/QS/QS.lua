@@ -140,6 +140,9 @@ function wirelessController(profiles)
 		 channelSet = uci:set('wireless', device, 'channel', channel)
 	  end
    end
+   uci:delete_all("wireless", "wifi-iface")
+   uci:save('wireless')
+   uci:commit('wireless')
    devNum = 1
    for profNum, prof in ipairs(profiles) do
 	  if luci.fs.isfile("/etc/commotion/profiles.d/"..prof[2]) then
