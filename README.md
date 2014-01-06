@@ -1,3 +1,8 @@
+# DEPRECATED 
+
+per: 1.0:grumpycat release.
+Please see the luci-commotion branch for replacement.
+
 ## commotion-quick-start
 
 The quickstart is a "on first boot" interface that walks a user through customizing a node. This is intended to make
