@@ -1,7 +1,7 @@
 # DEPRECATED 
 
-per: 1.0:grumpycat release.
-Please see the luci-commotion branch for replacement.
+Deprecated per: 1.0:grumpycat release. Here for historic reasons.... and the tons of useful snippets implemented in the history of this repo.
+Please see the luci-commotion branch of opentechinstitute for replacement. https://github.com/opentechinstitute/luci-commotion 
 
 ## commotion-quick-start
 
